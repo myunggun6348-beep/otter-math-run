@@ -53,7 +53,215 @@ html, body {
   padding: 18px 20px 40px;
 }
 
-/* Top Bar */
+/* ==========================================================================
+   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 시작)
+   ========================================================================== */
+.intro-screen {
+  max-width: 860px;
+  margin: 16px auto;
+  background: var(--bg-panel);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 26px;
+  padding: 34px 32px;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7);
+  animation: fadeIn 0.28s ease;
+}
+
+@media (max-width: 640px) {
+  .intro-screen {
+    padding: 24px 18px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.intro-header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.intro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 0.86rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.intro-title {
+  font-size: clamp(1.75rem, 3.8vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.intro-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Example Visual Pair Preview in Intro */
+.intro-example-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(11, 17, 32, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.mini-demo-card {
+  flex: 1;
+  min-width: 210px;
+  max-width: 270px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.mini-demo-card.demo-q {
+  background: linear-gradient(160deg, #1e3a8a, #172554);
+  border: 2px solid #60a5fa;
+}
+
+.mini-demo-card.demo-a {
+  background: linear-gradient(160deg, #065f46, #064e3b);
+  border: 2px solid #34d399;
+}
+
+.guide-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 720px) {
+  .guide-steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guide-step-card {
+  background: rgba(11, 17, 32, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.guide-step-num {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  margin-bottom: 8px;
+}
+
+.guide-step-title {
+  font-size: 1.02rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #f8fafc;
+}
+
+.guide-step-desc {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.intro-config-box {
+  background: rgba(11, 17, 32, 0.55);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 22px;
+}
+
+.config-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.mode-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+@media (max-width: 560px) {
+  .mode-select-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mode-option-btn {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border-subtle);
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+
+.mode-option-btn.active {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.btn-start-huge {
+  width: 100%;
+  padding: 18px 28px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  border-radius: 18px;
+  border: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #06b6d4, #10b981);
+  box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.55);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.btn-start-huge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -6px rgba(6, 182, 212, 0.75);
+}
+
+.btn-start-huge:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* ==========================================================================
+   GAME SCREEN: TOP BAR, TABS, STATUS & 12 CARDS
+   ========================================================================== */
 .top-bar {
   display: flex;
   flex-wrap: wrap;
@@ -72,6 +280,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 12px;
+  cursor: pointer;
 }
 
 .brand-icon {
@@ -472,46 +681,135 @@ html, body {
 </head>
 <body>
   <div class="app-wrap">
-    <!-- Top Header & Controls -->
-    <header class="top-bar">
-      <div class="brand-box">
-        <span class="brand-icon">🦅</span>
-        <div>
-          <div class="brand-title">고1 수학 공식 짝맞추기</div>
-          <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+    <!-- ====================================================================
+         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 시작)
+         ==================================================================== -->
+    <section id="screen-intro" class="intro-screen">
+      <div class="intro-header">
+        <div class="intro-badge">🦅 고등학교 1학년 수학 공식 & 개념 보드게임</div>
+        <h1 class="intro-title">까치매스 : 고1 수학 공식 짝맞추기</h1>
+        <p class="intro-subtitle">
+          12장의 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 찾아보세요!
+        </p>
+      </div>
+
+      <!-- Visual Pair Example -->
+      <div class="intro-example-box">
+        <div class="mini-demo-card demo-q">
+          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">📘 개념 · 질문 카드</div>
+          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-q"></div>
+        </div>
+        <div style="font-size:1.4rem;font-weight:900;color:#fbbf24;">↔ 짝! ↔</div>
+        <div class="mini-demo-card demo-a">
+          <div style="font-size:0.75rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">💡 정답 · 공식 카드</div>
+          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-a"></div>
         </div>
       </div>
 
-      <div class="action-group">
-        <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
-          👀 3초 전체 힌트
-        </button>
-        <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
-          🆚 2팀 대결 모드 켜기
-        </button>
-        <button class="btn" onclick="MatchGame.openCustomModal()">
-          ✏️ 내 문제 넣기
-        </button>
-        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
-          📲 스마트폰 QR · 앱 설치
-        </button>
-        <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
-          🔄 새 카드 섞기
-        </button>
-        <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
-          🔊
-        </button>
+      <!-- 3-Step How to Play Guide -->
+      <div class="guide-steps-grid">
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 1 · 카드 뒤집기</span>
+          <div class="guide-step-title">1번~12번 중 2장 선택</div>
+          <p class="guide-step-desc">
+            뒤집힌 12장 카드 중 두 장을 클릭합니다. 파란색 <strong>개념 카드</strong>와 그에 맞는 초록색 <strong>정답 공식 카드</strong>를 짝지으면 성공!
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 2 · 찬스 활용</span>
+          <div class="guide-step-title">👀 3초 전체 힌트</div>
+          <p class="guide-step-desc">
+            시작 직후나 막혔을 때 <strong>[👀 3초 전체 힌트]</strong>를 누르면 12장 카드의 앞면이 3초 동안 동시에 공개됩니다. 순간 기억력을 발휘하세요!
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 3 · 두 가지 모드</span>
+          <div class="guide-step-title">타임어택 & 2팀 대결</div>
+          <p class="guide-step-desc">
+            혼자(또는 반 전체가) 최단 시간 기록에 도전하거나, <strong>A팀 vs B팀</strong>으로 나뉘어 짝을 맞춘 팀이 <strong>연속 찬스</strong>를 얻는 팀 대결을 즐길 수 있습니다.
+          </p>
+        </div>
       </div>
-    </header>
 
-    <!-- Grade 1 Math Chapter Filter Tabs -->
-    <nav class="chapter-tabs" id="chapter-tabs"></nav>
+      <!-- Pre-game Settings (Chapter & Mode Selection) -->
+      <div class="intro-config-box">
+        <label class="config-label">📚 1. 도전할 고1 수학 단원을 선택하세요</label>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:0;"></div>
 
-    <!-- Live Status / Score Bar -->
-    <section class="status-bar" id="status-bar"></section>
+        <label class="config-label" style="margin-top:16px;">🎮 2. 플레이 모드를 선택하세요</label>
+        <div class="mode-select-grid">
+          <button type="button" class="mode-option-btn active" id="intro-mode-solo" onclick="MatchGame.setIntroMode(false)">
+            <div style="font-weight:900;font-size:1rem;color:#38bdf8;margin-bottom:2px;">⏱️ 1인 / 반 전체 타임어택</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">최단 시간과 최소 횟수로 6쌍 모두 맞추기</div>
+          </button>
+          <button type="button" class="mode-option-btn" id="intro-mode-team" onclick="MatchGame.setIntroMode(true)">
+            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (2팀 대결)</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">짝을 맞추면 한 번 더 뒤집는 분단·모둠 대항전</div>
+          </button>
+        </div>
+      </div>
 
-    <!-- 12 Cards Grid (4 x 3) -->
-    <main class="cards-grid" id="cards-grid"></main>
+      <!-- Start Game Button & Utility Links -->
+      <button class="btn-start-huge" onclick="MatchGame.enterGameScreen()">
+        🚀 게임 시작하기! (12장 카드판 열기)
+      </button>
+
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn" onclick="MatchGame.openCustomModal()">✏️ 내 문제 직접 넣기</button>
+        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">📲 스마트폰 QR · 앱 설치</button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2: MAIN 12-CARD MATCHING BOARD (게임 진행 화면)
+         ==================================================================== -->
+    <section id="screen-game" style="display:none;">
+      <!-- Top Header & Controls -->
+      <header class="top-bar">
+        <div class="brand-box" onclick="MatchGame.showIntroScreen()" title="첫 화면(게임 설명)으로 이동">
+          <span class="brand-icon">🦅</span>
+          <div>
+            <div class="brand-title">고1 수학 공식 짝맞추기</div>
+            <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+          </div>
+        </div>
+
+        <div class="action-group">
+          <button class="btn" onclick="MatchGame.showIntroScreen()">
+            📖 게임 설명
+          </button>
+          <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
+            👀 3초 전체 힌트
+          </button>
+          <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
+            🆚 2팀 대결 모드 켜기
+          </button>
+          <button class="btn" onclick="MatchGame.openCustomModal()">
+            ✏️ 내 문제 넣기
+          </button>
+          <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
+            📲 QR · 앱 설치
+          </button>
+          <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
+            🔄 새 카드 섞기
+          </button>
+          <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
+            🔊
+          </button>
+        </div>
+      </header>
+
+      <!-- Grade 1 Math Chapter Filter Tabs -->
+      <nav class="chapter-tabs" id="chapter-tabs"></nav>
+
+      <!-- Live Status / Score Bar -->
+      <section class="status-bar" id="status-bar"></section>
+
+      <!-- 12 Cards Grid (4 x 3) -->
+      <main class="cards-grid" id="cards-grid"></main>
+    </section>
   </div>
 
   <!-- Game Clear Modal -->
@@ -525,9 +823,12 @@ html, body {
 
       <div id="clear-pairs-review" style="text-align:left;background:rgba(11,17,32,0.75);border-radius:16px;padding:14px 18px;margin-bottom:22px;font-size:0.92rem;line-height:1.7;"></div>
 
-      <div style="display:flex;justify-content:center;gap:12px;">
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="MatchGame.closeClearAndRestart()">
           🔄 새로운 카드로 한 판 더!
+        </button>
+        <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="MatchGame.closeClearAndGoIntro()">
+          📖 첫 화면으로
         </button>
       </div>
     </div>
@@ -1139,10 +1440,14 @@ html, body {
 })(window);
 </script>
   <script>/**
- * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 웹앱 (PWA 지원)
+ * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 웹앱 (첫 화면 게임 설명 + Vercel & PWA 지원)
  */
 (function (global) {
+  const STORAGE_KEY_CUSTOM = 'kkachi_g1_custom_pairs_v1';
+  const STORAGE_KEY_BEST = 'kkachi_g1_best_time_v1';
+
   const state = {
+    currentScreen: 'intro', // 'intro' | 'game'
     chapterId: 'all', // 'all' | 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5' | 'custom'
     customPairs: null,
     selectedPairs: [],
@@ -1166,14 +1471,83 @@ html, body {
 
     // Web App / PWA state
     deferredPrompt: null,
-    lanUrl: null
+    shareUrl: null
   };
 
   async function init() {
+    loadSavedData();
     registerServiceWorker();
-    detectLanUrl();
+    await detectShareUrl();
+    renderIntroDemoCards();
     renderChapterTabs();
     startNewGame();
+  }
+
+  function renderIntroDemoCards() {
+    const qEl = document.getElementById('demo-card-q');
+    const aEl = document.getElementById('demo-card-a');
+    if (qEl) qEl.innerHTML = KkachiMathData.renderMathText('$a^3 + b^3$ 의 곱셈공식 변형');
+    if (aEl) aEl.innerHTML = KkachiMathData.renderMathText('$(a+b)^3 - 3ab(a+b)$');
+  }
+
+  function showIntroScreen() {
+    KkachiSound.click();
+    if (state.timerInterval) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+    }
+    state.currentScreen = 'intro';
+    document.getElementById('screen-intro').style.display = 'block';
+    document.getElementById('screen-game').style.display = 'none';
+    renderChapterTabs();
+    syncModeButtons();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function enterGameScreen() {
+    KkachiSound.fever(1);
+    state.currentScreen = 'game';
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-game').style.display = 'block';
+    syncModeButtons();
+    startNewGame();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setIntroMode(teamMode) {
+    KkachiSound.click();
+    state.isTeamMode = Boolean(teamMode);
+    syncModeButtons();
+  }
+
+  function syncModeButtons() {
+    const soloBtn = document.getElementById('intro-mode-solo');
+    const teamBtn = document.getElementById('intro-mode-team');
+    if (soloBtn) soloBtn.classList.toggle('active', !state.isTeamMode);
+    if (teamBtn) teamBtn.classList.toggle('active', state.isTeamMode);
+
+    const gameToggleBtn = document.getElementById('btn-mode-toggle');
+    if (gameToggleBtn) {
+      gameToggleBtn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로 전환' : '🆚 2팀 대결 모드 켜기';
+    }
+  }
+
+  function loadSavedData() {
+    try {
+      const savedBest = localStorage.getItem(STORAGE_KEY_BEST);
+      if (savedBest && !isNaN(Number(savedBest))) {
+        state.bestTimeSec = Number(savedBest);
+      }
+      const savedCustom = localStorage.getItem(STORAGE_KEY_CUSTOM);
+      if (savedCustom) {
+        const parsed = JSON.parse(savedCustom);
+        if (Array.isArray(parsed) && parsed.length === 6) {
+          state.customPairs = parsed;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 
   function registerServiceWorker() {
@@ -1186,22 +1560,26 @@ html, body {
     });
   }
 
-  async function detectLanUrl() {
-    if (!location.protocol.startsWith('http')) {
-      state.lanUrl = location.href;
-      return;
-    }
-    try {
-      const res = await fetch('/api/info');
-      const data = await res.json();
-      if (data && data.ok && Array.isArray(data.ips) && data.ips.length > 0) {
-        state.lanUrl = `http://${data.ips[0]}:${data.port || 3000}`;
-        return;
+  async function detectShareUrl() {
+    const isLocalhost =
+      location.hostname === 'localhost' ||
+      location.hostname === '127.0.0.1';
+
+    if (isLocalhost && location.protocol.startsWith('http')) {
+      try {
+        const res = await fetch('/api/info');
+        const data = await res.json();
+        if (data && data.ok && Array.isArray(data.ips) && data.ips.length > 0) {
+          state.shareUrl = `http://${data.ips[0]}:${data.port || 3000}`;
+          return;
+        }
+      } catch (e) {
+        // fallback to current URL
       }
-    } catch (e) {
-      // ignore
     }
-    state.lanUrl = location.href;
+    state.shareUrl = location.origin && location.origin !== 'null'
+      ? location.origin + location.pathname
+      : location.href;
   }
 
   function shuffle(arr) {
@@ -1216,9 +1594,6 @@ html, body {
   }
 
   function renderChapterTabs() {
-    const container = document.getElementById('chapter-tabs');
-    if (!container) return;
-
     const tabs = [
       { id: 'all', title: '🔥 고1 전체 랜덤' },
       ...KkachiMathData.CHAPTERS.map((c) => ({ id: c.id, title: c.title }))
@@ -1227,20 +1602,27 @@ html, body {
       tabs.push({ id: 'custom', title: '⭐ 내 커스텀 문제' });
     }
 
-    container.innerHTML = tabs
+    const html = tabs
       .map((t) => `
-        <button class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="MatchGame.selectChapter('${t.id}')">
+        <button type="button" class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="MatchGame.selectChapter('${t.id}')">
           ${t.title}
         </button>
       `)
       .join('');
+
+    const gameTabs = document.getElementById('chapter-tabs');
+    const introTabs = document.getElementById('intro-chapter-tabs');
+    if (gameTabs) gameTabs.innerHTML = html;
+    if (introTabs) introTabs.innerHTML = html;
   }
 
   function selectChapter(chId) {
     KkachiSound.click();
     state.chapterId = chId;
     renderChapterTabs();
-    startNewGame();
+    if (state.currentScreen === 'game') {
+      startNewGame();
+    }
   }
 
   function pickSixPairs() {
@@ -1515,10 +1897,7 @@ html, body {
   function toggleTeamMode() {
     KkachiSound.click();
     state.isTeamMode = !state.isTeamMode;
-    const btn = document.getElementById('btn-mode-toggle');
-    if (btn) {
-      btn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로 전환' : '🆚 2팀 대결 모드 켜기';
-    }
+    syncModeButtons();
     startNewGame();
   }
 
@@ -1531,6 +1910,11 @@ html, body {
     if (!state.isTeamMode) {
       if (!state.bestTimeSec || state.elapsedSec < state.bestTimeSec) {
         state.bestTimeSec = state.elapsedSec;
+        try {
+          localStorage.setItem(STORAGE_KEY_BEST, String(state.bestTimeSec));
+        } catch (e) {
+          // ignore
+        }
       }
     }
 
@@ -1577,6 +1961,11 @@ html, body {
     startNewGame();
   }
 
+  function closeClearAndGoIntro() {
+    document.getElementById('modal-clear').classList.remove('active');
+    showIntroScreen();
+  }
+
   // Custom 6-Pair Modal
   function openCustomModal() {
     KkachiSound.click();
@@ -1614,16 +2003,21 @@ html, body {
       custom.push({ id: `cust_${i}`, q, a });
     }
     state.customPairs = custom;
+    try {
+      localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(custom));
+    } catch (e) {
+      // ignore
+    }
     state.chapterId = 'custom';
     closeCustomModal();
     renderChapterTabs();
-    startNewGame();
+    enterGameScreen();
   }
 
   // Web App (PWA Install & QR) Modal
   function openWebAppModal() {
     KkachiSound.click();
-    const targetUrl = state.lanUrl || location.href;
+    const targetUrl = state.shareUrl || location.href;
     document.getElementById('webapp-url-label').textContent = targetUrl;
 
     const qrBox = document.getElementById('webapp-qr-box');
@@ -1652,7 +2046,7 @@ html, body {
   }
 
   function copyWebAppUrl() {
-    const url = state.lanUrl || location.href;
+    const url = state.shareUrl || location.href;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => {
         alert('웹앱 접속 주소가 복사되었습니다!\n' + url);
@@ -1672,12 +2066,16 @@ html, body {
 
   global.MatchGame = {
     init,
+    showIntroScreen,
+    enterGameScreen,
+    setIntroMode,
     selectChapter,
     startNewGame,
     onCardClick,
     peekAllCards,
     toggleTeamMode,
     closeClearAndRestart,
+    closeClearAndGoIntro,
     openCustomModal,
     closeCustomModal,
     applyCustomPairs,

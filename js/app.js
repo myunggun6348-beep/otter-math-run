@@ -1,11 +1,12 @@
 /**
- * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 웹앱 (Vercel & PWA 배포 최적화)
+ * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 웹앱 (첫 화면 게임 설명 + Vercel & PWA 지원)
  */
 (function (global) {
   const STORAGE_KEY_CUSTOM = 'kkachi_g1_custom_pairs_v1';
   const STORAGE_KEY_BEST = 'kkachi_g1_best_time_v1';
 
   const state = {
+    currentScreen: 'intro', // 'intro' | 'game'
     chapterId: 'all', // 'all' | 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5' | 'custom'
     customPairs: null,
     selectedPairs: [],
@@ -36,8 +37,58 @@
     loadSavedData();
     registerServiceWorker();
     await detectShareUrl();
+    renderIntroDemoCards();
     renderChapterTabs();
     startNewGame();
+  }
+
+  function renderIntroDemoCards() {
+    const qEl = document.getElementById('demo-card-q');
+    const aEl = document.getElementById('demo-card-a');
+    if (qEl) qEl.innerHTML = KkachiMathData.renderMathText('$a^3 + b^3$ 의 곱셈공식 변형');
+    if (aEl) aEl.innerHTML = KkachiMathData.renderMathText('$(a+b)^3 - 3ab(a+b)$');
+  }
+
+  function showIntroScreen() {
+    KkachiSound.click();
+    if (state.timerInterval) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+    }
+    state.currentScreen = 'intro';
+    document.getElementById('screen-intro').style.display = 'block';
+    document.getElementById('screen-game').style.display = 'none';
+    renderChapterTabs();
+    syncModeButtons();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function enterGameScreen() {
+    KkachiSound.fever(1);
+    state.currentScreen = 'game';
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-game').style.display = 'block';
+    syncModeButtons();
+    startNewGame();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setIntroMode(teamMode) {
+    KkachiSound.click();
+    state.isTeamMode = Boolean(teamMode);
+    syncModeButtons();
+  }
+
+  function syncModeButtons() {
+    const soloBtn = document.getElementById('intro-mode-solo');
+    const teamBtn = document.getElementById('intro-mode-team');
+    if (soloBtn) soloBtn.classList.toggle('active', !state.isTeamMode);
+    if (teamBtn) teamBtn.classList.toggle('active', state.isTeamMode);
+
+    const gameToggleBtn = document.getElementById('btn-mode-toggle');
+    if (gameToggleBtn) {
+      gameToggleBtn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로 전환' : '🆚 2팀 대결 모드 켜기';
+    }
   }
 
   function loadSavedData() {
@@ -85,7 +136,6 @@
         // fallback to current URL
       }
     }
-    // On Vercel (https://*.vercel.app) or custom domain, use clean origin + pathname
     state.shareUrl = location.origin && location.origin !== 'null'
       ? location.origin + location.pathname
       : location.href;
@@ -103,9 +153,6 @@
   }
 
   function renderChapterTabs() {
-    const container = document.getElementById('chapter-tabs');
-    if (!container) return;
-
     const tabs = [
       { id: 'all', title: '🔥 고1 전체 랜덤' },
       ...KkachiMathData.CHAPTERS.map((c) => ({ id: c.id, title: c.title }))
@@ -114,20 +161,27 @@
       tabs.push({ id: 'custom', title: '⭐ 내 커스텀 문제' });
     }
 
-    container.innerHTML = tabs
+    const html = tabs
       .map((t) => `
-        <button class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="MatchGame.selectChapter('${t.id}')">
+        <button type="button" class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="MatchGame.selectChapter('${t.id}')">
           ${t.title}
         </button>
       `)
       .join('');
+
+    const gameTabs = document.getElementById('chapter-tabs');
+    const introTabs = document.getElementById('intro-chapter-tabs');
+    if (gameTabs) gameTabs.innerHTML = html;
+    if (introTabs) introTabs.innerHTML = html;
   }
 
   function selectChapter(chId) {
     KkachiSound.click();
     state.chapterId = chId;
     renderChapterTabs();
-    startNewGame();
+    if (state.currentScreen === 'game') {
+      startNewGame();
+    }
   }
 
   function pickSixPairs() {
@@ -402,10 +456,7 @@
   function toggleTeamMode() {
     KkachiSound.click();
     state.isTeamMode = !state.isTeamMode;
-    const btn = document.getElementById('btn-mode-toggle');
-    if (btn) {
-      btn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로 전환' : '🆚 2팀 대결 모드 켜기';
-    }
+    syncModeButtons();
     startNewGame();
   }
 
@@ -469,6 +520,11 @@
     startNewGame();
   }
 
+  function closeClearAndGoIntro() {
+    document.getElementById('modal-clear').classList.remove('active');
+    showIntroScreen();
+  }
+
   // Custom 6-Pair Modal
   function openCustomModal() {
     KkachiSound.click();
@@ -514,7 +570,7 @@
     state.chapterId = 'custom';
     closeCustomModal();
     renderChapterTabs();
-    startNewGame();
+    enterGameScreen();
   }
 
   // Web App (PWA Install & QR) Modal
@@ -569,12 +625,16 @@
 
   global.MatchGame = {
     init,
+    showIntroScreen,
+    enterGameScreen,
+    setIntroMode,
     selectChapter,
     startNewGame,
     onCardClick,
     peekAllCards,
     toggleTeamMode,
     closeClearAndRestart,
+    closeClearAndGoIntro,
     openCustomModal,
     closeCustomModal,
     applyCustomPairs,

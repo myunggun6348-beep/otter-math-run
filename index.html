@@ -17,46 +17,135 @@
 </head>
 <body>
   <div class="app-wrap">
-    <!-- Top Header & Controls -->
-    <header class="top-bar">
-      <div class="brand-box">
-        <span class="brand-icon">🦅</span>
-        <div>
-          <div class="brand-title">고1 수학 공식 짝맞추기</div>
-          <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+    <!-- ====================================================================
+         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 시작)
+         ==================================================================== -->
+    <section id="screen-intro" class="intro-screen">
+      <div class="intro-header">
+        <div class="intro-badge">🦅 고등학교 1학년 수학 공식 & 개념 보드게임</div>
+        <h1 class="intro-title">까치매스 : 고1 수학 공식 짝맞추기</h1>
+        <p class="intro-subtitle">
+          12장의 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 찾아보세요!
+        </p>
+      </div>
+
+      <!-- Visual Pair Example -->
+      <div class="intro-example-box">
+        <div class="mini-demo-card demo-q">
+          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">📘 개념 · 질문 카드</div>
+          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-q"></div>
+        </div>
+        <div style="font-size:1.4rem;font-weight:900;color:#fbbf24;">↔ 짝! ↔</div>
+        <div class="mini-demo-card demo-a">
+          <div style="font-size:0.75rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">💡 정답 · 공식 카드</div>
+          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-a"></div>
         </div>
       </div>
 
-      <div class="action-group">
-        <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
-          👀 3초 전체 힌트
-        </button>
-        <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
-          🆚 2팀 대결 모드 켜기
-        </button>
-        <button class="btn" onclick="MatchGame.openCustomModal()">
-          ✏️ 내 문제 넣기
-        </button>
-        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
-          📲 스마트폰 QR · 앱 설치
-        </button>
-        <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
-          🔄 새 카드 섞기
-        </button>
-        <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
-          🔊
-        </button>
+      <!-- 3-Step How to Play Guide -->
+      <div class="guide-steps-grid">
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 1 · 카드 뒤집기</span>
+          <div class="guide-step-title">1번~12번 중 2장 선택</div>
+          <p class="guide-step-desc">
+            뒤집힌 12장 카드 중 두 장을 클릭합니다. 파란색 <strong>개념 카드</strong>와 그에 맞는 초록색 <strong>정답 공식 카드</strong>를 짝지으면 성공!
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 2 · 찬스 활용</span>
+          <div class="guide-step-title">👀 3초 전체 힌트</div>
+          <p class="guide-step-desc">
+            시작 직후나 막혔을 때 <strong>[👀 3초 전체 힌트]</strong>를 누르면 12장 카드의 앞면이 3초 동안 동시에 공개됩니다. 순간 기억력을 발휘하세요!
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 3 · 두 가지 모드</span>
+          <div class="guide-step-title">타임어택 & 2팀 대결</div>
+          <p class="guide-step-desc">
+            혼자(또는 반 전체가) 최단 시간 기록에 도전하거나, <strong>A팀 vs B팀</strong>으로 나뉘어 짝을 맞춘 팀이 <strong>연속 찬스</strong>를 얻는 팀 대결을 즐길 수 있습니다.
+          </p>
+        </div>
       </div>
-    </header>
 
-    <!-- Grade 1 Math Chapter Filter Tabs -->
-    <nav class="chapter-tabs" id="chapter-tabs"></nav>
+      <!-- Pre-game Settings (Chapter & Mode Selection) -->
+      <div class="intro-config-box">
+        <label class="config-label">📚 1. 도전할 고1 수학 단원을 선택하세요</label>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:0;"></div>
 
-    <!-- Live Status / Score Bar -->
-    <section class="status-bar" id="status-bar"></section>
+        <label class="config-label" style="margin-top:16px;">🎮 2. 플레이 모드를 선택하세요</label>
+        <div class="mode-select-grid">
+          <button type="button" class="mode-option-btn active" id="intro-mode-solo" onclick="MatchGame.setIntroMode(false)">
+            <div style="font-weight:900;font-size:1rem;color:#38bdf8;margin-bottom:2px;">⏱️ 1인 / 반 전체 타임어택</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">최단 시간과 최소 횟수로 6쌍 모두 맞추기</div>
+          </button>
+          <button type="button" class="mode-option-btn" id="intro-mode-team" onclick="MatchGame.setIntroMode(true)">
+            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (2팀 대결)</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">짝을 맞추면 한 번 더 뒤집는 분단·모둠 대항전</div>
+          </button>
+        </div>
+      </div>
 
-    <!-- 12 Cards Grid (4 x 3) -->
-    <main class="cards-grid" id="cards-grid"></main>
+      <!-- Start Game Button & Utility Links -->
+      <button class="btn-start-huge" onclick="MatchGame.enterGameScreen()">
+        🚀 게임 시작하기! (12장 카드판 열기)
+      </button>
+
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn" onclick="MatchGame.openCustomModal()">✏️ 내 문제 직접 넣기</button>
+        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">📲 스마트폰 QR · 앱 설치</button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2: MAIN 12-CARD MATCHING BOARD (게임 진행 화면)
+         ==================================================================== -->
+    <section id="screen-game" style="display:none;">
+      <!-- Top Header & Controls -->
+      <header class="top-bar">
+        <div class="brand-box" onclick="MatchGame.showIntroScreen()" title="첫 화면(게임 설명)으로 이동">
+          <span class="brand-icon">🦅</span>
+          <div>
+            <div class="brand-title">고1 수학 공식 짝맞추기</div>
+            <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+          </div>
+        </div>
+
+        <div class="action-group">
+          <button class="btn" onclick="MatchGame.showIntroScreen()">
+            📖 게임 설명
+          </button>
+          <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
+            👀 3초 전체 힌트
+          </button>
+          <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
+            🆚 2팀 대결 모드 켜기
+          </button>
+          <button class="btn" onclick="MatchGame.openCustomModal()">
+            ✏️ 내 문제 넣기
+          </button>
+          <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
+            📲 QR · 앱 설치
+          </button>
+          <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
+            🔄 새 카드 섞기
+          </button>
+          <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
+            🔊
+          </button>
+        </div>
+      </header>
+
+      <!-- Grade 1 Math Chapter Filter Tabs -->
+      <nav class="chapter-tabs" id="chapter-tabs"></nav>
+
+      <!-- Live Status / Score Bar -->
+      <section class="status-bar" id="status-bar"></section>
+
+      <!-- 12 Cards Grid (4 x 3) -->
+      <main class="cards-grid" id="cards-grid"></main>
+    </section>
   </div>
 
   <!-- Game Clear Modal -->
@@ -70,9 +159,12 @@
 
       <div id="clear-pairs-review" style="text-align:left;background:rgba(11,17,32,0.75);border-radius:16px;padding:14px 18px;margin-bottom:22px;font-size:0.92rem;line-height:1.7;"></div>
 
-      <div style="display:flex;justify-content:center;gap:12px;">
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="MatchGame.closeClearAndRestart()">
           🔄 새로운 카드로 한 판 더!
+        </button>
+        <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="MatchGame.closeClearAndGoIntro()">
+          📖 첫 화면으로
         </button>
       </div>
     </div>
