@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#07111e" />
+  <meta name="theme-color" content="#050b14" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="수달런 고1수학" />
+  <meta name="apple-mobile-web-app-title" content="수달런 3D" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>수달런 (OTTER MATH RUN) - 고1 수학 몬스터 격파 액션 런게임</title>
+  <title>수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 고1 수학 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/style.css" />
@@ -18,85 +18,85 @@
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & ACTION PREVIEW (첫 화면)
+         SCREEN 1: 3D INTRO & LIVE 3D OTTER PREVIEW (첫 화면)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
       <div class="intro-hero">
         <div class="intro-canvas-box">
-          <canvas id="intro-otter-canvas" width="210" height="138"></canvas>
+          <canvas id="intro-otter-canvas" width="225" height="145"></canvas>
         </div>
         <div style="flex:1;min-width:260px;">
-          <div class="intro-badge">⚔️ 몬스터 격파 & 워터캐논/부메랑 필살기 액션 탑재!</div>
-          <h1 class="intro-title">수달런 : 고1 수학 몬스터 격파!</h1>
+          <div class="intro-badge">🕶️ 서브웨이 서퍼 / 템플런 스타일 3인칭 3D 입체 액션!</div>
+          <h1 class="intro-title">수달런 3D : 고1 수학 몬스터 러너</h1>
           <p class="intro-subtitle">
-            네 발로 달리는 수달 앞을 <strong>3층 수학 몬스터 군단(🦇하늘 박쥐 · 👹다리 고블린 · 👾강변 슬라임)</strong>이 가로막습니다!<br />
-            <strong>정답 수식을 든 몬스터</strong>에게 점프해 <strong>🌊 워터캐논 & 황금 조개 부메랑</strong>으로 화면 밖으로 날려버리세요!
+            3D 입체 다리 위를 달리는 수달의 등 뒤(3인칭 시점)에서 바라보며 질주합니다!<br />
+            저 멀리 지평선에서 다가오는 <strong>왼쪽(1번) · 중앙(2번) · 오른쪽(3번) 3D 몬스터</strong> 중 정답 몬스터에게 레인을 바꿔 <strong>🌊 3D 워터캐논 & 황금 부메랑</strong>으로 날려버리세요!
           </p>
         </div>
       </div>
 
-      <!-- 3-Step Action Guide -->
+      <!-- 3-Step 3D Action Guide -->
       <div class="guide-steps-grid">
         <div class="guide-step-card">
-          <span class="guide-step-num">ACTION 1 · 몬스터 출현</span>
-          <div class="guide-step-title">3층 몬스터 중 정답 타겟 포착!</div>
+          <span class="guide-step-num">3D ACTION 1 · 입체 질주</span>
+          <div class="guide-step-title">좌 · 중 · 우 3D 레인 이동 & 점프</div>
           <p class="guide-step-desc">
-            상단에 고1 수학 문제가 뜨고, 3층(박쥐)·2층(고블린)·1층(슬라임) 몬스터가 각자 수식 방패를 들고 달려옵니다.
+            3D 다리 위를 달리며 회전하는 3D 조개 코인(🐚)을 먹고, 지평선 너머에서 점점 커지며 다가오는 3마리 3D 몬스터의 수식 방패를 확인합니다.
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">ACTION 2 · 필살기 격파!</span>
-          <div class="guide-step-title">점프 & 워터캐논으로 날려버리기!</div>
+          <span class="guide-step-num">3D ACTION 2 · 3D 조준 격파</span>
+          <div class="guide-step-title">정답 레인으로 뱅크 이동 & 발사!</div>
           <p class="guide-step-desc">
-            정답 몬스터를 클릭(또는 <strong>1·2·3 / ↑·→·↓</strong>)하면 수달이 도약해 <strong>부메랑 & 워터캐논</strong>으로 몬스터를 <strong>CRITICAL 9999!</strong> 화면 밖으로 날려버립니다!
+            정답 몬스터(<strong>⬅️1번 왼쪽 / ⬆️2번 중앙 / ➡️3번 오른쪽</strong>)를 클릭하면 카메라가 입체적으로 기울며 3D 워터캐논으로 몬스터를 저 하늘로 날려버립니다!
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">ACTION 3 · 메가 궁극기</span>
-          <div class="guide-step-title">🔥 게이지 100% 메가 워터브레스!</div>
+          <span class="guide-step-num">3D ACTION 3 · 3D 메가 궁극기</span>
+          <div class="guide-step-title">🔥 100% 3D 하이퍼 워터 브레스!</div>
           <p class="guide-step-desc">
-            몬스터를 3마리 날려 게이지가 100% 차면 <strong>[🔥 메가 궁극기]</strong> 발동 가능! 아무리 어려운 문제도 3층 몬스터 전원을 한 방에 날려버립니다!
+            게이지 100% 달성 시 <strong>[🔥 3D 메가 궁극기]</strong> 발동! 3차원 터널 전체를 휩쓰는 무지개 레이저로 좌·중·우 몬스터 3마리를 동시에 폭파합니다!
           </p>
         </div>
       </div>
 
-      <!-- Pre-game Settings (Otter Skin, Chapter & Speed) -->
+      <!-- Pre-game Settings (3D Otter Skin, Chapter & Speed) -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 출격할 수달 용사 & 무기 선택 (좌측 화면에서 실시간 공격 모션 미리보기!)</label>
+        <label class="config-label">🦦 1. 출격할 3D 수달 용사 & 3D 무기 선택 (좌측 3D 화면에서 실시간 미리보기!)</label>
         <div class="skin-grid">
           <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 아기 조개 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">무기: 황금 조개 부메랑</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 3D 아기 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">3D 황금 조개 부메랑</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 고1 우등생 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">무기: 초고압 워터 레이저</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 3D 우등생 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">3D 플라즈마 워터 레이저</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">무기: 해일 토네이도 웨이브</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 3D 호버보드 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">3D 네온 서핑 웨이브</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 황금 왕관 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">무기: 썬더 엑스칼리버 검기</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 3D 황금왕관 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">3D 썬더 메테오 캐논</div>
           </button>
         </div>
 
-        <label class="config-label">📚 2. 토벌할 고1 수학 월드(단원) 선택</label>
+        <label class="config-label">📚 2. 달릴 고1 수학 3D 월드(단원) 선택</label>
         <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:12px;"></div>
 
-        <label class="config-label">⚡ 3. 몬스터 진격 속도 (난이도)</label>
+        <label class="config-label">⚡ 3. 3D 질주 속도 (난이도)</label>
         <div class="chapter-tabs">
-          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 진격 (9초)</button>
-          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 진격 (6.5초)</button>
-          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 기습 (4.5초)</button>
+          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 질주 (9초)</button>
+          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 3D 질주 (6.5초)</button>
+          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 초음속 3D 부스터 (4.5초)</button>
         </div>
       </div>
 
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
-        ⚔️ 수달런 출격하기! (몬스터 격파 액션 시작)
+        🕶️ 수달런 3D 출격하기! (3인칭 입체 러너 시작)
       </button>
 
       <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
@@ -105,24 +105,24 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: SIDE-SCROLLING ACTION RUNNER STAGE (게임 진행 화면)
+         SCREEN 2: 3D THIRD-PERSON PERSPECTIVE RUNNER STAGE
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
       <header class="top-bar">
         <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="OtterRun.showIntro()">
-          <span style="font-size:1.65rem;">🦦⚔️</span>
+          <span style="font-size:1.65rem;">🦦🕶️</span>
           <div>
-            <div style="font-size:1.15rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 몬스터 격파!</div>
-            <div style="font-size:0.76rem;color:var(--text-muted);">정답 수식을 든 몬스터(1·2·3번)를 클릭하면 점프 & 필살기로 날려버립니다!</div>
+            <div style="font-size:1.15rem;font-weight:900;color:#38bdf8;">수달런 3D : 고1 수학 몬스터 러너</div>
+            <div style="font-size:0.76rem;color:var(--text-muted);">왼쪽(1번/←) · 중앙(2번/↑) · 오른쪽(3번/→) 중 정답 3D 몬스터를 클릭해 격파하세요!</div>
           </div>
         </div>
 
         <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
           <button class="btn" onclick="OtterRun.showIntro()">📖 첫 화면</button>
           <button class="btn" id="btn-ultimate" disabled onclick="OtterRun.fireUltimateSkill()">
-            ⚡ 필살기 충전 중 (0%)
+            ⚡ 3D 필살기 충전 (0%)
           </button>
-          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 방패(1회)</button>
+          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 3D 방어막(1회)</button>
           <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 QR·앱</button>
           <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 재출격</button>
           <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()">🔊</button>
@@ -134,11 +134,11 @@
       <!-- HUD Bar -->
       <section class="hud-bar">
         <div class="hud-card">
-          <span class="hud-label">❤️ 체력 & 방패</span>
+          <span class="hud-label">❤️ 체력 & 방어막</span>
           <span class="hud-val" id="hud-hearts" style="font-size:1.1rem;">❤️❤️❤️❤️❤️</span>
         </div>
         <div class="hud-card">
-          <span class="hud-label">⚡ 필살기 게이지</span>
+          <span class="hud-label">⚡ 3D 궁극기 게이지</span>
           <span class="hud-val" id="hud-ult" style="color:#c084fc;">0%</span>
         </div>
         <div class="hud-card">
@@ -153,43 +153,41 @@
 
       <!-- Math Question Board -->
       <section class="question-board">
-        <span class="q-badge-pill" id="q-gate-num">WAVE #1 / 10</span>
+        <span class="q-badge-pill" id="q-gate-num">3D WAVE #1 / 10</span>
         <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
-        <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">몬스터 접근 중</span>
+        <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">3D 접근 중</span>
       </section>
 
-      <!-- 60FPS Side-Scrolling Canvas World + Approaching 3-Floor Monster Shields -->
+      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + 3D Perspective Hologram Shields -->
       <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <canvas id="runner-canvas" width="960" height="360"></canvas>
+        <canvas id="runner-canvas" width="960" height="380"></canvas>
 
-        <!-- Approaching 3-Story Monster Formula Shields synced with Canvas X position -->
-        <div class="canvas-gates-overlay" id="gates-overlay" style="left: 75%;">
-          <div class="platform-card floor-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
-          <div class="platform-card floor-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
-          <div class="platform-card floor-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
-        </div>
+        <!-- 3D Hologram Formula Shields positioned dynamically via 3D perspective projection! -->
+        <div class="holo-shield" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
+        <div class="holo-shield" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
+        <div class="holo-shield" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:2.2rem;margin-bottom:4px;">💢 탱! 오답 몬스터의 강철 방패에 튕겼어요!</div>
+          <div style="font-size:2.2rem;margin-bottom:4px;">💢 쾅! 오답 3D 몬스터 방패에 충돌했어요!</div>
           <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
           <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.95rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
-          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 다음 몬스터 웨이브로 돌격합니다...</div>
+          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 다음 3D 몬스터 웨이브로 돌격합니다...</div>
         </div>
       </main>
 
-      <!-- Bottom Quick Attack Buttons -->
+      <!-- Bottom Left / Center / Right 3D Lane Attack Buttons -->
       <section class="controls-bar">
         <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(0)">
-          <span class="ctrl-lane-badge">🦇 1번 (3층 박쥐 타격!)</span>
+          <span class="ctrl-lane-badge">⬅️ 1번 왼쪽 레인 (키 1 / ←)</span>
           <span class="ctrl-formula-text" id="ctrl-text-0"></span>
         </button>
         <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(1)">
-          <span class="ctrl-lane-badge">👹 2번 (2층 고블린 타격!)</span>
+          <span class="ctrl-lane-badge">⬆️ 2번 중앙 레인 (키 2 / ↑)</span>
           <span class="ctrl-formula-text" id="ctrl-text-1"></span>
         </button>
         <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(2)">
-          <span class="ctrl-lane-badge">👾 3번 (1층 슬라임 타격!)</span>
+          <span class="ctrl-lane-badge">➡️ 3번 오른쪽 레인 (키 3 / →)</span>
           <span class="ctrl-formula-text" id="ctrl-text-2"></span>
         </button>
       </section>
@@ -199,18 +197,18 @@
   <!-- Result Modal -->
   <div class="modal-backdrop" id="modal-result">
     <div class="modal-box">
-      <div style="font-size:3.2rem;margin-bottom:6px;">🦦⚔️🏆</div>
-      <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">토벌 완료!</h2>
+      <div style="font-size:3.2rem;margin-bottom:6px;">🦦🕶️🏆</div>
+      <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">3D 토벌 완료!</h2>
       <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 
-      <div id="result-review-box" style="text-align:left;background:rgba(7,17,30,0.8);border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
+      <div id="result-review-box" style="text-align:left;background:rgba(5,11,20,0.8);border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
 
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="OtterRun.closeResultAndRestart()">
-          ⚔️ 한 번 더 출격하기!
+          🕶️ 한 번 더 3D 출격!
         </button>
         <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="OtterRun.closeResultAndIntro()">
-          📖 첫 화면(무기/스킨 바꾸기)
+          📖 첫 화면(3D 무기 바꾸기)
         </button>
       </div>
     </div>
@@ -224,10 +222,10 @@
         <button class="btn" onclick="OtterRun.closeWebAppModal()">✕ 닫기</button>
       </div>
       <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">
-        스마트폰 카메라로 아래 QR코드를 스캔하면 모바일 웹앱 화면으로 바로 실행됩니다.
+        스마트폰 카메라로 아래 QR코드를 스캔하면 모바일 3D 웹앱 화면으로 바로 실행됩니다.
       </p>
       <div id="webapp-qr-box" style="display:inline-flex;padding:14px;background:#ffffff;border-radius:16px;margin-bottom:12px;"></div>
-      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(7,17,30,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
+      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(5,11,20,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
       <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
         <button class="btn btn-emerald" onclick="OtterRun.installPWA()">📲 이 기기에 웹앱(PWA) 바로 설치</button>
         <button class="btn btn-primary" onclick="OtterRun.copyWebAppUrl()">🔗 웹앱 주소 복사</button>

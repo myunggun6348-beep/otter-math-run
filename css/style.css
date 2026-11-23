@@ -1,9 +1,9 @@
 /* ==========================================================================
-   수달런 (OTTER MATH RUN) - 몬스터 격파 & 워터캐논/부메랑 필살기 액션 스타일
+   수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 3D 러너 & 몬스터 격파 액션 스타일
    ========================================================================== */
 :root {
-  --bg-dark: #07111e;
-  --bg-panel: #101e33;
+  --bg-dark: #050b14;
+  --bg-panel: #0f1b2d;
   --border-subtle: rgba(148, 163, 184, 0.22);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
@@ -26,7 +26,7 @@ html, body {
   background-color: var(--bg-dark);
   background-image:
     radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.16), transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.15), transparent 40%);
+    radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.14), transparent 40%);
   color: var(--text-main);
   font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
@@ -39,16 +39,16 @@ html, body {
 }
 
 /* ==========================================================================
-   SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
+   SCREEN 1: 3D INTRO & LIVE 3D OTTER PREVIEW (첫 화면)
    ========================================================================== */
 .intro-screen {
-  max-width: 890px;
+  max-width: 900px;
   margin: 8px auto;
   background: var(--bg-panel);
-  border: 1px solid rgba(56, 189, 248, 0.38);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   border-radius: 26px;
   padding: 26px 28px;
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.25s ease;
 }
 
@@ -67,13 +67,13 @@ html, body {
 }
 
 .intro-canvas-box {
-  width: 210px;
-  height: 138px;
+  width: 225px;
+  height: 145px;
   border-radius: 20px;
   overflow: hidden;
   border: 2px solid #38bdf8;
-  background: #0c4a6e;
-  box-shadow: 0 0 28px rgba(56, 189, 248, 0.3);
+  background: #050b14;
+  box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
   flex-shrink: 0;
 }
 
@@ -83,20 +83,20 @@ html, body {
   gap: 6px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  color: #fbbf24;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #7dd3fc;
   font-size: 0.84rem;
-  font-weight: 800;
+  font-weight: 900;
   margin-bottom: 8px;
 }
 
 .intro-title {
-  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 6px;
-  background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
+  background: linear-gradient(90deg, #38bdf8, #c084fc, #fbbf24);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -120,7 +120,7 @@ html, body {
 }
 
 .guide-step-card {
-  background: rgba(7, 17, 30, 0.72);
+  background: rgba(5, 11, 20, 0.72);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   padding: 13px 15px;
@@ -150,7 +150,7 @@ html, body {
 }
 
 .intro-config-box {
-  background: rgba(7, 17, 30, 0.6);
+  background: rgba(5, 11, 20, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   padding: 15px 18px;
@@ -225,8 +225,8 @@ html, body {
   border-radius: 18px;
   border: none;
   color: #ffffff;
-  background: linear-gradient(135deg, #0284c7, #06b6d4, #10b981);
-  box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.6);
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4);
+  box-shadow: 0 12px 30px -6px rgba(124, 58, 237, 0.6);
   cursor: pointer;
   transition: transform 0.18s;
 }
@@ -236,7 +236,7 @@ html, body {
 }
 
 /* ==========================================================================
-   SCREEN 2: SIDE-SCROLLING ACTION RUNNER STAGE
+   SCREEN 2: 3D THIRD-PERSON PERSPECTIVE RUNNER STAGE
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -271,7 +271,7 @@ html, body {
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn-primary { background: linear-gradient(135deg, #2563eb, #06b6d4); border-color: transparent; }
 .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
-.btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #07111e; border-color: transparent; }
+.btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #050b14; border-color: transparent; }
 
 .btn-ultimate-ready {
   background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6) !important;
@@ -312,7 +312,7 @@ html, body {
 
 /* Question Board */
 .question-board {
-  background: linear-gradient(135deg, #172554, #0f172a);
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
   border: 2px solid #38bdf8;
   border-radius: 16px;
   padding: 12px 18px;
@@ -321,7 +321,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  box-shadow: 0 8px 25px -8px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 8px 25px -8px rgba(56, 189, 248, 0.4);
 }
 
 .q-badge-pill {
@@ -343,22 +343,22 @@ html, body {
   flex: 1;
 }
 
-/* Canvas Stage Container + Screen Shake */
+/* 3D Viewport Stage Container */
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 380px;
   border-radius: 22px;
   overflow: hidden;
   border: 2px solid rgba(56, 189, 248, 0.45);
-  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 22px 50px -12px rgba(0, 0, 0, 0.85);
   margin-bottom: 12px;
-  background: #0c4a6e;
+  background: #050b14;
 }
 
 .canvas-stage-wrap.fever-glow {
   border-color: #f59e0b;
-  box-shadow: 0 0 38px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 42px rgba(245, 158, 11, 0.6);
 }
 
 .canvas-stage-wrap.shake-hit {
@@ -367,8 +367,8 @@ html, body {
 
 @keyframes heavyScreenShake {
   0%, 100% { transform: translate(0, 0); }
-  15% { transform: translate(-12px, -7px) rotate(-1deg); }
-  30% { transform: translate(11px, 6px) rotate(1deg); }
+  15% { transform: translate(-13px, -7px) rotate(-1deg); }
+  30% { transform: translate(12px, 7px) rotate(1deg); }
   45% { transform: translate(-9px, 5px); }
   60% { transform: translate(8px, -5px); }
   75% { transform: translate(-5px, 3px); }
@@ -381,66 +381,50 @@ html, body {
   cursor: pointer;
 }
 
-/* Floating HTML Formula Shields synced over the approaching Canvas Monsters */
-.canvas-gates-overlay {
+/* 3D Hologram Math Formula Shields floating above the 3D Monsters in perspective! */
+.holo-shield {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 225px;
-  pointer-events: auto;
-  z-index: 15;
-}
-
-.platform-card {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 74px;
+  width: 210px;
+  min-height: 70px;
   border-radius: 14px;
   background: rgba(15, 23, 42, 0.92);
-  border: 2.5px solid #f43f5e;
-  padding: 6px 11px;
+  border: 2.5px solid #38bdf8;
+  padding: 7px 11px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  transition: transform 0.14s, border-color 0.14s, opacity 0.2s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.25);
+  transform-origin: center bottom;
+  z-index: 15;
+  transition: border-color 0.15s, background 0.15s;
 }
 
-.platform-card:hover {
-  transform: scale(1.05);
+.holo-shield:hover {
   border-color: #fbbf24;
+  background: rgba(30, 41, 59, 0.96);
 }
 
-.platform-card.target-floor {
+.holo-shield.selected-lane {
   border-color: #fbbf24;
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.65);
 }
 
-.platform-card.plat-correct {
+.holo-shield.shield-correct {
   border-color: #10b981 !important;
   background: rgba(6, 95, 70, 0.95) !important;
-  opacity: 0;
-  transform: translate(120px, -60px) rotate(35deg) scale(0.5);
-  transition: all 0.35s ease;
 }
 
-.platform-card.plat-wrong {
+.holo-shield.shield-wrong {
   border-color: #f43f5e !important;
   background: rgba(136, 19, 55, 0.95) !important;
 }
-
-/* Floor heights matching Canvas Y coordinates */
-.platform-card.floor-0 { top: 20px; }
-.platform-card.floor-1 { top: 128px; }
-.platform-card.floor-2 { top: 236px; }
 
 /* Crash Explanation Overlay */
 .crash-tip-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(7, 17, 30, 0.88);
+  background: rgba(5, 11, 20, 0.9);
   backdrop-filter: blur(6px);
   z-index: 40;
   display: none;
@@ -453,11 +437,11 @@ html, body {
 
 .crash-tip-overlay.active { display: flex; }
 
-/* Bottom Attack Controls */
+/* Bottom Left / Center / Right 3D Lane Attack Buttons */
 .controls-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 @media (max-width: 640px) {
@@ -468,7 +452,7 @@ html, body {
   padding: 13px 15px;
   border-radius: 15px;
   background: var(--bg-panel);
-  border: 2px solid rgba(244, 63, 94, 0.45);
+  border: 2px solid rgba(56, 189, 248, 0.45);
   color: var(--text-main);
   display: flex;
   align-items: center;
@@ -479,7 +463,7 @@ html, body {
 }
 
 .jump-ctrl-btn:hover {
-  background: rgba(244, 63, 94, 0.18);
+  background: rgba(56, 189, 248, 0.18);
   border-color: #fbbf24;
   transform: translateY(-2px);
 }
@@ -487,8 +471,8 @@ html, body {
 .ctrl-lane-badge {
   padding: 4px 9px;
   border-radius: 8px;
-  background: rgba(244, 63, 94, 0.22);
-  color: #fda4af;
+  background: rgba(56, 189, 248, 0.22);
+  color: #7dd3fc;
   font-size: 0.8rem;
   font-weight: 900;
   white-space: nowrap;
@@ -527,7 +511,7 @@ html, body {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(7, 11, 20, 0.85);
+  background: rgba(5, 11, 20, 0.85);
   backdrop-filter: blur(6px);
   display: none;
   align-items: center;
@@ -544,7 +528,7 @@ html, body {
   width: 100%;
   padding: 26px;
   text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
   max-height: 90vh;
   overflow-y: auto;
 }
