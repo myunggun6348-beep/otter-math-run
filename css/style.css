@@ -1,5 +1,5 @@
 /* ==========================================================================
-   수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 캔버스 수달 달리기 & 점프 런게임 스타일
+   수달런 (OTTER MATH RUN) - 몬스터 격파 & 워터캐논/부메랑 필살기 액션 스타일
    ========================================================================== */
 :root {
   --bg-dark: #07111e;
@@ -42,7 +42,7 @@ html, body {
    SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
    ========================================================================== */
 .intro-screen {
-  max-width: 880px;
+  max-width: 890px;
   margin: 8px auto;
   background: var(--bg-panel);
   border: 1px solid rgba(56, 189, 248, 0.38);
@@ -67,8 +67,8 @@ html, body {
 }
 
 .intro-canvas-box {
-  width: 190px;
-  height: 135px;
+  width: 210px;
+  height: 138px;
   border-radius: 20px;
   overflow: hidden;
   border: 2px solid #38bdf8;
@@ -83,9 +83,9 @@ html, body {
   gap: 6px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.16);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  color: #38bdf8;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
   font-size: 0.84rem;
   font-weight: 800;
   margin-bottom: 8px;
@@ -236,7 +236,7 @@ html, body {
 }
 
 /* ==========================================================================
-   SCREEN 2: SIDE-SCROLLING CANVAS RUNNER STAGE
+   SCREEN 2: SIDE-SCROLLING ACTION RUNNER STAGE
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -268,9 +268,23 @@ html, body {
 }
 
 .btn:hover { background: rgba(255, 255, 255, 0.14); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn-primary { background: linear-gradient(135deg, #2563eb, #06b6d4); border-color: transparent; }
 .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
 .btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #07111e; border-color: transparent; }
+
+.btn-ultimate-ready {
+  background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6) !important;
+  color: #ffffff !important;
+  border-color: #fde68a !important;
+  box-shadow: 0 0 22px rgba(236, 72, 153, 0.75);
+  animation: pulseUlt 0.55s infinite alternate;
+}
+
+@keyframes pulseUlt {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
 
 .hud-bar {
   display: grid;
@@ -313,8 +327,9 @@ html, body {
 .q-badge-pill {
   padding: 4px 11px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.22);
-  color: #7dd3fc;
+  background: rgba(244, 63, 94, 0.25);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  color: #fda4af;
   font-size: 0.76rem;
   font-weight: 900;
   white-space: nowrap;
@@ -328,7 +343,7 @@ html, body {
   flex: 1;
 }
 
-/* Canvas Stage Container */
+/* Canvas Stage Container + Screen Shake */
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
@@ -346,6 +361,19 @@ html, body {
   box-shadow: 0 0 38px rgba(245, 158, 11, 0.55);
 }
 
+.canvas-stage-wrap.shake-hit {
+  animation: heavyScreenShake 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes heavyScreenShake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-12px, -7px) rotate(-1deg); }
+  30% { transform: translate(11px, 6px) rotate(1deg); }
+  45% { transform: translate(-9px, 5px); }
+  60% { transform: translate(8px, -5px); }
+  75% { transform: translate(-5px, 3px); }
+}
+
 #runner-canvas {
   width: 100%;
   height: 100%;
@@ -353,12 +381,12 @@ html, body {
   cursor: pointer;
 }
 
-/* Floating HTML Formula Labels synced over the approaching Canvas Platforms */
+/* Floating HTML Formula Shields synced over the approaching Canvas Monsters */
 .canvas-gates-overlay {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 245px;
+  width: 225px;
   pointer-events: auto;
   z-index: 15;
 }
@@ -367,32 +395,35 @@ html, body {
   position: absolute;
   left: 0;
   right: 0;
-  height: 76px;
+  height: 74px;
   border-radius: 14px;
   background: rgba(15, 23, 42, 0.92);
-  border: 2.5px solid #38bdf8;
-  padding: 7px 12px;
+  border: 2.5px solid #f43f5e;
+  padding: 6px 11px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
-  transition: transform 0.14s, border-color 0.14s;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  transition: transform 0.14s, border-color 0.14s, opacity 0.2s;
 }
 
 .platform-card:hover {
-  transform: scale(1.04);
+  transform: scale(1.05);
   border-color: #fbbf24;
 }
 
 .platform-card.target-floor {
   border-color: #fbbf24;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.6);
 }
 
 .platform-card.plat-correct {
   border-color: #10b981 !important;
   background: rgba(6, 95, 70, 0.95) !important;
+  opacity: 0;
+  transform: translate(120px, -60px) rotate(35deg) scale(0.5);
+  transition: all 0.35s ease;
 }
 
 .platform-card.plat-wrong {
@@ -400,10 +431,10 @@ html, body {
   background: rgba(136, 19, 55, 0.95) !important;
 }
 
-/* Floor heights matching Canvas Y coordinates (3층 하늘 / 2층 다리 / 1층 강변) */
-.platform-card.floor-0 { top: 24px; }
-.platform-card.floor-1 { top: 132px; }
-.platform-card.floor-2 { top: 240px; }
+/* Floor heights matching Canvas Y coordinates */
+.platform-card.floor-0 { top: 20px; }
+.platform-card.floor-1 { top: 128px; }
+.platform-card.floor-2 { top: 236px; }
 
 /* Crash Explanation Overlay */
 .crash-tip-overlay {
@@ -422,7 +453,7 @@ html, body {
 
 .crash-tip-overlay.active { display: flex; }
 
-/* Bottom Jump Controls */
+/* Bottom Attack Controls */
 .controls-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -437,7 +468,7 @@ html, body {
   padding: 13px 15px;
   border-radius: 15px;
   background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.4);
+  border: 2px solid rgba(244, 63, 94, 0.45);
   color: var(--text-main);
   display: flex;
   align-items: center;
@@ -448,16 +479,16 @@ html, body {
 }
 
 .jump-ctrl-btn:hover {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: #38bdf8;
+  background: rgba(244, 63, 94, 0.18);
+  border-color: #fbbf24;
   transform: translateY(-2px);
 }
 
 .ctrl-lane-badge {
   padding: 4px 9px;
   border-radius: 8px;
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
+  background: rgba(244, 63, 94, 0.22);
+  color: #fda4af;
   font-size: 0.8rem;
   font-weight: 900;
   white-space: nowrap;

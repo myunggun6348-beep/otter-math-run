@@ -1,5 +1,5 @@
 /**
- * 수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 캔버스에서 네 발로 직접 달리고 점프하는 고1 수학 런게임
+ * 수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 몬스터 격파 & 워터캐논/부메랑 필살기 액션 런게임
  */
 (function (global) {
   const SPEED_MAP = {
@@ -8,7 +8,7 @@
     fast: 4500
   };
 
-  // Floor Y coordinates on the 960x360 canvas (where the otter's feet land)
+  // Floor Y coordinates on the 960x360 canvas
   const FLOOR_Y = [92, 200, 308];
 
   const state = {
@@ -21,30 +21,37 @@
     // Intro preview animation
     introRafId: null,
     introPhase: 0,
-    introOtterY: 102,
-    introOtterVy: 0,
+    introProjX: -1,
+    introMonX: 165,
+    introMonFlyY: 0,
+    introMonRot: 0,
 
     // Active run state
     running: false,
     pausedForCrash: false,
     isDashing: false,
-    targetFloor: 2, // 0 (3층 구름), 1 (2층 다리), 2 (1층 강변 바닥)
+    targetFloor: 2, // 0 (3층 박쥐), 1 (2층 고블린), 2 (1층 슬라임)
 
     // Physical Otter coordinates & physics on the 960x360 canvas
-    otterX: 145,
-    otterBaseX: 145,
+    otterX: 140,
+    otterBaseX: 140,
     otterY: FLOOR_Y[2],
     otterVy: 0,
     otterGravity: 0.62,
     otterJumpCount: 0,
-    otterSpin: 0,     // radians for 360° backflip celebration
-    otterPhase: 0,    // leg running cycle phase
-    otterMood: 'run', // 'run' | 'happy' | 'hurt'
+    otterSpin: 0,
+    otterPhase: 0,
+    otterMood: 'run',
 
-    // World scroll & particles
+    // Action FX arrays on Canvas
     scrollX: 0,
-    dustParticles: [], // footstep puffs & celebration stars
-    coins: [],         // collectible floating seashells & fish
+    dustParticles: [],
+    projectiles: [],     // [{ x, y, targetY, skin, rot }]
+    flyingMonsters: [],  // [{ x, y, vx, vy, rot, vRot, floorType }]
+    slashEffects: [],    // [{ x, y, radius, life, color }]
+    floatingTexts: [],   // [{ x, y, text, subText, color, life }]
+    ultBeamLife: 0,      // > 0 when firing Mega Water Breath Ultimate!
+    coins: [],
     lastCoinSpawn: 0,
 
     // Game stats
@@ -52,6 +59,7 @@
     maxHearts: 5,
     hasShield: false,
     freeShieldUsed: false,
+    ultGauge: 0, // 0..100%
     distance: 0,
     score: 0,
     combo: 0,
@@ -59,11 +67,12 @@
     gateCount: 0,
     targetGates: 10,
 
-    // Current Math Gate state
+    // Current Math Monster Wave state
     questionPool: [],
     currentQ: null,
     gateOptions: [],
-    gateX: 740, // Canvas X coordinate of approaching 3-story platforms (960 -> otterX)
+    monstersAlive: [true, true, true],
+    gateX: 740,
     history: [],
 
     lastFrameTime: 0,
@@ -75,7 +84,7 @@
   };
 
   // =========================================================================
-  // 60FPS ARTICULATED RUNNING OTTER RENDERER (Side-Profile with Swinging Legs!)
+  // 1. ARTICULATED RUNNING OTTER RENDERER (Side-Profile with Swinging Legs)
   // =========================================================================
   function drawArticulatedOtter(ctx, x, y, phase, opts = {}) {
     const skin = opts.skin || 'basic';
@@ -93,7 +102,6 @@
       ctx.rotate(spin);
     }
 
-    // Running leg swing angles
     const legAngle = airborne ? 0.55 : Math.sin(phase) * 0.65;
     const bodyBounce = airborne ? 0 : Math.abs(Math.sin(phase)) * -4.5;
     const bodyTilt = airborne ? -0.14 : Math.cos(phase) * 0.06;
@@ -101,7 +109,7 @@
     ctx.translate(0, bodyBounce);
     ctx.rotate(bodyTilt);
 
-    // 1. Surfboard (if surfer skin or 5+ combo FEVER)
+    // Surfboard
     if (skin === 'surfer' || fever) {
       ctx.save();
       ctx.beginPath();
@@ -114,7 +122,7 @@
       ctx.restore();
     }
 
-    // 2. Fluttering Cape (if King skin)
+    // Fluttering Cape
     if (skin === 'king') {
       ctx.save();
       const wave = Math.sin(phase * 1.4) * 5;
@@ -131,7 +139,7 @@
       ctx.restore();
     }
 
-    // 3. Wagging Otter Tail (extends to the left)
+    // Wagging Tail
     ctx.save();
     const tailWag = Math.sin(phase * 1.1) * 0.22;
     ctx.translate(-22, 6);
@@ -148,11 +156,11 @@
     ctx.stroke();
     ctx.restore();
 
-    // 4. Far Hind Leg & Far Front Leg (Darker brown, behind torso)
+    // Far legs
     drawLimb(ctx, -14, 13, -legAngle, '#6b3e1a');
     drawLimb(ctx, 14, 13, legAngle, '#6b3e1a');
 
-    // 5. Plump Side-Profile Otter Torso
+    // Torso
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(0, 4, 26, 15, -0.05, 0, Math.PI * 2);
@@ -162,37 +170,35 @@
     ctx.strokeStyle = '#4a290e';
     ctx.stroke();
 
-    // Soft Cream Underbelly
     ctx.beginPath();
     ctx.ellipse(3, 9, 20, 9, -0.05, 0, Math.PI);
     ctx.fillStyle = '#fde6c4';
     ctx.fill();
     ctx.restore();
 
-    // 6. Near Hind Leg & Near Front Leg (Alternating stride!)
+    // Near legs
     drawLimb(ctx, -12, 14, legAngle, '#8b5428');
     drawLimb(ctx, 16, 14, -legAngle, '#8b5428');
 
-    // 7. Golden Seashell held at chest
+    // Golden Seashell Weapon at chest
     ctx.save();
-    ctx.translate(10, 4);
+    ctx.translate(12, 4);
     ctx.beginPath();
-    ctx.arc(0, 0, 7, Math.PI, 0);
-    ctx.lineTo(4, 6);
-    ctx.lineTo(-4, 6);
+    ctx.arc(0, 0, 7.5, Math.PI, 0);
+    ctx.lineTo(4.5, 6.5);
+    ctx.lineTo(-4.5, 6.5);
     ctx.closePath();
     ctx.fillStyle = '#fbbf24';
     ctx.fill();
-    ctx.lineWidth = 1.4;
+    ctx.lineWidth = 1.5;
     ctx.strokeStyle = '#b45309';
     ctx.stroke();
     ctx.restore();
 
-    // 8. Cute Side-Profile Otter Head (Facing Right)
+    // Head
     ctx.save();
     ctx.translate(22, -10);
 
-    // Back Ear
     ctx.beginPath();
     ctx.arc(-8, -12, 5.5, 0, Math.PI * 2);
     ctx.fillStyle = '#7c4a21';
@@ -201,7 +207,6 @@
     ctx.lineWidth = 1.8;
     ctx.stroke();
 
-    // Main Head Sphere
     ctx.beginPath();
     ctx.ellipse(0, 0, 17, 14.5, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#9a6232';
@@ -210,42 +215,27 @@
     ctx.strokeStyle = '#4a290e';
     ctx.stroke();
 
-    // Chubby Cream Snout / Muzzle on Right
     ctx.beginPath();
     ctx.ellipse(11, 3, 9.5, 7.5, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#fef3c7';
     ctx.fill();
 
-    // Rosy Pink Cheek Blush
     ctx.beginPath();
     ctx.ellipse(3, 5, 4.2, 2.8, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#fb7185';
     ctx.fill();
 
-    // Cute Dark Nose Tip
     ctx.beginPath();
     ctx.ellipse(18, 0, 3.2, 2.4, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#1e293b';
     ctx.fill();
 
-    // Smile mouth
     ctx.beginPath();
     ctx.arc(13, 4, 3.5, 0.2, Math.PI * 0.85);
     ctx.strokeStyle = '#4a290e';
     ctx.lineWidth = 1.8;
     ctx.stroke();
 
-    // Whiskers
-    ctx.beginPath();
-    ctx.moveTo(12, 3);
-    ctx.lineTo(22, 1);
-    ctx.moveTo(12, 5);
-    ctx.lineTo(22, 6);
-    ctx.strokeStyle = '#5c3415';
-    ctx.lineWidth = 1.3;
-    ctx.stroke();
-
-    // Expressive Eye
     if (mood === 'happy') {
       ctx.beginPath();
       ctx.arc(6, -3, 4, Math.PI * 1.1, Math.PI * 1.9);
@@ -272,15 +262,12 @@
       ctx.fill();
     }
 
-    // Skin Headwear & Glasses
     if (skin === 'scholar') {
-      // Red Glasses
       ctx.beginPath();
       ctx.arc(6, -3, 6.2, 0, Math.PI * 2);
       ctx.strokeStyle = '#ef4444';
       ctx.lineWidth = 2;
       ctx.stroke();
-      // Mortarboard Graduation Cap
       ctx.fillStyle = '#1e293b';
       ctx.beginPath();
       ctx.moveTo(-15, -14);
@@ -293,14 +280,12 @@
       ctx.lineWidth = 1.4;
       ctx.stroke();
     } else if (skin === 'surfer') {
-      // Cool Sunglasses
       ctx.fillStyle = '#0284c7';
       ctx.fillRect(1, -7, 11, 7);
       ctx.strokeStyle = '#e0f2fe';
       ctx.lineWidth = 1.4;
       ctx.strokeRect(1, -7, 11, 7);
     } else if (skin === 'king') {
-      // Golden Crown
       ctx.beginPath();
       ctx.moveTo(-9, -12);
       ctx.lineTo(-7, -23);
@@ -317,9 +302,8 @@
       ctx.stroke();
     }
 
-    ctx.restore(); // End Head
+    ctx.restore();
 
-    // 9. Protective Water Bubble Shield
     if (shielded) {
       ctx.beginPath();
       ctx.arc(4, 0, 44, 0, Math.PI * 2);
@@ -346,7 +330,6 @@
     ctx.lineWidth = 1.6;
     ctx.strokeStyle = '#4a290e';
     ctx.stroke();
-    // Little web paw at bottom
     ctx.beginPath();
     ctx.ellipse(2, 14, 5.5, 3.2, 0, 0, Math.PI * 2);
     ctx.fillStyle = color;
@@ -356,7 +339,144 @@
   }
 
   // =========================================================================
-  // INTRO MINI CANVAS LOOP (Shows the Otter running & jumping on First Screen!)
+  // 2. ANIMATED 3-FLOOR MONSTERS & PROJECTILES RENDERER
+  // =========================================================================
+  function drawMonsterOnCanvas(ctx, x, y, floorType, phase, isKnockedOut = false, rot = 0) {
+    ctx.save();
+    ctx.translate(x, y - 28);
+    if (rot !== 0) ctx.rotate(rot);
+
+    const bob = isKnockedOut ? 0 : Math.sin(phase * 1.4 + floorType) * 5;
+    ctx.translate(0, bob);
+
+    if (floorType === 0) {
+      // 3층: 🦇 허수 박쥐 (Purple Bat Monster)
+      const wingFlap = isKnockedOut ? 0.5 : Math.sin(phase * 2.4) * 14;
+      ctx.fillStyle = '#6d28d9';
+      ctx.strokeStyle = '#c4b5fd';
+      ctx.lineWidth = 2;
+      // Left & Right Bat Wings
+      ctx.beginPath();
+      ctx.moveTo(-10, 0);
+      ctx.quadraticCurveTo(-34, -18 + wingFlap, -38, 8 + wingFlap);
+      ctx.quadraticCurveTo(-22, 10, -10, 8);
+      ctx.moveTo(10, 0);
+      ctx.quadraticCurveTo(34, -18 + wingFlap, 38, 8 + wingFlap);
+      ctx.quadraticCurveTo(22, 10, 10, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Bat Body
+      ctx.beginPath();
+      ctx.arc(0, 2, 18, 0, Math.PI * 2);
+      ctx.fillStyle = '#4c1d95';
+      ctx.fill();
+      ctx.stroke();
+    } else if (floorType === 1) {
+      // 2층: 👹 판별식 고블린 (Horned Bridge Goblin)
+      // Horns
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.moveTo(-14, -12);
+      ctx.lineTo(-22, -28);
+      ctx.lineTo(-6, -18);
+      ctx.moveTo(14, -12);
+      ctx.lineTo(22, -28);
+      ctx.lineTo(6, -18);
+      ctx.fill();
+
+      // Goblin Body
+      ctx.beginPath();
+      ctx.roundRect(-20, -18, 40, 38, 12);
+      ctx.fillStyle = '#be123c';
+      ctx.fill();
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = '#fda4af';
+      ctx.stroke();
+    } else {
+      // 1층: 👾 다항식 가시 슬라임 (Spiky River Slime)
+      const squish = isKnockedOut ? 0 : Math.sin(phase * 1.8) * 2.5;
+      ctx.beginPath();
+      ctx.arc(0, 4 + squish, 22, Math.PI, 0);
+      ctx.lineTo(22, 22);
+      ctx.lineTo(-22, 22);
+      ctx.closePath();
+      ctx.fillStyle = '#15803d';
+      ctx.fill();
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = '#86efac';
+      ctx.stroke();
+    }
+
+    // Monster Eyes (Angry vs Knocked-Out X_X)
+    if (isKnockedOut) {
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(-11, -5); ctx.lineTo(-4, 2);
+      ctx.moveTo(-4, -5); ctx.lineTo(-11, 2);
+      ctx.moveTo(4, -5); ctx.lineTo(11, 2);
+      ctx.moveTo(11, -5); ctx.lineTo(4, 2);
+      ctx.stroke();
+    } else {
+      // Glowing menacing eyes facing left toward the otter
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(-8, -2, 4.5, 0, Math.PI * 2);
+      ctx.arc(6, -2, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.arc(-9, -2, 2, 0, Math.PI * 2);
+      ctx.arc(5, -2, 2, 0, Math.PI * 2);
+      ctx.fill();
+      // Angry Eyebrows
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(-14, -9); ctx.lineTo(-3, -5);
+      ctx.moveTo(12, -9); ctx.lineTo(1, -5);
+      ctx.stroke();
+      // Fangs
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(-8, 8); ctx.lineTo(-5, 14); ctx.lineTo(-2, 8);
+      ctx.moveTo(2, 8); ctx.lineTo(5, 14); ctx.lineTo(8, 8);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawProjectile(ctx, p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+
+    // Water Laser Trail behind projectile
+    const grad = ctx.createLinearGradient(-75, 0, 10, 0);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.5, p.skin === 'king' ? 'rgba(244, 63, 94, 0.7)' : 'rgba(56, 189, 248, 0.75)');
+    grad.addColorStop(1, '#ffffff');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(-75, -7, 85, 14, 7);
+    ctx.fill();
+
+    // Spinning Golden Shell Boomerang / Energy Orb
+    ctx.rotate(p.rot);
+    ctx.beginPath();
+    ctx.arc(0, 0, 13, 0, Math.PI * 2);
+    ctx.fillStyle = '#fbbf24';
+    ctx.fill();
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // =========================================================================
+  // INTRO MINI CANVAS LOOP (Shows Otter shooting & blasting a monster!)
   // =========================================================================
   function startIntroPreviewLoop() {
     if (state.introRafId) cancelAnimationFrame(state.introRafId);
@@ -364,43 +484,69 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
+    let monAlive = true;
+    let monVx = 0, monVy = 0;
+
     function frame() {
       if (state.screen !== 'intro') return;
       state.introPhase += 0.24;
 
-      // Occasional cute automatic hop
-      if (state.introOtterY >= 104 && Math.random() < 0.018) {
-        state.introOtterVy = -6.8;
-      }
-      state.introOtterY += state.introOtterVy;
-      state.introOtterVy += 0.42;
-      if (state.introOtterY >= 104) {
-        state.introOtterY = 104;
-        state.introOtterVy = 0;
+      // Every ~110 frames, fire a projectile at the demo monster!
+      const cycle = Math.floor(state.introPhase * 4) % 120;
+      if (cycle === 15) {
+        state.introProjX = 80;
+        monAlive = true;
+        state.introMonX = 172;
+        state.introMonFlyY = 104;
+        state.introMonRot = 0;
       }
 
-      // Draw mini background
-      const grad = ctx.createLinearGradient(0, 0, 0, 135);
+      if (state.introProjX > 0) {
+        state.introProjX += 9;
+        if (state.introProjX >= state.introMonX - 12 && monAlive) {
+          monAlive = false;
+          state.introProjX = -1;
+          monVx = 6.5;
+          monVy = -6.5;
+        }
+      }
+
+      if (!monAlive) {
+        state.introMonX += monVx;
+        state.introMonFlyY += monVy;
+        monVy += 0.35;
+        state.introMonRot += 0.32;
+      }
+
+      const grad = ctx.createLinearGradient(0, 0, 0, 138);
       grad.addColorStop(0, '#0c4a6e');
       grad.addColorStop(0.75, '#0284c7');
       grad.addColorStop(0.76, '#10b981');
       grad.addColorStop(1, '#047857');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 190, 135);
+      ctx.fillRect(0, 0, 210, 138);
 
-      // Scrolling ground dashes
       ctx.fillStyle = 'rgba(255,255,255,0.25)';
       const offset = (state.introPhase * 12) % 40;
-      for (let x = -offset; x < 190; x += 40) {
-        ctx.fillRect(x, 112, 22, 4);
+      for (let x = -offset; x < 210; x += 40) {
+        ctx.fillRect(x, 114, 22, 4);
+      }
+
+      // Draw Demo Monster
+      if (state.introMonX < 245) {
+        drawMonsterOnCanvas(ctx, state.introMonX, state.introMonFlyY, 2, state.introPhase, !monAlive, state.introMonRot);
+      }
+
+      // Draw Projectile
+      if (state.introProjX > 0) {
+        drawProjectile(ctx, { x: state.introProjX, y: 84, rot: state.introPhase * 2, skin: state.skin });
       }
 
       // Draw Running Otter
-      drawArticulatedOtter(ctx, 88, state.introOtterY, state.introPhase, {
+      drawArticulatedOtter(ctx, 64, 106, state.introPhase, {
         skin: state.skin,
-        mood: state.introOtterY < 100 ? 'happy' : 'run',
-        airborne: state.introOtterY < 102,
-        scale: 0.92
+        mood: !monAlive ? 'happy' : 'run',
+        scale: 0.86
       });
 
       state.introRafId = requestAnimationFrame(frame);
@@ -506,7 +652,7 @@
   }
 
   // =========================================================================
-  // MAIN SIDE-SCROLLING RUNNER GAMEPLAY
+  // MAIN ACTION RUNNER GAMEPLAY
   // =========================================================================
   function shuffle(arr) {
     const a = arr.slice();
@@ -544,7 +690,7 @@
     state.running = true;
     state.pausedForCrash = false;
     state.isDashing = false;
-    state.targetFloor = 2; // Start running on 1층 ground river bridge
+    state.targetFloor = 2;
     state.otterX = state.otterBaseX;
     state.otterY = FLOOR_Y[2];
     state.otterVy = 0;
@@ -555,10 +701,17 @@
 
     state.scrollX = 0;
     state.dustParticles = [];
+    state.projectiles = [];
+    state.flyingMonsters = [];
+    state.slashEffects = [];
+    state.floatingTexts = [];
+    state.ultBeamLife = 0;
     state.coins = [];
+
     state.hearts = 5;
     state.hasShield = false;
     state.freeShieldUsed = false;
+    state.ultGauge = 35; // Start with 35% charge so players get their first Ultimate after 2 hits!
     state.distance = 0;
     state.score = 0;
     state.combo = 0;
@@ -588,14 +741,35 @@
     }
   }
 
+  function triggerScreenShake() {
+    const wrap = document.getElementById('canvas-stage-wrap');
+    if (!wrap) return;
+    wrap.classList.remove('shake-hit');
+    void wrap.offsetWidth; // trigger reflow
+    wrap.classList.add('shake-hit');
+  }
+
   function updateHudUI() {
     const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
     const shieldStr = state.hasShield ? ' 🛡️' : '';
     document.getElementById('hud-hearts').textContent = heartStr + shieldStr;
-    document.getElementById('hud-distance').textContent = `${Math.floor(state.distance)} m`;
+    document.getElementById('hud-ult').textContent = `${Math.min(100, Math.floor(state.ultGauge))}%`;
     document.getElementById('hud-score').textContent = `${state.score.toLocaleString()}점`;
     document.getElementById('hud-combo').textContent =
       state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `${state.combo} COMBO`;
+
+    const ultBtn = document.getElementById('btn-ultimate');
+    if (ultBtn) {
+      if (state.ultGauge >= 100) {
+        ultBtn.disabled = false;
+        ultBtn.className = 'btn btn-ultimate-ready';
+        ultBtn.textContent = '🔥 메가 워터캐논 발사! (100%)';
+      } else {
+        ultBtn.disabled = true;
+        ultBtn.className = 'btn';
+        ultBtn.textContent = `⚡ 필살기 충전 (${Math.floor(state.ultGauge)}%)`;
+      }
+    }
 
     const wrap = document.getElementById('canvas-stage-wrap');
     if (wrap) wrap.classList.toggle('fever-glow', state.combo >= 5);
@@ -616,7 +790,9 @@
     state.isDashing = false;
     state.otterMood = 'run';
     state.otterSpin = 0;
-    state.gateX = 760; // Starts on the right side of the 960px canvas
+    state.gateX = 760;
+    state.monstersAlive = [true, true, true];
+    state.projectiles = [];
 
     const bonusPool = shuffle(['star', 'heart', 'shield', 'none', 'none']);
     state.gateOptions = shuffle([
@@ -625,12 +801,12 @@
       { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
     ]);
 
-    document.getElementById('q-gate-num').textContent = `GATE #${state.gateCount} / ${state.targetGates}`;
+    document.getElementById('q-gate-num').textContent = `WAVE #${state.gateCount} / ${state.targetGates}`;
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
-      const floorName = idx === 0 ? '🔼 3층 구름 발판' : idx === 1 ? '➡️ 2층 다리 발판' : '🔽 1층 강변 발판';
+      const monName = idx === 0 ? '🦇 3층 하늘 박쥐' : idx === 1 ? '👹 2층 다리 고블린' : '👾 1층 강변 슬라임';
       let bonusHtml = '';
       if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
       else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
@@ -639,8 +815,8 @@
       if (cardEl) {
         cardEl.className = `platform-card floor-${idx} ${idx === state.targetFloor ? 'target-floor' : ''}`;
         cardEl.innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:900;color:#93c5fd;">
-            <span>${floorName}</span>
+          <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:900;color:#fda4af;">
+            <span>${monName}</span>
             ${bonusHtml}
           </div>
           <div style="font-size:1.02rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
@@ -654,29 +830,33 @@
     });
   }
 
-  // Player clicks a platform or presses 1/2/3 -> Otter physically jumps in a parabolic arc to that floor AND sprints forward!
+  // Player clicks a monster floor -> Otter jumps to that floor AND fires Boomerang + Water Cannon!
   function jumpToFloorAndDash(floorIdx) {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
-    KkachiSound.click();
+    KkachiSound.shoot();
 
     state.targetFloor = floorIdx;
     state.isDashing = true;
 
-    // Launch parabolic jump arc toward the target floor height
     const targetY = FLOOR_Y[floorIdx];
     const dy = targetY - state.otterY;
     if (dy < -10) {
-      // Jumping UP to 2층 or 3층 platform
       state.otterVy = dy < -120 ? -14.8 : -11.2;
     } else if (dy > 10) {
-      // Diving DOWN to lower platform
       state.otterVy = -4.5;
     } else {
-      // Hop on current floor
       state.otterVy = -7.5;
     }
 
-    // Spawn burst of water/dust jump particles under otter's feet
+    // Fire Golden Boomerang & Water Laser toward the target monster!
+    state.projectiles.push({
+      x: state.otterX + 35,
+      y: state.otterY - 24,
+      targetY: targetY - 26,
+      skin: state.skin,
+      rot: 0
+    });
+
     for (let i = 0; i < 8; i++) {
       state.dustParticles.push({
         x: state.otterX,
@@ -684,7 +864,7 @@
         vx: -2 - Math.random() * 4,
         vy: -1 - Math.random() * 3,
         size: 4 + Math.random() * 5,
-        color: '#bae6fd',
+        color: '#38bdf8',
         life: 1
       });
     }
@@ -695,24 +875,75 @@
     });
   }
 
-  // Free jump when clicking the canvas track (to collect coins or hop while thinking)
+  // MEGA WATER BREATH ULTIMATE SKILL (Blasts ALL 3 Monsters simultaneously!)
+  function fireUltimateSkill() {
+    if (!state.running || state.pausedForCrash || state.ultGauge < 100) return;
+    state.ultGauge = 0;
+    state.pausedForCrash = true;
+    state.ultBeamLife = 1.0;
+    KkachiSound.ultimate();
+    triggerScreenShake();
+
+    // Blast all 3 monsters off the screen!
+    [0, 1, 2].forEach((fl) => {
+      state.monstersAlive[fl] = false;
+      const cardEl = document.getElementById(`plat-card-${fl}`);
+      if (cardEl) cardEl.classList.add('plat-correct');
+
+      state.flyingMonsters.push({
+        x: state.gateX - 36,
+        y: FLOOR_Y[fl],
+        vx: 16 + Math.random() * 6,
+        vy: -11 - Math.random() * 5,
+        rot: 0,
+        vRot: 0.42,
+        floorType: fl
+      });
+
+      state.slashEffects.push({
+        x: state.gateX - 30,
+        y: FLOOR_Y[fl] - 26,
+        radius: 52,
+        life: 1.0,
+        color: '#f59e0b'
+      });
+    });
+
+    state.floatingTexts.push({
+      x: 480,
+      y: 160,
+      text: '🌈 MEGA WATER BREATH!! 99,999 DMG!',
+      subText: '3층 몬스터 전원 일격 소멸! (+500점)',
+      color: '#fde68a',
+      life: 1.5
+    });
+
+    state.combo += 1;
+    if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+    state.score += 500;
+    state.otterMood = 'happy';
+    state.otterSpin = Math.PI * 2;
+
+    state.history.push({
+      q: state.currentQ.q,
+      ans: state.currentQ.ans,
+      tip: state.currentQ.tip,
+      passed: true
+    });
+
+    updateHudUI();
+    setTimeout(() => {
+      state.pausedForCrash = false;
+      spawnNextGate();
+    }, 850);
+  }
+
   function freeHop() {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
     if (state.otterJumpCount < 2) {
       KkachiSound.click();
       state.otterVy = -10.5;
       state.otterJumpCount += 1;
-      for (let i = 0; i < 5; i++) {
-        state.dustParticles.push({
-          x: state.otterX - 10,
-          y: state.otterY,
-          vx: -2 - Math.random() * 3,
-          vy: -Math.random() * 2,
-          size: 4 + Math.random() * 4,
-          color: '#e0f2fe',
-          life: 1
-        });
-      }
     }
   }
 
@@ -730,7 +961,7 @@
   }
 
   // =========================================================================
-  // 60FPS MAIN GAME LOOP & SIDE-SCROLLING WORLD RENDERER
+  // 60FPS MAIN GAME LOOP & ACTION FX ENGINE
   // =========================================================================
   function gameLoop(now) {
     if (!state.running) return;
@@ -741,9 +972,57 @@
     if (!state.pausedForCrash) {
       updatePhysics(now, dt, dtSec);
     }
-
+    updateActionFX(dtSec);
     renderCanvasWorld();
     state.rafId = requestAnimationFrame(gameLoop);
+  }
+
+  function updateActionFX(dtSec) {
+    // Update flying ragdoll monsters blasted off screen
+    state.flyingMonsters = state.flyingMonsters.filter((m) => {
+      m.x += m.vx;
+      m.y += m.vy;
+      m.vy += 0.45;
+      m.rot += m.vRot;
+      // Trail smoke particles behind flying monster
+      if (Math.random() < 0.6) {
+        state.dustParticles.push({
+          x: m.x,
+          y: m.y - 20,
+          vx: -2,
+          vy: -1,
+          size: 6,
+          color: 'rgba(251, 191, 36, 0.75)',
+          life: 0.7
+        });
+      }
+      return m.x < 1050 && m.y < 450;
+    });
+
+    // Update slash bursts
+    state.slashEffects = state.slashEffects.filter((s) => {
+      s.life -= dtSec * 2.6;
+      return s.life > 0;
+    });
+
+    // Update floating CRITICAL damage texts
+    state.floatingTexts = state.floatingTexts.filter((ft) => {
+      ft.y -= 42 * dtSec;
+      ft.life -= dtSec * 1.1;
+      return ft.life > 0;
+    });
+
+    if (state.ultBeamLife > 0) {
+      state.ultBeamLife = Math.max(0, state.ultBeamLife - dtSec * 1.6);
+    }
+
+    // Update dust & explosion particles
+    state.dustParticles = state.dustParticles.filter((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= dtSec * 1.9;
+      return p.life > 0;
+    });
   }
 
   function updatePhysics(now, dt, dtSec) {
@@ -751,14 +1030,10 @@
     const dashMult = state.isDashing ? 4.2 : 1;
     const worldSpeed = 240 * feverMult * dashMult;
 
-    // 1. Advance scrolling background & running distance
     state.scrollX += worldSpeed * dtSec;
     state.distance += 15 * feverMult * dashMult * dtSec;
-
-    // 2. Advance Otter's leg running cycle phase
     state.otterPhase += dtSec * (state.isDashing ? 26 : 15) * feverMult;
 
-    // Spawn footstep dust/splash puffs while running on ground
     const targetGroundY = FLOOR_Y[state.targetFloor];
     const onGround = Math.abs(state.otterY - targetGroundY) < 4 && state.otterVy >= 0;
     if (onGround && Math.random() < 0.35) {
@@ -773,21 +1048,16 @@
       });
     }
 
-    // 3. Otter vertical jump & platform landing physics
     state.otterY += state.otterVy;
     state.otterVy += state.otterGravity;
-
     if (state.otterVy > 0 && state.otterY >= targetGroundY) {
       state.otterY = targetGroundY;
       state.otterVy = 0;
       state.otterJumpCount = 0;
     }
 
-    // 4. Otter horizontal forward sprint!
-    // When dashing, the otter physically runs forward toward the middle of the bridge (x = 340),
-    // then smoothly cruises back to base position (x = 145) after breaking through!
     if (state.isDashing) {
-      state.otterX += (350 - state.otterX) * 0.14;
+      state.otterX += (330 - state.otterX) * 0.15;
     } else {
       state.otterX += (state.otterBaseX - state.otterX) * 0.08;
     }
@@ -796,13 +1066,19 @@
       state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
     }
 
-    // 5. Move approaching 3-story Math Gate platforms
+    // Move projectiles toward target monster
+    for (const p of state.projectiles) {
+      p.x += 1250 * dtSec;
+      p.y += (p.targetY - p.y) * 0.25;
+      p.rot += 22 * dtSec;
+    }
+
+    // Move approaching 3-story Monsters & Shields
     const gateSpeed = state.isDashing
       ? 1450
       : (760 - state.otterBaseX) / (state.gateDurationMs / 1000);
     state.gateX -= gateSpeed * dtSec;
 
-    // Sync HTML formula overlay position with Canvas gateX
     const overlay = document.getElementById('gates-overlay');
     if (overlay) {
       const leftPct = (state.gateX / 960) * 100;
@@ -812,15 +1088,17 @@
     const remSec = Math.max(0, (state.gateX - state.otterX) / Math.max(1, gateSpeed));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '🌊 점프 & 전력돌진!!' : `관문까지 ${remSec.toFixed(1)}초`;
+      timeLbl.textContent = state.isDashing ? '🌊 필살기 발사!!' : `충돌까지 ${remSec.toFixed(1)}초`;
     }
 
-    // Check Gate collision when Otter reaches the Gate X!
-    if (state.gateX <= state.otterX + 35) {
+    // Trigger collision when projectile or otter hits the monster line!
+    const projHit = state.projectiles.some((p) => p.x >= state.gateX - 45);
+    if (projHit || state.gateX <= state.otterX + 45) {
+      state.projectiles = [];
       resolveGateCollision();
     }
 
-    // 6. Update floating collectible clams & fish
+    // Collectible floating clams
     if (now - state.lastCoinSpawn > 850) {
       state.lastCoinSpawn = now;
       const fl = Math.floor(Math.random() * 3);
@@ -837,33 +1115,12 @@
       const distToOtter = Math.hypot(c.x - state.otterX, c.y - (state.otterY - 24));
       if (distToOtter < 44) {
         state.score += 20;
-        // Sparkle particle
-        for (let i = 0; i < 5; i++) {
-          state.dustParticles.push({
-            x: c.x,
-            y: c.y,
-            vx: (Math.random() - 0.5) * 6,
-            vy: (Math.random() - 0.5) * 6,
-            size: 4,
-            color: '#fbbf24',
-            life: 1
-          });
-        }
+        state.ultGauge = Math.min(100, state.ultGauge + 5);
         continue;
       }
       if (c.x > -30) nextCoins.push(c);
     }
     state.coins = nextCoins;
-
-    // 7. Update dust & celebration particles
-    const nextParticles = [];
-    for (const p of state.dustParticles) {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life -= dtSec * 1.9;
-      if (p.life > 0) nextParticles.push(p);
-    }
-    state.dustParticles = nextParticles;
 
     updateHudUI();
   }
@@ -885,7 +1142,7 @@
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // 2. Parallax Clouds
+    // 2. Parallax Clouds & Hills
     ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
     const cloudOffset = (state.scrollX * 0.18) % 320;
     for (let x = -cloudOffset; x < W + 100; x += 320) {
@@ -893,7 +1150,6 @@
       drawCloud(ctx, x + 210, 75, 26);
     }
 
-    // 3. Parallax Distant Hills & Pine Trees
     ctx.fillStyle = 'rgba(6, 78, 59, 0.45)';
     const hillOffset = (state.scrollX * 0.35) % 400;
     for (let x = -hillOffset; x < W + 400; x += 400) {
@@ -903,22 +1159,15 @@
       ctx.fill();
     }
 
-    // 4. 3-Story Running Tracks / Stepping Bridges
-    // Floor 0 (3층 하늘 구름 다리 - y = 92)
+    // 3. 3-Story Running Bridges
     drawTrackBridge(ctx, W, FLOOR_Y[0], state.scrollX * 0.85, 'rgba(56, 189, 248, 0.25)', '#38bdf8');
-    // Floor 1 (2층 나무 징검다리 - y = 200)
     drawTrackBridge(ctx, W, FLOOR_Y[1], state.scrollX * 0.95, 'rgba(16, 185, 129, 0.25)', '#34d399');
-    // Floor 2 (1층 강변 메인 다리 - y = 308)
     drawMainGroundBridge(ctx, W, FLOOR_Y[2], state.scrollX);
 
-    // 5. Collectible Floating Seashells & Stars
+    // 4. Collectible Clams
     for (const c of state.coins) {
       ctx.save();
       ctx.translate(c.x, c.y);
-      ctx.beginPath();
-      ctx.arc(0, 0, 11, 0, Math.PI * 2);
-      ctx.fillStyle = c.type === 'clam' ? 'rgba(251, 191, 36, 0.25)' : 'rgba(56, 189, 248, 0.25)';
-      ctx.fill();
       ctx.font = '18px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -926,7 +1175,61 @@
       ctx.restore();
     }
 
-    // 6. Footstep Dust & Celebration Particles
+    // 5. Draw Approaching 3-Floor Monsters standing right in front of the formula cards!
+    [0, 1, 2].forEach((fl) => {
+      if (state.monstersAlive[fl]) {
+        drawMonsterOnCanvas(ctx, state.gateX - 34, FLOOR_Y[fl], fl, state.otterPhase * 0.5, false, 0);
+      }
+    });
+
+    // 6. Draw Ragdoll Monsters flying off screen!
+    for (const fm of state.flyingMonsters) {
+      drawMonsterOnCanvas(ctx, fm.x, fm.y, fm.floorType, 0, true, fm.rot);
+    }
+
+    // 7. Draw Active Projectiles (Golden Boomerang & Water Laser)
+    for (const p of state.projectiles) {
+      drawProjectile(ctx, p);
+    }
+
+    // 8. Draw Full-Screen Mega Water Breath Ultimate Beam!
+    if (state.ultBeamLife > 0) {
+      ctx.save();
+      ctx.globalAlpha = state.ultBeamLife;
+      const beamGrad = ctx.createLinearGradient(0, 40, 0, 320);
+      beamGrad.addColorStop(0, '#f43f5e');
+      beamGrad.addColorStop(0.3, '#fbbf24');
+      beamGrad.addColorStop(0.6, '#38bdf8');
+      beamGrad.addColorStop(1, '#10b981');
+      ctx.fillStyle = beamGrad;
+      ctx.fillRect(state.otterX + 20, 35, W - state.otterX, 275);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(state.otterX + 20, 110, W - state.otterX, 120);
+      ctx.restore();
+    }
+
+    // 9. Draw Cross Slash & Impact Explosions
+    for (const s of state.slashEffects) {
+      ctx.save();
+      ctx.translate(s.x, s.y);
+      ctx.globalAlpha = s.life;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 6 * s.life;
+      const len = s.radius * (1.4 - s.life * 0.4);
+      ctx.beginPath();
+      ctx.moveTo(-len, -len); ctx.lineTo(len, len);
+      ctx.moveTo(len, -len); ctx.lineTo(-len, len);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, s.radius * (1.2 - s.life * 0.5), 0, Math.PI * 2);
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 5 * s.life;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 10. Dust & Star Particles
     for (const p of state.dustParticles) {
       ctx.save();
       ctx.globalAlpha = Math.max(0, p.life);
@@ -937,34 +1240,9 @@
       ctx.restore();
     }
 
-    // 7. Speed lines during Dash or Fever
-    if (state.isDashing || state.combo >= 5) {
-      ctx.save();
-      ctx.strokeStyle = state.combo >= 5 ? 'rgba(251, 191, 36, 0.45)' : 'rgba(125, 211, 252, 0.45)';
-      ctx.lineWidth = 2.5;
-      for (let i = 0; i < 6; i++) {
-        const ly = 40 + ((i * 55 + state.scrollX) % 270);
-        const lx = ((state.scrollX * 2 + i * 170) % W);
-        ctx.beginPath();
-        ctx.moveTo(W - lx, ly);
-        ctx.lineTo(W - lx + 55, ly);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
-
-    // 8. Draw the Articulated Running & Jumping Cute Otter!
+    // 11. Draw the Articulated Running & Jumping Cute Otter!
     const targetGroundY = FLOOR_Y[state.targetFloor];
     const isAirborne = Math.abs(state.otterY - targetGroundY) > 5;
-
-    // Shadow under the otter on its target floor
-    ctx.save();
-    const shadowScale = Math.max(0.35, 1 - Math.abs(targetGroundY - state.otterY) / 180);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
-    ctx.beginPath();
-    ctx.ellipse(state.otterX, targetGroundY + 2, 26 * shadowScale, 6 * shadowScale, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
 
     drawArticulatedOtter(ctx, state.otterX, state.otterY, state.otterPhase, {
       skin: state.skin,
@@ -973,8 +1251,29 @@
       spin: state.otterSpin,
       fever: state.combo >= 5,
       shielded: state.hasShield,
-      scale: 1.08
+      scale: state.ultBeamLife > 0 ? 1.55 : 1.08
     });
+
+    // 12. Draw Floating CRITICAL HIT Damage Texts
+    for (const ft of state.floatingTexts) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, ft.life);
+      ctx.font = '900 26px Pretendard, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 5;
+      ctx.strokeText(ft.text, ft.x, ft.y);
+      ctx.fillStyle = ft.color;
+      ctx.fillText(ft.text, ft.x, ft.y);
+
+      if (ft.subText) {
+        ctx.font = '800 16px Pretendard, sans-serif';
+        ctx.strokeText(ft.subText, ft.x, ft.y + 24);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(ft.subText, ft.x, ft.y + 24);
+      }
+      ctx.restore();
+    }
   }
 
   function drawCloud(ctx, x, y, r) {
@@ -996,7 +1295,6 @@
     ctx.lineTo(W, y);
     ctx.stroke();
 
-    // Moving planks along the bridge
     const offset = scroll % 60;
     ctx.fillStyle = strokeCol;
     for (let x = -offset; x < W; x += 60) {
@@ -1007,34 +1305,21 @@
 
   function drawMainGroundBridge(ctx, W, y, scroll) {
     ctx.save();
-    // Grass / wooden riverbank deck
     ctx.fillStyle = '#065f46';
     ctx.fillRect(0, y, W, 16);
     ctx.fillStyle = '#10b981';
     ctx.fillRect(0, y, W, 5);
 
-    // Moving bridge planks & water ripples
     const offset = scroll % 50;
     ctx.fillStyle = '#34d399';
     for (let x = -offset; x < W; x += 50) {
       ctx.fillRect(x, y + 6, 26, 5);
     }
-
-    // Sparkling river waves at bottom
-    const waveOffset = (scroll * 1.2) % 80;
-    ctx.strokeStyle = 'rgba(186, 230, 253, 0.35)';
-    ctx.lineWidth = 2;
-    for (let x = -waveOffset; x < W; x += 80) {
-      ctx.beginPath();
-      ctx.moveTo(x, y + 32);
-      ctx.quadraticCurveTo(x + 20, y + 26, x + 40, y + 32);
-      ctx.stroke();
-    }
     ctx.restore();
   }
 
   // =========================================================================
-  // GATE COLLISION & CELEBRATION / CRASH EXPLANATION
+  // MONSTER SMASH RESOLUTION & RAGDOLL KNOCKBACK
   // =========================================================================
   function resolveGateCollision() {
     state.pausedForCrash = true;
@@ -1043,22 +1328,48 @@
     const cardEl = document.getElementById(`plat-card-${pickedIdx}`);
 
     if (pickedOpt && pickedOpt.isCorrect) {
-      // SUCCESSFUL JUMP & BREAKTHROUGH!
+      // MONSTER SMASHED!
       if (cardEl) cardEl.classList.add('plat-correct');
+      state.monstersAlive[pickedIdx] = false;
+
+      // Launch hit monster spinning off the top-right of the screen!
+      const hitX = state.gateX - 34;
+      const hitY = FLOOR_Y[pickedIdx];
+      state.flyingMonsters.push({
+        x: hitX,
+        y: hitY,
+        vx: 15 + Math.random() * 5,
+        vy: -11 - Math.random() * 3,
+        rot: 0,
+        vRot: 0.38,
+        floorType: pickedIdx
+      });
+
+      // Cross Slash & Explosion effect
+      state.slashEffects.push({
+        x: hitX,
+        y: hitY - 26,
+        radius: 48,
+        life: 1.0,
+        color: '#fbbf24'
+      });
+
+      triggerScreenShake();
+
       state.combo += 1;
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+      state.ultGauge = Math.min(100, state.ultGauge + 35);
       state.otterMood = 'happy';
-      state.otterSpin = Math.PI * 2; // 360° celebratory backflip!
+      state.otterSpin = Math.PI * 2;
 
-      // Burst of golden celebration particles
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 24; i++) {
         state.dustParticles.push({
-          x: state.otterX + 20,
-          y: state.otterY - 20,
-          vx: (Math.random() - 0.3) * 10,
-          vy: (Math.random() - 0.7) * 10,
-          size: 4 + Math.random() * 5,
-          color: i % 2 === 0 ? '#fbbf24' : '#34d399',
+          x: hitX,
+          y: hitY - 20,
+          vx: (Math.random() - 0.3) * 12,
+          vy: (Math.random() - 0.7) * 12,
+          size: 4 + Math.random() * 6,
+          color: i % 2 === 0 ? '#fbbf24' : '#38bdf8',
           life: 1.2
         });
       }
@@ -1070,6 +1381,22 @@
       if (pickedOpt.bonus === 'shield') state.hasShield = true;
 
       state.score += pts;
+
+      const skillNames = {
+        basic: '🐚 황금부메랑 격파!',
+        scholar: '🌊 워터레이저 격파!',
+        surfer: '🏄 해일토네이도 격파!',
+        king: '⚡ 썬더검기 격파!'
+      };
+      state.floatingTexts.push({
+        x: Math.min(720, Math.max(240, hitX)),
+        y: Math.max(65, hitY - 35),
+        text: `💥 CRITICAL! ${999 + state.combo * 1000} DMG!`,
+        subText: `${skillNames[state.skin] || '필살기 격파!'} (+${pts}점)`,
+        color: '#fde68a',
+        life: 1.2
+      });
+
       state.history.push({
         q: state.currentQ.q,
         ans: state.currentQ.ans,
@@ -1080,16 +1407,16 @@
       if (state.combo === 5) {
         KkachiSound.jackpot();
       } else {
-        KkachiSound.correct(state.combo * 2);
+        KkachiSound.smash(state.combo * 2);
       }
 
       updateHudUI();
       setTimeout(() => {
         state.pausedForCrash = false;
         spawnNextGate();
-      }, 460);
+      }, 520);
     } else {
-      // WRONG PLATFORM COLLISION!
+      // WRONG MONSTER SHIELD COUNTERATTACK!
       if (cardEl) cardEl.classList.add('plat-wrong');
       state.gateOptions.forEach((o, i) => {
         if (o.isCorrect) {
@@ -1108,11 +1435,19 @@
       if (state.hasShield) {
         state.hasShield = false;
         KkachiSound.radar();
+        state.floatingTexts.push({
+          x: state.otterX + 60,
+          y: state.otterY - 40,
+          text: '🛡️ 물방울 방패로 반격 방어!',
+          subText: '체력 감소 없음!',
+          color: '#38bdf8',
+          life: 1.2
+        });
         updateHudUI();
         setTimeout(() => {
           state.pausedForCrash = false;
           spawnNextGate();
-        }, 650);
+        }, 700);
         return;
       }
 
@@ -1120,11 +1455,12 @@
       state.hearts -= 1;
       state.otterMood = 'hurt';
       KkachiSound.bomb();
+      triggerScreenShake();
       updateHudUI();
 
       const overlay = document.getElementById('crash-tip-overlay');
       document.getElementById('crash-correct-text').innerHTML =
-        `✔ 정답 발판: ${KkachiMathData.renderMathText(state.currentQ.ans)}`;
+        `✔ 정답 몬스터 수식: ${KkachiMathData.renderMathText(state.currentQ.ans)}`;
       document.getElementById('crash-tip-text').innerHTML =
         `💡 ${KkachiMathData.renderMathText(state.currentQ.tip)}`;
       overlay.classList.add('active');
@@ -1149,20 +1485,20 @@
     const passedCount = state.history.filter((h) => h.passed).length;
 
     document.getElementById('result-title').textContent = cleared
-      ? `🎉 10개 수학 관문 완주 성공!`
-      : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 질주)`;
+      ? `🎉 10개 몬스터 웨이브 완전 토벌!`
+      : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 진격)`;
 
     document.getElementById('result-desc').innerHTML =
-      `최종 점수 <strong style="color:#fbbf24;">${state.score.toLocaleString()}점</strong> · 달린 거리 <strong style="color:#38bdf8;">${Math.floor(state.distance)}m</strong> · 관문 돌파 <strong style="color:#34d399;">${passedCount}/${state.history.length}</strong> · 최고 <strong>${state.maxCombo}콤보</strong>`;
+      `최종 점수 <strong style="color:#fbbf24;">${state.score.toLocaleString()}점</strong> · 토벌 성공 <strong style="color:#34d399;">${passedCount}/${state.history.length}마리</strong> · 최고 <strong>${state.maxCombo}연속 격파</strong>`;
 
     const reviewEl = document.getElementById('result-review-box');
     reviewEl.innerHTML =
-      `<div style="font-weight:900;color:#38bdf8;margin-bottom:6px;">📘 이번 질주에서 만난 고1 수학 관문 복습</div>` +
+      `<div style="font-weight:900;color:#38bdf8;margin-bottom:6px;">📘 이번 출격에서 격파한 고1 수학 수식 복습</div>` +
       state.history
         .map((h, i) => `
           <div style="border-bottom:1px solid rgba(255,255,255,0.08);padding:6px 0;">
             <div style="font-weight:800;">
-              ${h.passed ? '🟢' : '🔴'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
+              ${h.passed ? '⚔️' : '🛡️'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
               <span style="color:#34d399;margin-left:6px;">→ ${KkachiMathData.renderMathText(h.ans)}</span>
             </div>
             ${!h.passed ? `<div style="font-size:0.8rem;color:#93c5fd;margin-top:2px;">💡 ${KkachiMathData.renderMathText(h.tip)}</div>` : ''}
@@ -1202,9 +1538,13 @@
       } else if (e.key === '3' || e.key === 'ArrowDown') {
         e.preventDefault();
         jumpToFloorAndDash(2);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (state.ultGauge >= 100) fireUltimateSkill();
       } else if (e.key === ' ') {
         e.preventDefault();
-        freeHop();
+        if (state.ultGauge >= 100) fireUltimateSkill();
+        else freeHop();
       }
     });
   }
@@ -1261,6 +1601,7 @@
     showIntro,
     startGame,
     jumpToFloorAndDash,
+    fireUltimateSkill,
     activateFreeShield,
     closeResultAndRestart,
     closeResultAndIntro,

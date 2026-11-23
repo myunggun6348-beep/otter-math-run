@@ -1,6 +1,5 @@
 /**
- * 까치매스 (KKACHI MATH) Web Audio API Arcade Sound Synthesizer
- * 콤보 상승 사운드 및 복불복 특수 기믹(폭탄, 스틸, 잭팟, 레이더) 효과음 내장
+ * 수달런 (OTTER MATH RUN) - 액션 타격음 & 필살기 사운드 신디사이저 (Web Audio API)
  */
 (function (global) {
   let ctx = null;
@@ -23,7 +22,7 @@
     return ctx;
   }
 
-  function playTone(freq, type, duration, gainVal = 0.14, delay = 0) {
+  function playTone(freq, type, duration, gainVal = 0.14, delay = 0, slideToFreq = null) {
     const audio = getCtx();
     if (!audio) return;
 
@@ -33,9 +32,12 @@
 
     osc.type = type;
     osc.frequency.setValueAtTime(freq, now);
+    if (slideToFreq) {
+      osc.frequency.exponentialRampToValueAtTime(slideToFreq, now + duration);
+    }
 
     gain.gain.setValueAtTime(0.001, now);
-    gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.012);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
     osc.connect(gain);
@@ -57,11 +59,29 @@
     click() {
       playTone(680, 'sine', 0.06, 0.08);
     },
-    correct(combo = 1) {
+    shoot() {
+      // Fast boomerang / water laser launch whoosh
+      playTone(360, 'sawtooth', 0.14, 0.14, 0, 980);
+      playTone(620, 'triangle', 0.12, 0.12, 0.03, 1420);
+    },
+    smash(combo = 1) {
+      // Heavy impact thud + critical hit chime!
+      playTone(145, 'sawtooth', 0.16, 0.25, 0, 48);
+      playTone(260, 'square', 0.11, 0.18, 0.01, 90);
       const idx = Math.min(COMBO_FREQS.length - 1, Math.max(0, (combo || 1) - 1));
       const base = COMBO_FREQS[idx];
-      playTone(base, 'triangle', 0.12, 0.16, 0);
-      playTone(base * 1.25, 'sine', 0.18, 0.14, 0.055);
+      playTone(base, 'triangle', 0.15, 0.18, 0.05);
+      playTone(base * 1.5, 'sine', 0.22, 0.16, 0.1);
+    },
+    ultimate() {
+      // Mega Otter Water Breath cannon blast!
+      playTone(180, 'sawtooth', 0.35, 0.24, 0, 55);
+      [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98].forEach((f, i) => {
+        playTone(f, 'sawtooth', 0.22, 0.15, i * 0.045);
+      });
+    },
+    correct(combo = 1) {
+      this.smash(combo);
     },
     fever(level = 1) {
       const notes = level >= 2
@@ -76,25 +96,16 @@
       playTone(164.81, 'sawtooth', 0.22, 0.13, 0.08);
     },
     bomb() {
-      // Low explosive rumble descending
       [180, 140, 110, 85, 65].forEach((f, i) => {
         playTone(f, 'sawtooth', 0.18, 0.2, i * 0.045);
       });
     },
-    steal() {
-      // Mischievous rising-falling-rising synth
-      playTone(587.33, 'triangle', 0.1, 0.15, 0);
-      playTone(440, 'triangle', 0.1, 0.15, 0.08);
-      playTone(880, 'sawtooth', 0.22, 0.16, 0.16);
-    },
     jackpot() {
-      // Coin cascade fanfare
       [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98, 2093.0].forEach((f, i) => {
         playTone(f, 'triangle', 0.18, 0.16, i * 0.05);
       });
     },
     radar() {
-      // High-tech sonar ping
       playTone(1174.66, 'sine', 0.14, 0.15, 0);
       playTone(1567.98, 'sine', 0.24, 0.14, 0.12);
     },
