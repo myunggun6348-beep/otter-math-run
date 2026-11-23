@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="까치매스 고1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <title>까치매스 - 고1 수학 공식 12장 짝맞추기 웹앱</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-wrap">
+    <!-- Top Header & Controls -->
+    <header class="top-bar">
+      <div class="brand-box">
+        <span class="brand-icon">🦅</span>
+        <div>
+          <div class="brand-title">고1 수학 공식 짝맞추기</div>
+          <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
+          👀 3초 전체 힌트
+        </button>
+        <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
+          🆚 2팀 대결 모드 켜기
+        </button>
+        <button class="btn" onclick="MatchGame.openCustomModal()">
+          ✏️ 내 문제 넣기
+        </button>
+        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
+          📲 스마트폰 QR · 앱 설치
+        </button>
+        <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
+          🔄 새 카드 섞기
+        </button>
+        <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Grade 1 Math Chapter Filter Tabs -->
+    <nav class="chapter-tabs" id="chapter-tabs"></nav>
+
+    <!-- Live Status / Score Bar -->
+    <section class="status-bar" id="status-bar"></section>
+
+    <!-- 12 Cards Grid (4 x 3) -->
+    <main class="cards-grid" id="cards-grid"></main>
+  </div>
+
+  <!-- Game Clear Modal -->
+  <div class="modal-backdrop" id="modal-clear">
+    <div class="modal-box">
+      <div style="font-size:3.4rem;margin-bottom:8px;" id="clear-icon">🎉</div>
+      <h2 style="font-size:1.85rem;font-weight:900;margin-bottom:8px;" id="clear-title">
+        6쌍 모두 짝맞추기 성공!
+      </h2>
+      <p style="color:var(--text-muted);font-size:1.05rem;margin-bottom:20px;" id="clear-desc"></p>
+
+      <div id="clear-pairs-review" style="text-align:left;background:rgba(11,17,32,0.75);border-radius:16px;padding:14px 18px;margin-bottom:22px;font-size:0.92rem;line-height:1.7;"></div>
+
+      <div style="display:flex;justify-content:center;gap:12px;">
+        <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="MatchGame.closeClearAndRestart()">
+          🔄 새로운 카드로 한 판 더!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Super Simple 6-Pair Custom Editor Modal -->
+  <div class="modal-backdrop" id="modal-custom" onclick="if(event.target===this) MatchGame.closeCustomModal()">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h3 style="font-size:1.3rem;font-weight:900;">✏️ 나만의 6쌍 카드 직접 입력</h3>
+        <button class="btn" onclick="MatchGame.closeCustomModal()">✕ 닫기</button>
+      </div>
+      <p style="font-size:0.86rem;color:var(--text-muted);margin-bottom:14px;">
+        오늘 수업할 개념 6쌍(왼쪽: 질문/개념, 오른쪽: 정답/공식)을 입력하고 적용하면 바로 12장 카드로 만들어집니다. (수식은 <code>$x^2$</code> 처럼 입력)
+      </p>
+
+      <div id="custom-pairs-rows"></div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+        <button class="btn" onclick="MatchGame.closeCustomModal()">취소</button>
+        <button class="btn btn-emerald" onclick="MatchGame.applyCustomPairs()">✔ 이 6쌍으로 카드판 만들기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web App (PWA Install & Smartphone QR Share) Modal -->
+  <div class="modal-backdrop" id="modal-webapp" onclick="if(event.target===this) MatchGame.closeWebAppModal()">
+    <div class="modal-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h3 style="font-size:1.3rem;font-weight:900;">📲 스마트폰 웹앱 접속 & 앱 설치</h3>
+        <button class="btn" onclick="MatchGame.closeWebAppModal()">✕ 닫기</button>
+      </div>
+
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">
+        스마트폰 카메라로 아래 QR코드를 스캔하면 모바일 웹앱 화면으로 바로 실행됩니다.
+      </p>
+
+      <div id="webapp-qr-box" style="display:inline-flex;padding:14px;background:#ffffff;border-radius:16px;margin-bottom:12px;"></div>
+
+      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(11,17,32,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;background:rgba(11,17,32,0.65);padding:16px;border-radius:14px;margin-bottom:16px;font-size:0.88rem;line-height:1.55;">
+        <div style="font-weight:800;color:#34d399;">📱 스마트폰/태블릿에 진짜 ‘앱’처럼 설치하는 법 (PWA)</div>
+        <div>• <strong>갤럭시(Android) / 크롬</strong>: 아래 <strong>[📲 홈 화면에 앱 설치하기]</strong> 버튼 클릭 또는 브라우저 메뉴(⋮) → <strong>[앱 설치 / 홈 화면에 추가]</strong></div>
+        <div>• <strong>아이폰/아이패드(Safari)</strong>: 하단 <strong>공유 버튼(□↑)</strong> → <strong>[홈 화면에 추가]</strong> 클릭 시 주소창 없는 전체화면 앱으로 실행됩니다!</div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+        <button class="btn btn-emerald" id="btn-pwa-install" onclick="MatchGame.installPWA()">
+          📲 이 기기에 웹앱(PWA) 바로 설치
+        </button>
+        <button class="btn btn-primary" onclick="MatchGame.copyWebAppUrl()">
+          🔗 웹앱 주소 복사
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/qrcode.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/math-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
