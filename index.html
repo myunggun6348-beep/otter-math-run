@@ -13,7 +13,7 @@
   <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 <body>
   <div class="app-wrap">
@@ -147,6 +147,14 @@
           </div>
         </header>
 
+        <!-- 3D Boss Warning & HP Banner (Wave 5 & Wave 10) -->
+        <div class="boss-hud-banner" id="boss-hud-banner">
+          <span id="boss-hud-title">🚨 BOSS WAVE! 🐉 심해 크라켄 드래곤 출현! (격파 보너스 +600점)</span>
+        </div>
+
+        <!-- Heartbeat Red Danger Proximity Vignette -->
+        <div class="danger-vignette" id="danger-vignette"></div>
+
         <canvas id="runner-canvas" width="960" height="340"></canvas>
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
@@ -160,6 +168,16 @@
 
       <!-- 2. Integrated Battle Quiz Console (Question + 1·2·3 Choices together directly below 3D Monsters!) -->
       <section class="battle-quiz-console">
+        <!-- Dynamic Thrill Status Bar (Speed Kill / Just Counter / Boss / Golden Wave & Combo Speed Boost) -->
+        <div class="thrill-status-bar">
+          <div class="thrill-pill mode-speed" id="thrill-mode-pill">
+            ⚡ 3초 스피드 킬 찬스! (황금 조개 분수 +200점)
+          </div>
+          <div class="thrill-pill" id="thrill-speed-pill">
+            💨 질주 속도 1.0x (콤보 시 초고속 가속!)
+          </div>
+        </div>
+
         <!-- Question & Timer Progress Bar -->
         <div class="console-question-box">
           <span class="q-wave-tag" id="q-gate-num">WAVE 1 / 10</span>
@@ -219,9 +237,9 @@
     </div>
   </div>
 
-  <script src="js/qrcode.js?v=6"></script>
-  <script src="js/sound.js?v=6"></script>
-  <script src="js/math-data.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/qrcode.js?v=7"></script>
+  <script src="js/sound.js?v=7"></script>
+  <script src="js/math-data.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
 </body>
 </html>

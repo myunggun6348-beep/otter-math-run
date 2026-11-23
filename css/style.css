@@ -397,6 +397,114 @@ html, body {
   animation: heavyScreenShake 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
+.canvas-stage-wrap.impact-punch #runner-canvas {
+  animation: cameraZoomPunch 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cameraZoomPunch {
+  0% { transform: scale(1); filter: brightness(1); }
+  25% { transform: scale(1.085); filter: brightness(1.22) contrast(1.08); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Danger Proximity Heartbeat Red Vignette */
+.danger-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  box-shadow: inset 0 0 65px 22px rgba(225, 29, 72, 0.85);
+  border: 4px solid rgba(244, 63, 94, 0.9);
+  border-radius: 27px 27px 0 0;
+  transition: opacity 0.15s ease;
+}
+
+.danger-vignette.active {
+  opacity: 1;
+  animation: heartbeatPulse 0.45s infinite alternate;
+}
+
+@keyframes heartbeatPulse {
+  from { box-shadow: inset 0 0 40px 14px rgba(225, 29, 72, 0.55); }
+  to { box-shadow: inset 0 0 80px 28px rgba(244, 63, 94, 0.95); }
+}
+
+/* 3D Boss Warning & Boss HP Bar Overlay */
+.boss-hud-banner {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #991b1b, #e11d48, #991b1b);
+  border: 2.5px solid #fef08a;
+  border-bottom-width: 5px;
+  border-bottom-color: #7f1d1d;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 0.84rem;
+  box-shadow: 0 8px 20px rgba(225, 29, 72, 0.55);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: pulseUlt 0.5s infinite alternate;
+}
+
+.boss-hud-banner.active {
+  display: inline-flex;
+}
+
+/* Floating Thrill Status Pill (Speed Kill / Just Counter / Golden Wave) */
+.thrill-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.thrill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  border: 2px solid #38bdf8;
+  border-bottom-width: 4px;
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.thrill-pill.mode-speed {
+  background: #fef9c3;
+  border-color: #f59e0b;
+  border-bottom-color: #b45309;
+  color: #92400e;
+}
+
+.thrill-pill.mode-counter {
+  background: #ffe4e6;
+  border-color: #f43f5e;
+  border-bottom-color: #be123c;
+  color: #be123c;
+  animation: pulseUlt 0.4s infinite alternate;
+}
+
+.thrill-pill.mode-golden {
+  background: linear-gradient(90deg, #fef08a, #fde047);
+  border-color: #d97706;
+  border-bottom-color: #92400e;
+  color: #78350f;
+}
+
 @keyframes heavyScreenShake {
   0%, 100% { transform: translate(0, 0); }
   15% { transform: translate(-12px, -6px) rotate(-1deg); }

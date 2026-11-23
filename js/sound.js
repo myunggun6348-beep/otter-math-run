@@ -109,6 +109,29 @@
       playTone(1174.66, 'sine', 0.14, 0.15, 0);
       playTone(1567.98, 'sine', 0.24, 0.14, 0.12);
     },
+    siren() {
+      // Boss Warning Siren (Dramatic 2-tone arcade alarm)
+      playTone(440, 'sawtooth', 0.22, 0.18, 0, 880);
+      playTone(880, 'sawtooth', 0.22, 0.18, 0.22, 440);
+      playTone(440, 'sawtooth', 0.24, 0.2, 0.45, 920);
+    },
+    heartbeat() {
+      // Danger proximity heartbeat thump-thump
+      playTone(95, 'sine', 0.11, 0.26, 0, 48);
+      playTone(82, 'sine', 0.14, 0.22, 0.14, 42);
+    },
+    counter() {
+      // Bullet-time slow-mo counter flash + electric crit!
+      playTone(220, 'triangle', 0.18, 0.22, 0, 1480);
+      playTone(1174.66, 'sawtooth', 0.16, 0.2, 0.12);
+      playTone(1760.0, 'sine', 0.28, 0.22, 0.18);
+    },
+    coinBurst() {
+      // Quick-Kill Golden Seashell Fountain chime
+      [987.77, 1318.51, 1567.98, 2093.0].forEach((f, i) => {
+        playTone(f, 'sine', 0.14, 0.15, i * 0.04);
+      });
+    },
     victory() {
       const melody = [
         { f: 523.25, d: 0.13, t: 0 },

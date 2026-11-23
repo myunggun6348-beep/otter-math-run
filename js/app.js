@@ -72,12 +72,21 @@
     gateCount: 0,
     targetGates: 10,
 
-    // Approaching 3D Monster Wave
+    // Approaching 3D Monster Wave & Thrill Mechanics
     questionPool: [],
     currentQ: null,
     gateOptions: [],
     monstersAlive: [true, true, true],
     monsterZ: 1180, // Approaches from Z=1180 down to Z=140
+    isBossWave: false,
+    isGoldenWave: false,
+    waveStartTime: 0,
+    isCounterDash: false,
+    isQuickKillDash: false,
+    slowMoTimer: 0,
+    hitStopTimer: 0,
+    lastHeartbeatTime: 0,
+    otterTrails3D: [],
     history: [],
 
     lastFrameTime: 0,
@@ -345,30 +354,53 @@
   function draw3DMonster(ctx, sx, sy, sc, laneType, phase, isKO = false, rot = 0) {
     ctx.save();
     ctx.translate(sx, sy);
-    ctx.scale(sc, sc);
+    const bossScale = state.isBossWave && !isKO ? 1.24 : 1.0;
+    ctx.scale(sc * bossScale, sc * bossScale);
 
-    // 3D Ground Shadow
+    // 3D Ground Shadow & Boss Glowing Aura Ring
     ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
     ctx.beginPath();
     ctx.ellipse(0, 6, 40, 12, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    if (state.isBossWave && !isKO) {
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.ellipse(0, 6, 48 + Math.sin(phase * 3) * 4, 15, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (state.isGoldenWave && !isKO) {
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(0, 6, 45 + Math.sin(phase * 3) * 3, 14, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
     const bob = isKO ? 0 : Math.sin(phase * 1.5 + laneType) * 8;
     ctx.translate(0, -34 + bob);
     if (rot !== 0) ctx.rotate(rot);
 
-    if (laneType === 0) {
+    if (state.isGoldenWave && !isKO) {
+      // 💰 24K Golden Treasure Monster Wave!
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.moveTo(-20, -14); ctx.lineTo(-34, -38); ctx.lineTo(-8, -24);
+      ctx.moveTo(20, -14); ctx.lineTo(34, -38); ctx.lineTo(8, -24);
+      ctx.fill();
+      drawShadedSphere(ctx, 0, 2, 32, '#f59e0b', '#fef9c3', '#92400e');
+    } else if (laneType === 0) {
       // Left Lane: 🦇 3D 다크 배트 (3D Winged Bat Demon)
       const flap = isKO ? 0 : Math.sin(phase * 2.5) * 18;
-      ctx.fillStyle = '#5b21b6';
-      ctx.strokeStyle = '#c4b5fd';
+      ctx.fillStyle = state.isBossWave ? '#991b1b' : '#5b21b6';
+      ctx.strokeStyle = state.isBossWave ? '#fde047' : '#c4b5fd';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(-15, 0);
-      ctx.quadraticCurveTo(-52, -26 + flap, -58, 12 + flap);
+      ctx.quadraticCurveTo(-56, -28 + flap, -62, 12 + flap);
       ctx.quadraticCurveTo(-34, 14, -15, 10);
       ctx.moveTo(15, 0);
-      ctx.quadraticCurveTo(52, -26 + flap, 58, 12 + flap);
+      ctx.quadraticCurveTo(56, -28 + flap, 62, 12 + flap);
       ctx.quadraticCurveTo(34, 14, 15, 10);
       ctx.fill();
       ctx.stroke();
@@ -376,23 +408,39 @@
       drawShadedSphere(ctx, 0, 0, 28, '#6d28d9', '#a78bfa', '#2e1065');
     } else if (laneType === 1) {
       // Center Lane: 👹 3D 아이언 고블린 (3D Horned Goblin Brute)
-      // 3D Golden Horns
       ctx.fillStyle = '#fbbf24';
       ctx.beginPath();
-      ctx.moveTo(-20, -14); ctx.lineTo(-34, -38); ctx.lineTo(-8, -24);
-      ctx.moveTo(20, -14); ctx.lineTo(34, -38); ctx.lineTo(8, -24);
+      ctx.moveTo(-20, -14); ctx.lineTo(-36, -40); ctx.lineTo(-8, -24);
+      ctx.moveTo(20, -14); ctx.lineTo(36, -40); ctx.lineTo(8, -24);
       ctx.fill();
 
       drawShadedSphere(ctx, 0, 2, 31, '#e11d48', '#fda4af', '#4c0519');
     } else {
       // Right Lane: 👾 3D 킹 슬라임 (3D Glossy Jelly Slime)
       drawShadedSphere(ctx, 0, 4, 32, '#10b981', '#a7f3d0', '#064e3b');
-      // 3D Mini Crown on King Slime
       ctx.fillStyle = '#fbbf24';
       ctx.beginPath();
       ctx.moveTo(-12, -24); ctx.lineTo(-14, -36); ctx.lineTo(0, -28); ctx.lineTo(14, -36); ctx.lineTo(12, -24);
       ctx.closePath();
       ctx.fill();
+    }
+
+    // Boss Dragon Crown on Wave 5 & Wave 10
+    if (state.isBossWave && !isKO) {
+      ctx.fillStyle = '#fde047';
+      ctx.strokeStyle = '#991b1b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-16, -25);
+      ctx.lineTo(-20, -41);
+      ctx.lineTo(-7, -31);
+      ctx.lineTo(0, -45);
+      ctx.lineTo(7, -31);
+      ctx.lineTo(20, -41);
+      ctx.lineTo(16, -25);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
     }
 
     // 3D Monster Glowing Face
@@ -710,6 +758,25 @@
     wrap.classList.add('shake-hit');
   }
 
+  function triggerImpactPunch() {
+    const wrap = document.getElementById('canvas-stage-wrap');
+    if (!wrap) return;
+    wrap.classList.remove('impact-punch');
+    void wrap.offsetWidth;
+    wrap.classList.add('impact-punch');
+  }
+
+  function spawnGoldenCoinFountain(centerX, centerZ, count = 12) {
+    for (let i = 0; i < count; i++) {
+      const ln = i % 3;
+      state.coins3D.push({
+        x: LANE_X[ln] + (Math.random() - 0.5) * 45,
+        y: 18 + (i % 3) * 12,
+        z: Math.min(1150, Math.max(220, centerZ - i * 55))
+      });
+    }
+  }
+
   function updateHudUI() {
     const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
     const shieldStr = state.hasShield ? ' 🛡️' : '';
@@ -753,10 +820,55 @@
     state.currentQ = q;
     state.gateCount += 1;
     state.isDashing = false;
+    state.isCounterDash = false;
+    state.isQuickKillDash = false;
+    state.slowMoTimer = 0;
     state.otterSpin = 0;
     state.monsterZ = 1220;
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
+    state.waveStartTime = performance.now();
+
+    // Thrilling Special Waves: Boss Wave (5, 10) & Golden Bonus Wave (3, 8)
+    state.isBossWave = state.gateCount === 5 || state.gateCount === 10;
+    state.isGoldenWave = state.gateCount === 3 || state.gateCount === 8;
+
+    const dangerEl = document.getElementById('danger-vignette');
+    if (dangerEl) dangerEl.classList.remove('active');
+
+    const bossBanner = document.getElementById('boss-hud-banner');
+    const bossTitle = document.getElementById('boss-hud-title');
+    if (bossBanner && bossTitle) {
+      if (state.isBossWave) {
+        bossBanner.classList.add('active');
+        bossTitle.textContent = state.gateCount === 10
+          ? '🚨 FINAL BOSS WAVE 10! 👑 카오스 타이탄 로드 출현! (격파 보너스 +1,000점)'
+          : '🚨 BOSS WAVE 5! 🐉 심해 크라켄 드래곤 출현! (격파 보너스 +600점)';
+        KkachiSound.siren();
+        state.floatingTexts.push({
+          x: 480,
+          y: 135,
+          text: state.gateCount === 10 ? '🚨 WARNING!! 최종 3D 보스 출현!!' : '🚨 WARNING!! 중간 3D 보스 출현!!',
+          subText: '정답 공식으로 거대 보스를 격파하세요!',
+          color: '#fde047',
+          life: 1.6
+        });
+      } else {
+        bossBanner.classList.remove('active');
+      }
+    }
+
+    if (state.isGoldenWave) {
+      KkachiSound.coinBurst();
+      state.floatingTexts.push({
+        x: 480,
+        y: 135,
+        text: '💰 GOLDEN BONUS WAVE!! (황금 보물 몬스터 출현!)',
+        subText: '격파 시 점수 2배 + 황금 조개 대폭발!',
+        color: '#fde047',
+        life: 1.5
+      });
+    }
 
     const bonusPool = shuffle(['star', 'heart', 'shield', 'none', 'none']);
     state.gateOptions = shuffle([
@@ -765,13 +877,25 @@
       { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
     ]);
 
-    document.getElementById('q-gate-num').textContent = `WAVE ${state.gateCount} / ${state.targetGates}`;
+    const waveTagEl = document.getElementById('q-gate-num');
+    if (waveTagEl) {
+      if (state.isBossWave) {
+        waveTagEl.textContent = `🐉 BOSS WAVE ${state.gateCount}/${state.targetGates}`;
+        waveTagEl.style.background = '#e11d48';
+      } else if (state.isGoldenWave) {
+        waveTagEl.textContent = `💰 GOLD WAVE ${state.gateCount}/${state.targetGates}`;
+        waveTagEl.style.background = '#d97706';
+      } else {
+        waveTagEl.textContent = `WAVE ${state.gateCount} / ${state.targetGates}`;
+        waveTagEl.style.background = '#0284c7';
+      }
+    }
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
     const laneMeta = [
-      { title: '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#7e22ce' },
-      { title: '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#be123c' },
-      { title: '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#047857' }
+      { title: state.isBossWave ? '🐉 ①번 보스 좌측' : state.isGoldenWave ? '💰 ①번 황금 몬스터' : '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#7e22ce' },
+      { title: state.isBossWave ? '👑 ②번 보스 본체' : state.isGoldenWave ? '💰 ②번 황금 몬스터' : '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#be123c' },
+      { title: state.isBossWave ? '🐉 ③번 보스 우측' : state.isGoldenWave ? '💰 ③번 황금 몬스터' : '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#047857' }
     ];
 
     state.gateOptions.forEach((opt, idx) => {
@@ -800,11 +924,25 @@
   // Player clicks Left(0), Center(1), or Right(2) Lane -> 3D Otter banks into that lane, jumps, and fires 3D Water Cannon!
   function jumpToFloorAndDash(laneIdx) {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
-    KkachiSound.shoot();
+
+    const elapsedSec = (performance.now() - state.waveStartTime) / 1000;
+    state.isQuickKillDash = elapsedSec <= 3.0;
+    state.isCounterDash = state.monsterZ < 540;
+
+    if (state.isCounterDash) {
+      // Bullet-Time Slow-Mo Just Counter!
+      KkachiSound.counter();
+      state.slowMoTimer = 0.22;
+    } else {
+      KkachiSound.shoot();
+    }
+
+    const dangerEl = document.getElementById('danger-vignette');
+    if (dangerEl) dangerEl.classList.remove('active');
 
     state.targetLane = laneIdx;
     state.isDashing = true;
-    state.otterVy3D = 12.5; // 3D jump upward (+Y in 3D world)
+    state.otterVy3D = 13.5; // 3D jump upward (+Y in 3D world)
 
     const targetX = LANE_X[laneIdx];
     state.projectiles3D.push({
@@ -914,7 +1052,21 @@
     if (!state.running) return;
     const dt = Math.min(50, now - state.lastFrameTime);
     state.lastFrameTime = now;
-    const dtSec = dt / 1000;
+    let dtSec = dt / 1000;
+
+    // 1. Hit-Stop Freeze Frame (0.065s arcade impact pause on smash!)
+    if (state.hitStopTimer > 0) {
+      state.hitStopTimer = Math.max(0, state.hitStopTimer - dtSec);
+      render3DWorld();
+      state.rafId = requestAnimationFrame(gameLoop);
+      return;
+    }
+
+    // 2. Bullet-Time Slow-Motion on Extreme Just Counter!
+    if (state.slowMoTimer > 0) {
+      state.slowMoTimer = Math.max(0, state.slowMoTimer - dtSec);
+      dtSec *= 0.25;
+    }
 
     if (!state.pausedForCrash) {
       update3DPhysics(now, dtSec);
@@ -925,24 +1077,25 @@
   }
 
   function update3DPhysics(now, dtSec) {
-    const feverMult = state.combo >= 5 ? 1.45 : 1;
-    const dashMult = state.isDashing ? 4.2 : 1;
-    const speedZ = 480 * feverMult * dashMult;
+    // Progressive Combo Speed Ramp (1.0x up to 1.85x MAX SPEED!)
+    const comboSpeedMult = 1 + Math.min(0.85, state.combo * 0.14);
+    const dashMult = state.isDashing ? 4.4 : 1;
+    const speedZ = 480 * comboSpeedMult * dashMult;
 
     state.trackZ += speedZ * dtSec;
-    state.distance += 16 * feverMult * dashMult * dtSec;
-    state.otterPhase += dtSec * (state.isDashing ? 26 : 16) * feverMult;
+    state.distance += 16 * comboSpeedMult * dashMult * dtSec;
+    state.otterPhase += dtSec * (state.isDashing ? 28 : 16) * comboSpeedMult;
 
     // 1. 3D Lane Banking Movement (wx)
     const targetX = LANE_X[state.targetLane];
     const dx = targetX - state.otterX3D;
-    state.otterX3D += dx * 0.18;
-    state.otterRoll = Math.max(-0.35, Math.min(0.35, dx * 0.0022));
+    state.otterX3D += dx * 0.2;
+    state.otterRoll = Math.max(-0.36, Math.min(0.36, dx * 0.0023));
 
-    // Smooth 3rd-person Camera Follow & Dynamic FOV Zoom
+    // Smooth 3rd-person Camera Follow & Dynamic FOV Zoom Punch
     state.camX += (state.otterX3D * 0.36 - state.camX) * 0.14;
-    const targetFov = state.isDashing ? 345 : 410;
-    state.fov += (targetFov - state.fov) * 0.15;
+    const targetFov = state.slowMoTimer > 0 ? 305 : state.isDashing ? 340 : 410 - Math.min(35, state.combo * 5);
+    state.fov += (targetFov - state.fov) * 0.18;
 
     // 2. 3D Jump Gravity (wy)
     state.otterY3D += state.otterVy3D;
@@ -957,8 +1110,19 @@
       state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
     }
 
+    // Spawn 3D Otter Afterimage Booster Trail Rings when Combo >= 2 or Dashing
+    if ((state.combo >= 2 || state.isDashing) && Math.random() < 0.65) {
+      state.otterTrails3D.push({
+        x: state.otterX3D,
+        y: state.otterY3D + 16,
+        z: state.otterZ3D - 8,
+        life: 0.75,
+        color: state.combo >= 5 ? '#f59e0b' : '#38bdf8'
+      });
+    }
+
     // Spawn 3D footstep splash cubes under otter's paws
-    if (state.otterY3D <= 2 && Math.random() < 0.4) {
+    if (state.otterY3D <= 2 && Math.random() < 0.45) {
       state.voxels3D.push({
         x: state.otterX3D + (Math.random() - 0.5) * 26,
         y: 4,
@@ -967,34 +1131,76 @@
         vy: 2 + Math.random() * 3,
         vz: -8,
         size: 6,
-        color: state.combo >= 5 ? '#fde68a' : '#7dd3fc',
+        color: state.combo >= 5 ? '#fde047' : '#7dd3fc',
         life: 0.8
       });
     }
 
     // 3. Move 3D Projectiles down the Z-axis toward monsterZ
     for (const p of state.projectiles3D) {
-      p.z += 2400 * dtSec;
-      p.x += (p.targetX - p.x) * 0.28;
-      p.rot += 20 * dtSec;
+      p.z += 2500 * dtSec;
+      p.x += (p.targetX - p.x) * 0.3;
+      p.rot += 22 * dtSec;
     }
 
     // 4. Move approaching 3D Monsters along the Z-axis (from Z=1220 to Z=130)
     const monSpeedZ = state.isDashing
-      ? 2300
+      ? 2350
       : (1220 - state.otterZ3D) / (state.gateDurationMs / 1000);
     state.monsterZ -= monSpeedZ * dtSec;
 
     const remSec = Math.max(0, (state.monsterZ - state.otterZ3D) / Math.max(1, monSpeedZ));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '🌊 발사!!' : `${remSec.toFixed(1)}초`;
+      timeLbl.textContent = state.isDashing
+        ? (state.isCounterDash ? '⚡ 저스트 카운터!!' : '🌊 워터캐논 발사!!')
+        : `${remSec.toFixed(1)}초`;
     }
 
     const progFill = document.getElementById('q-progress-fill');
     if (progFill) {
       const remPct = Math.max(0, Math.min(100, ((state.monsterZ - state.otterZ3D) / (1220 - state.otterZ3D)) * 100));
       progFill.style.width = `${remPct}%`;
+    }
+
+    // 5. Danger Proximity Vignette & Heartbeat Audio + Dynamic Thrill Status Pill
+    const inDangerZone = state.monsterZ < 540 && !state.isDashing;
+    const dangerEl = document.getElementById('danger-vignette');
+    if (dangerEl) {
+      dangerEl.classList.toggle('active', inDangerZone);
+    }
+    if (inDangerZone && now - state.lastHeartbeatTime > 680) {
+      state.lastHeartbeatTime = now;
+      KkachiSound.heartbeat();
+    }
+
+    const elapsedSec = (now - state.waveStartTime) / 1000;
+    const modePill = document.getElementById('thrill-mode-pill');
+    const speedPill = document.getElementById('thrill-speed-pill');
+    if (speedPill) {
+      speedPill.textContent = state.combo >= 5
+        ? `🔥 HYPER FEVER 속도 ${comboSpeedMult.toFixed(1)}x (초고속 집중선 가동!)`
+        : `💨 질주 속도 ${comboSpeedMult.toFixed(1)}x (${state.combo}연속 콤보 가속)`;
+    }
+    if (modePill) {
+      if (inDangerZone) {
+        modePill.className = 'thrill-pill mode-counter';
+        modePill.textContent = '🚨 DANGER! 지금 정답 클릭 시 ⚡극한 저스트 카운터 발동! (데미지 2.5배 +400점)';
+      } else if (state.isBossWave) {
+        modePill.className = 'thrill-pill mode-counter';
+        modePill.textContent = state.gateCount === 10
+          ? '👑 최종 3D 보스전! 정답 공식으로 격파 시 +1,000점 & 황금 조개 대폭발!'
+          : '🐉 중간 3D 보스전! 정답 공식으로 격파 시 +600점 보너스!';
+      } else if (state.isGoldenWave) {
+        modePill.className = 'thrill-pill mode-golden';
+        modePill.textContent = '💰 황금 보물 고블린 출현! 격파 시 점수 2배 + 황금 조개 분수!';
+      } else if (elapsedSec <= 3.0) {
+        modePill.className = 'thrill-pill mode-speed';
+        modePill.textContent = `⚡ 3초 스피드 킬 찬스! (${Math.max(0, 3.0 - elapsedSec).toFixed(1)}초 내 정답 시 황금 조개 분수 +200점)`;
+      } else {
+        modePill.className = 'thrill-pill';
+        modePill.textContent = '🎯 침착하게 정답 공식을 가진 몬스터 번호를 타격하세요!';
+      }
     }
 
     // Check 3D Collision!
@@ -1064,6 +1270,12 @@
     if (state.ultBeamLife > 0) {
       state.ultBeamLife = Math.max(0, state.ultBeamLife - dtSec * 1.6);
     }
+
+    state.otterTrails3D = state.otterTrails3D.filter((tr) => {
+      tr.z -= 320 * dtSec;
+      tr.life -= dtSec * 2.4;
+      return tr.life > 0 && tr.z > 15;
+    });
   }
 
   function render3DWorld() {
@@ -1297,6 +1509,19 @@
       ctx.restore();
     }
 
+    // 8.5 Draw 3D Otter Booster Afterimage Trail Rings
+    for (const tr of state.otterTrails3D) {
+      const p = project3D(tr.x, tr.y, tr.z, W, H, camX, camY, fov, horY);
+      ctx.save();
+      ctx.globalAlpha = tr.life * 0.55;
+      ctx.strokeStyle = tr.color;
+      ctx.lineWidth = Math.max(2, 6 * p.scale);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 26 * p.scale, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
     // 9. Draw the 3D Volumetric Cute Otter in the foreground (Z = 125)!
     const pOtter = project3D(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
     draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.38, state.otterPhase, {
@@ -1308,6 +1533,30 @@
       fever: state.combo >= 5,
       shielded: state.hasShield
     });
+
+    // 9.5 Draw 3D Radial Anime Speed Lines (초고속 집중선) on Dash, Combo >= 2, or Just Counter Slow-Mo!
+    if (state.isDashing || state.combo >= 2 || state.slowMoTimer > 0) {
+      const lineCount = state.combo >= 5 || state.isDashing ? 28 : 16;
+      const cx = W * 0.5 - camX * 0.15;
+      const cy = horY + 24;
+      ctx.save();
+      ctx.strokeStyle = state.slowMoTimer > 0
+        ? 'rgba(254, 240, 138, 0.85)'
+        : state.combo >= 5
+          ? 'rgba(253, 224, 71, 0.65)'
+          : 'rgba(255, 255, 255, 0.55)';
+      for (let i = 0; i < lineCount; i++) {
+        const ang = (i / lineCount) * Math.PI * 2 + (state.otterPhase * 0.07) % 0.4;
+        const rInner = 155 + ((i * 37 + Math.floor(state.trackZ * 0.5)) % 95);
+        const rOuter = rInner + 140 + (state.isDashing ? 90 : 0);
+        ctx.lineWidth = (i % 3 === 0) ? 3.2 : 1.8;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(ang) * rInner, cy + Math.sin(ang) * rInner * 0.55);
+        ctx.lineTo(cx + Math.cos(ang) * rOuter, cy + Math.sin(ang) * rOuter * 0.55);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
 
     // 10. Draw Floating 3D Critical Damage Texts
     for (const ft of state.floatingTexts) {
@@ -1383,27 +1632,62 @@
       }
 
       triggerScreenShake();
+      triggerImpactPunch();
+      state.hitStopTimer = 0.065; // Crisp 65ms Arcade Hit-Stop Freeze Frame!
 
       state.combo += 1;
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
-      state.ultGauge = Math.min(100, state.ultGauge + 35);
+      state.ultGauge = Math.min(100, state.ultGauge + (state.isCounterDash || state.isGoldenWave ? 50 : 35));
       state.otterSpin = Math.PI * 2;
 
       let pts = 150 + (state.combo - 1) * 30;
       if (state.combo >= 5) pts *= 2;
-      if (pickedOpt.bonus === 'star') pts *= 2;
+      if (pickedOpt.bonus === 'star' || state.isGoldenWave) pts *= 2;
       if (pickedOpt.bonus === 'heart' && state.hearts < state.maxHearts) state.hearts += 1;
       if (pickedOpt.bonus === 'shield') state.hasShield = true;
 
+      const bonusTags = [];
+      if (state.isBossWave) {
+        const bossBonus = state.gateCount === 10 ? 1000 : 600;
+        pts += bossBonus;
+        bonusTags.push(`🐉 보스 격파 +${bossBonus}점`);
+        spawnGoldenCoinFountain(hitX3D, state.monsterZ, 15);
+      }
+      if (state.isCounterDash) {
+        pts += 400;
+        bonusTags.push('⚡ 극한 저스트 카운터 +400점');
+      }
+      if (state.isQuickKillDash) {
+        pts += 200;
+        bonusTags.push('⚡ 3초 스피드 킬 +200점');
+        spawnGoldenCoinFountain(hitX3D, state.monsterZ, 12);
+        KkachiSound.coinBurst();
+      } else if (state.isGoldenWave) {
+        bonusTags.push('💰 황금 보물 2배');
+        spawnGoldenCoinFountain(hitX3D, state.monsterZ, 12);
+      }
+
       state.score += pts;
 
+      const mainHeadline = state.isBossWave
+        ? `🐉 3D BOSS DOWN!! ${9999 + state.combo * 2500} DMG!!`
+        : state.isCounterDash
+          ? `⚡ JUST COUNTER!! x2.5배 카운터 폭발!!`
+          : state.isQuickKillDash
+            ? `⚡ 3초 QUICK KILL!! ${999 + state.combo * 1200} DMG!`
+            : `💥 3D CRITICAL! ${999 + state.combo * 1000} DMG!`;
+
+      const subHeadline = bonusTags.length > 0
+        ? `${bonusTags.join(' · ')} (총 +${pts.toLocaleString()}점!)`
+        : `3D 몬스터 격파! (+${pts.toLocaleString()}점)`;
+
       state.floatingTexts.push({
-        x: 480 + (pickedIdx - 1) * 140,
-        y: 170,
-        text: `💥 3D CRITICAL! ${999 + state.combo * 1000} DMG!`,
-        subText: `3D 몬스터 격파! (+${pts}점)`,
-        color: '#fde68a',
-        life: 1.2
+        x: 480 + (pickedIdx - 1) * 110,
+        y: 165,
+        text: mainHeadline,
+        subText: subHeadline,
+        color: state.isCounterDash || state.isBossWave ? '#fde047' : '#fef08a',
+        life: 1.35
       });
 
       state.history.push({
