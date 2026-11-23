@@ -10,11 +10,11 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>까치매스 - 고1 수학 공식 12장 짝맞추기 웹앱</title>
+  <title>까치매스 - 고1 수학 공식 12장 복불복 짝맞추기 웹앱</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <style>/* ==========================================================================
-   까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 카드 게임 스타일
+   까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 & 복불복 특수 기믹 스타일
    ========================================================================== */
 :root {
   --bg-dark: #0b1120;
@@ -54,22 +54,22 @@ html, body {
 }
 
 /* ==========================================================================
-   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 시작)
+   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 복불복 안내)
    ========================================================================== */
 .intro-screen {
-  max-width: 860px;
-  margin: 16px auto;
+  max-width: 890px;
+  margin: 12px auto;
   background: var(--bg-panel);
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 26px;
-  padding: 34px 32px;
+  padding: 32px 30px;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7);
   animation: fadeIn 0.28s ease;
 }
 
 @media (max-width: 640px) {
   .intro-screen {
-    padding: 24px 18px;
+    padding: 22px 16px;
   }
 }
 
@@ -80,7 +80,7 @@ html, body {
 
 .intro-header {
   text-align: center;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
 
 .intro-badge {
@@ -89,16 +89,16 @@ html, body {
   gap: 6px;
   padding: 6px 16px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  color: #38bdf8;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
   font-size: 0.86rem;
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .intro-title {
-  font-size: clamp(1.75rem, 3.8vw, 2.5rem);
+  font-size: clamp(1.75rem, 3.8vw, 2.45rem);
   font-weight: 900;
   line-height: 1.25;
   margin-bottom: 8px;
@@ -109,7 +109,7 @@ html, body {
 
 .intro-subtitle {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
@@ -122,16 +122,16 @@ html, body {
   background: rgba(11, 17, 32, 0.65);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 16px 20px;
-  margin-bottom: 22px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .mini-demo-card {
   flex: 1;
-  min-width: 210px;
-  max-width: 270px;
-  padding: 14px 16px;
+  min-width: 200px;
+  max-width: 265px;
+  padding: 12px 14px;
   border-radius: 14px;
   text-align: center;
 }
@@ -146,56 +146,50 @@ html, body {
   border: 2px solid #34d399;
 }
 
-.guide-steps-grid {
+/* Mystery Gimmick Cards Showcase in Intro */
+.gimmick-showcase-box {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.55));
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.gimmick-showcase-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
 }
 
-@media (max-width: 720px) {
-  .guide-steps-grid {
-    grid-template-columns: 1fr;
-  }
+.gimmick-info-item {
+  background: rgba(11, 17, 32, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 12px;
 }
 
-.guide-step-card {
-  background: rgba(11, 17, 32, 0.65);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.guide-step-num {
-  display: inline-block;
-  font-size: 0.76rem;
+.gimmick-info-title {
+  font-size: 0.88rem;
   font-weight: 900;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
-  margin-bottom: 8px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.guide-step-title {
-  font-size: 1.02rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: #f8fafc;
-}
-
-.guide-step-desc {
-  font-size: 0.86rem;
+.gimmick-info-desc {
+  font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.38;
 }
 
 .intro-config-box {
   background: rgba(11, 17, 32, 0.55);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 22px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
 }
 
 .config-label {
@@ -210,7 +204,7 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 @media (max-width: 560px) {
@@ -220,7 +214,7 @@ html, body {
 }
 
 .mode-option-btn {
-  padding: 14px 16px;
+  padding: 13px 16px;
   border-radius: 14px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
@@ -238,8 +232,8 @@ html, body {
 
 .btn-start-huge {
   width: 100%;
-  padding: 18px 28px;
-  font-size: 1.25rem;
+  padding: 17px 26px;
+  font-size: 1.22rem;
   font-weight: 900;
   border-radius: 18px;
   border: none;
@@ -260,7 +254,7 @@ html, body {
 }
 
 /* ==========================================================================
-   GAME SCREEN: TOP BAR, TABS, STATUS & 12 CARDS
+   GAME SCREEN: TOP BAR, TABS, GIMMICK BANNER, STATUS & 12 CARDS
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -272,7 +266,7 @@ html, body {
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   padding: 14px 20px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
@@ -288,7 +282,7 @@ html, body {
 }
 
 .brand-title {
-  font-size: 1.35rem;
+  font-size: 1.32rem;
   font-weight: 900;
   background: linear-gradient(90deg, #38bdf8, #34d399);
   -webkit-background-clip: text;
@@ -296,7 +290,7 @@ html, body {
 }
 
 .brand-sub {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   font-weight: 600;
 }
@@ -313,10 +307,10 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 15px;
+  padding: 9px 14px;
   border-radius: 11px;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-main);
@@ -333,6 +327,12 @@ html, body {
   transform: translateY(0) scale(0.97);
 }
 
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-primary {
   background: linear-gradient(135deg, #2563eb, #06b6d4);
   border-color: transparent;
@@ -345,6 +345,13 @@ html, body {
   border-color: transparent;
 }
 
+.btn-purple {
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 6px 18px -4px rgba(236, 72, 153, 0.45);
+}
+
 .btn-emerald {
   background: linear-gradient(135deg, #059669, #10b981);
   border-color: transparent;
@@ -355,13 +362,13 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .tab-btn {
-  padding: 9px 16px;
+  padding: 8px 15px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 800;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
@@ -382,19 +389,72 @@ html, body {
   box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
 }
 
+/* Live Mystery Gimmick Event Banner */
+.gimmick-event-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  margin-bottom: 12px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  transition: all 0.25s ease;
+}
+
+.gimmick-event-banner.event-star {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: #f59e0b;
+  color: #fde68a;
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.3);
+}
+
+.gimmick-event-banner.event-steal {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: #c084fc;
+  color: #f3e8ff;
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
+}
+
+.gimmick-event-banner.event-bomb {
+  background: rgba(244, 63, 94, 0.22);
+  border-color: #f43f5e;
+  color: #fecdd3;
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.45);
+  animation: bombFlash 0.45s ease;
+}
+
+.gimmick-event-banner.event-radar {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: #22d3ee;
+  color: #cffafe;
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.35);
+}
+
+@keyframes bombFlash {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
 /* Status / Score Bar */
 .status-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .status-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -407,13 +467,13 @@ html, body {
 }
 
 .status-label {
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .status-val {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
@@ -422,7 +482,7 @@ html, body {
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 15px;
   perspective: 1200px;
 }
 
@@ -441,7 +501,7 @@ html, body {
 }
 
 .card-slot {
-  height: 185px;
+  height: 188px;
   position: relative;
   cursor: pointer;
 }
@@ -459,6 +519,11 @@ html, body {
   transform: rotateY(180deg);
 }
 
+.card-slot.radar-peek .card-front {
+  border-color: #22d3ee !important;
+  box-shadow: 0 0 32px rgba(34, 211, 238, 0.8) !important;
+}
+
 .card-face {
   position: absolute;
   inset: 0;
@@ -469,7 +534,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 14px;
   box-shadow: 0 14px 28px -8px rgba(0, 0, 0, 0.55);
 }
 
@@ -480,21 +545,39 @@ html, body {
   transition: border-color 0.18s, transform 0.18s;
 }
 
+.card-back.has-mystery {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: inset 0 0 18px rgba(245, 158, 11, 0.12);
+}
+
 .card-slot:hover .card-back {
   border-color: #38bdf8;
   transform: translateY(-3px);
 }
 
+.mystery-back-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
 .card-num-circle {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 999px;
   background: rgba(56, 189, 248, 0.14);
   border: 2px solid rgba(56, 189, 248, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.9rem;
+  font-size: 1.85rem;
   font-weight: 900;
   color: #38bdf8;
   margin-bottom: 8px;
@@ -550,12 +633,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 800;
+  gap: 4px;
 }
 
 .card-type-badge {
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: 999px;
 }
 
@@ -569,8 +653,52 @@ html, body {
   color: #a7f3d0;
 }
 
+/* Gimmick Pill on Card Front */
+.gimmick-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.gimmick-star {
+  background: rgba(245, 158, 11, 0.28);
+  color: #fde68a;
+  border: 1px solid #f59e0b;
+}
+
+.gimmick-steal {
+  background: rgba(168, 85, 247, 0.3);
+  color: #f3e8ff;
+  border: 1px solid #c084fc;
+}
+
+.gimmick-bomb {
+  background: rgba(244, 63, 94, 0.32);
+  color: #fecdd3;
+  border: 1px solid #f43f5e;
+  animation: pulseBomb 0.8s infinite alternate;
+}
+
+.gimmick-radar {
+  background: rgba(6, 182, 212, 0.28);
+  color: #cffafe;
+  border: 1px solid #22d3ee;
+}
+
+.gimmick-jackpot {
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+  color: #ffffff;
+}
+
+@keyframes pulseBomb {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
 .card-math-content {
-  font-size: 1.18rem;
+  font-size: 1.15rem;
   font-weight: 800;
   line-height: 1.45;
   word-break: keep-all;
@@ -578,7 +706,7 @@ html, body {
 }
 
 .card-match-stamp {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 900;
   color: #fbbf24;
   visibility: hidden;
@@ -586,6 +714,33 @@ html, body {
 
 .card-slot.matched .card-match-stamp {
   visibility: visible;
+}
+
+/* Floating Gimmick Popup Effect */
+.floating-gimmick-toast {
+  position: fixed;
+  top: 22%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 2px solid #fbbf24;
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #ffffff;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  z-index: 300;
+  animation: toastFloat 1.35s ease forwards;
+  white-space: nowrap;
+}
+
+@keyframes toastFloat {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+  20% { opacity: 1; transform: translate(-50%, -10px) scale(1.06); }
+  75% { opacity: 1; transform: translate(-50%, -18px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -38px) scale(0.95); }
 }
 
 /* Math Typography */
@@ -630,7 +785,7 @@ html, body {
   padding: 0 2px;
 }
 
-/* Modals (Clear Celebration & Simple Custom Editor) */
+/* Modals */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -682,54 +837,66 @@ html, body {
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 시작)
+         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 복불복 안내)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
       <div class="intro-header">
-        <div class="intro-badge">🦅 고등학교 1학년 수학 공식 & 개념 보드게임</div>
-        <h1 class="intro-title">까치매스 : 고1 수학 공식 짝맞추기</h1>
+        <div class="intro-badge">🎲 복불복 특수 기믹(폭탄·스틸·2배·레이더) 탑재!</div>
+        <h1 class="intro-title">까치매스 : 고1 수학 공식 복불복 짝맞추기</h1>
         <p class="intro-subtitle">
-          12장의 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 찾아보세요!
+          12장 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 맞추고 특수 기믹을 터뜨리세요!
         </p>
       </div>
 
       <!-- Visual Pair Example -->
       <div class="intro-example-box">
         <div class="mini-demo-card demo-q">
-          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">📘 개념 · 질문 카드</div>
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">
+            <span>📘 개념 · 질문 카드</span>
+            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
+          </div>
           <div style="font-size:1.05rem;font-weight:800;" id="demo-card-q"></div>
         </div>
-        <div style="font-size:1.4rem;font-weight:900;color:#fbbf24;">↔ 짝! ↔</div>
+        <div style="font-size:1.35rem;font-weight:900;color:#fbbf24;">↔ 짝 성공! ↔</div>
         <div class="mini-demo-card demo-a">
-          <div style="font-size:0.75rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">💡 정답 · 공식 카드</div>
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">
+            <span>💡 정답 · 공식 카드</span>
+            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
+          </div>
           <div style="font-size:1.05rem;font-weight:800;" id="demo-card-a"></div>
         </div>
       </div>
 
-      <!-- 3-Step How to Play Guide -->
-      <div class="guide-steps-grid">
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 1 · 카드 뒤집기</span>
-          <div class="guide-step-title">1번~12번 중 2장 선택</div>
-          <p class="guide-step-desc">
-            뒤집힌 12장 카드 중 두 장을 클릭합니다. 파란색 <strong>개념 카드</strong>와 그에 맞는 초록색 <strong>정답 공식 카드</strong>를 짝지으면 성공!
-          </p>
+      <!-- 5 Mystery Gimmicks Showcase -->
+      <div class="gimmick-showcase-box">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:0.96rem;font-weight:900;color:#fbbf24;">
+            🎰 카드마다 랜덤으로 숨어 있는 5가지 복불복 특수 기믹!
+          </div>
+          <span style="font-size:0.78rem;color:#cbd5e1;">일발 역전의 기회를 노려보세요!</span>
         </div>
 
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 2 · 찬스 활용</span>
-          <div class="guide-step-title">👀 3초 전체 힌트</div>
-          <p class="guide-step-desc">
-            시작 직후나 막혔을 때 <strong>[👀 3초 전체 힌트]</strong>를 누르면 12장 카드의 앞면이 3초 동안 동시에 공개됩니다. 순간 기억력을 발휘하세요!
-          </p>
-        </div>
-
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 3 · 두 가지 모드</span>
-          <div class="guide-step-title">타임어택 & 2팀 대결</div>
-          <p class="guide-step-desc">
-            혼자(또는 반 전체가) 최단 시간 기록에 도전하거나, <strong>A팀 vs B팀</strong>으로 나뉘어 짝을 맞춘 팀이 <strong>연속 찬스</strong>를 얻는 팀 대결을 즐길 수 있습니다.
-          </p>
+        <div class="gimmick-showcase-grid">
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#fde68a;">⭐ 더블 스타</div>
+            <p class="gimmick-info-desc">이 공식 짝을 맞추면 기본 점수의 <strong>2배(+200점)</strong> 획득!</p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#e9d5ff;">😈 상대 점수 뺏기</div>
+            <p class="gimmick-info-desc">팀전에서 <strong>상대 팀 점수 100점을 강탈!</strong> (개인전은 +250점)</p>
+          </div>
+          <div class="gimmick-info-item" style="border-color:rgba(244,63,94,0.45);">
+            <div class="gimmick-info-title" style="color:#fda4af;">💣 시한폭탄 (주의!)</div>
+            <p class="gimmick-info-desc">열고 <strong>틀리면 💥-50점 폭발!</strong> 짝을 <strong>맞추면 🛠️해체 보너스 +250점!</strong></p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#a5f3fc;">⚡ 천리안 레이더</div>
+            <p class="gimmick-info-desc">맞추는 즉시 <strong>아직 안 맞춘 다른 1쌍을 2초간 자동 투시!</strong></p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#f472b6;">👑 황금 까치 잭팟</div>
+            <p class="gimmick-info-desc">맞추는 순간 터지는 <strong>+300점 대박 잭팟</strong> 카드!</p>
+          </div>
         </div>
       </div>
 
@@ -742,18 +909,18 @@ html, body {
         <div class="mode-select-grid">
           <button type="button" class="mode-option-btn active" id="intro-mode-solo" onclick="MatchGame.setIntroMode(false)">
             <div style="font-weight:900;font-size:1rem;color:#38bdf8;margin-bottom:2px;">⏱️ 1인 / 반 전체 타임어택</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">최단 시간과 최소 횟수로 6쌍 모두 맞추기</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">폭탄을 해체하고 최고 점수와 최단 시간 기록에 도전!</div>
           </button>
           <button type="button" class="mode-option-btn" id="intro-mode-team" onclick="MatchGame.setIntroMode(true)">
-            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (2팀 대결)</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">짝을 맞추면 한 번 더 뒤집는 분단·모둠 대항전</div>
+            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (복불복 대결)</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">맞추면 연속 찬스! 점수 뺏기(😈)와 폭탄(💣)으로 일발 역전!</div>
           </button>
         </div>
       </div>
 
       <!-- Start Game Button & Utility Links -->
       <button class="btn-start-huge" onclick="MatchGame.enterGameScreen()">
-        🚀 게임 시작하기! (12장 카드판 열기)
+        🚀 복불복 게임 시작하기! (12장 카드판 열기)
       </button>
 
       <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
@@ -771,26 +938,29 @@ html, body {
         <div class="brand-box" onclick="MatchGame.showIntroScreen()" title="첫 화면(게임 설명)으로 이동">
           <span class="brand-icon">🦅</span>
           <div>
-            <div class="brand-title">고1 수학 공식 짝맞추기</div>
-            <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+            <div class="brand-title">고1 수학 공식 복불복 짝맞추기</div>
+            <div class="brand-sub">파란 카드(개념)와 초록 카드(공식) 짝을 맞추고 💣폭탄과 😈점수뺏기를 노리세요!</div>
           </div>
         </div>
 
         <div class="action-group">
           <button class="btn" onclick="MatchGame.showIntroScreen()">
-            📖 게임 설명
+            📖 설명
+          </button>
+          <button class="btn btn-purple" id="btn-roulette" onclick="MatchGame.spinMysteryRoulette()">
+            🎰 복불복 찬스 뽑기 (1회)
           </button>
           <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
             👀 3초 전체 힌트
           </button>
           <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
-            🆚 2팀 대결 모드 켜기
+            🆚 2팀 대결 켜기
           </button>
           <button class="btn" onclick="MatchGame.openCustomModal()">
-            ✏️ 내 문제 넣기
+            ✏️ 내 문제
           </button>
           <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
-            📲 QR · 앱 설치
+            📲 QR·앱
           </button>
           <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
             🔄 새 카드 섞기
@@ -803,6 +973,14 @@ html, body {
 
       <!-- Grade 1 Math Chapter Filter Tabs -->
       <nav class="chapter-tabs" id="chapter-tabs"></nav>
+
+      <!-- Live Mystery Gimmick Event Banner -->
+      <div class="gimmick-event-banner" id="gimmick-event-banner">
+        <span id="gimmick-banner-text">🎲 카드에 숨겨진 복불복 기믹(⭐2배 · 😈점수뺏기 · 💣폭탄 · ⚡레이더 · 👑잭팟)을 찾아보세요!</span>
+        <button class="btn" style="padding:4px 10px;font-size:0.76rem;" id="btn-gimmick-toggle" onclick="MatchGame.toggleGimmicksEnabled()">
+          🎲 복불복 ON
+        </button>
+      </div>
 
       <!-- Live Status / Score Bar -->
       <section class="status-bar" id="status-bar"></section>
@@ -1174,26 +1352,15 @@ html, body {
 </script>
   <script>/**
  * 까치매스 (KKACHI MATH) Web Audio API Arcade Sound Synthesizer
- * 별도 오디오 파일 없이 즉각적인 타격감과 콤보 상승 사운드를 제공합니다.
+ * 콤보 상승 사운드 및 복불복 특수 기믹(폭탄, 스틸, 잭팟, 레이더) 효과음 내장
  */
 (function (global) {
   let ctx = null;
   let muted = false;
 
-  // Pentatonic + Major scale frequencies for combo pitch escalation
   const COMBO_FREQS = [
-    523.25, // C5 (1 combo)
-    587.33, // D5 (2)
-    659.25, // E5 (3)
-    698.46, // F5 (4)
-    783.99, // G5 (5 - FEVER)
-    880.00, // A5 (6)
-    987.77, // B5 (7)
-    1046.50, // C6 (8)
-    1174.66, // D6 (9)
-    1318.51, // E6 (10 - SUPER FEVER)
-    1396.91, // F6 (11)
-    1567.98  // G6 (12+)
+    523.25, 587.33, 659.25, 698.46, 783.99, 880.00,
+    987.77, 1046.50, 1174.66, 1318.51, 1396.91, 1567.98
   ];
 
   function getCtx() {
@@ -1242,11 +1409,6 @@ html, body {
     click() {
       playTone(680, 'sine', 0.06, 0.08);
     },
-    join() {
-      // Friendly magpie chirp
-      playTone(740, 'triangle', 0.09, 0.11, 0);
-      playTone(987.77, 'triangle', 0.13, 0.13, 0.07);
-    },
     correct(combo = 1) {
       const idx = Math.min(COMBO_FREQS.length - 1, Math.max(0, (combo || 1) - 1));
       const base = COMBO_FREQS[idx];
@@ -1254,7 +1416,6 @@ html, body {
       playTone(base * 1.25, 'sine', 0.18, 0.14, 0.055);
     },
     fever(level = 1) {
-      // Exciting power-up arpeggio
       const notes = level >= 2
         ? [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98]
         : [440, 554.37, 659.25, 880, 1108.73];
@@ -1263,20 +1424,31 @@ html, body {
       });
     },
     wrong() {
-      // Ice freeze / buzz sound
-      playTone(220, 'sawtooth', 0.16, 0.14, 0);
-      playTone(164.81, 'sawtooth', 0.25, 0.14, 0.09);
+      playTone(220, 'sawtooth', 0.15, 0.13, 0);
+      playTone(164.81, 'sawtooth', 0.22, 0.13, 0.08);
     },
-    countdown(isGo = false) {
-      if (isGo) {
-        playTone(880, 'triangle', 0.14, 0.18, 0);
-        playTone(1174.66, 'triangle', 0.28, 0.2, 0.06);
-      } else {
-        playTone(440, 'sine', 0.12, 0.14, 0);
-      }
+    bomb() {
+      // Low explosive rumble descending
+      [180, 140, 110, 85, 65].forEach((f, i) => {
+        playTone(f, 'sawtooth', 0.18, 0.2, i * 0.045);
+      });
     },
-    tickUrgent() {
-      playTone(880, 'sine', 0.05, 0.07, 0);
+    steal() {
+      // Mischievous rising-falling-rising synth
+      playTone(587.33, 'triangle', 0.1, 0.15, 0);
+      playTone(440, 'triangle', 0.1, 0.15, 0.08);
+      playTone(880, 'sawtooth', 0.22, 0.16, 0.16);
+    },
+    jackpot() {
+      // Coin cascade fanfare
+      [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98, 2093.0].forEach((f, i) => {
+        playTone(f, 'triangle', 0.18, 0.16, i * 0.05);
+      });
+    },
+    radar() {
+      // High-tech sonar ping
+      playTone(1174.66, 'sine', 0.14, 0.15, 0);
+      playTone(1567.98, 'sine', 0.24, 0.14, 0.12);
     },
     victory() {
       const melody = [
@@ -1440,15 +1612,56 @@ html, body {
 })(window);
 </script>
   <script>/**
- * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 웹앱 (첫 화면 게임 설명 + Vercel & PWA 지원)
+ * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 복불복 짝맞추기 웹앱
+ * 5대 복불복 특수 기믹 (⭐2배, 😈점수뺏기, 💣시한폭탄, ⚡레이더 투시, 👑황금잭팟) + 🎰복불복 찬스 룰렛
  */
 (function (global) {
   const STORAGE_KEY_CUSTOM = 'kkachi_g1_custom_pairs_v1';
-  const STORAGE_KEY_BEST = 'kkachi_g1_best_time_v1';
+  const STORAGE_KEY_BEST_SCORE = 'kkachi_g1_best_score_v1';
+
+  const GIMMICK_TYPES = {
+    star: {
+      id: 'star',
+      label: '⭐ 점수 2배',
+      pillClass: 'gimmick-star',
+      bannerClass: 'event-star'
+    },
+    steal: {
+      id: 'steal',
+      label: '😈 점수 뺏기',
+      pillClass: 'gimmick-steal',
+      bannerClass: 'event-steal'
+    },
+    bomb: {
+      id: 'bomb',
+      label: '💣 시한폭탄',
+      pillClass: 'gimmick-bomb',
+      bannerClass: 'event-bomb'
+    },
+    radar: {
+      id: 'radar',
+      label: '⚡ 레이더 투시',
+      pillClass: 'gimmick-radar',
+      bannerClass: 'event-radar'
+    },
+    jackpot: {
+      id: 'jackpot',
+      label: '👑 황금 잭팟',
+      pillClass: 'gimmick-jackpot',
+      bannerClass: 'event-star'
+    },
+    normal: {
+      id: 'normal',
+      label: '',
+      pillClass: '',
+      bannerClass: ''
+    }
+  };
 
   const state = {
     currentScreen: 'intro', // 'intro' | 'game'
     chapterId: 'all', // 'all' | 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5' | 'custom'
+    gimmicksEnabled: true,
     customPairs: null,
     selectedPairs: [],
     cards: [], // 12 cards
@@ -1458,16 +1671,23 @@ html, body {
 
     matchedCount: 0,
     moves: 0,
+    combo: 0,
+    score: 0,
+    nextMatchDoubleBuff: false,
+    rouletteUsed: false,
+
     startTime: 0,
     elapsedSec: 0,
     timerInterval: null,
-    bestTimeSec: null,
+    bestScore: 0,
 
     // Team mode (A팀 vs B팀)
     isTeamMode: false,
     currentTeam: 'A', // 'A' | 'B'
     scoreA: 0,
     scoreB: 0,
+    pairsA: 0,
+    pairsB: 0,
 
     // Web App / PWA state
     deferredPrompt: null,
@@ -1528,15 +1748,25 @@ html, body {
 
     const gameToggleBtn = document.getElementById('btn-mode-toggle');
     if (gameToggleBtn) {
-      gameToggleBtn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로 전환' : '🆚 2팀 대결 모드 켜기';
+      gameToggleBtn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로' : '🆚 2팀 대결 켜기';
     }
+  }
+
+  function toggleGimmicksEnabled() {
+    KkachiSound.click();
+    state.gimmicksEnabled = !state.gimmicksEnabled;
+    const btn = document.getElementById('btn-gimmick-toggle');
+    if (btn) {
+      btn.textContent = state.gimmicksEnabled ? '🎲 복불복 ON' : '🎲 복불복 OFF';
+    }
+    startNewGame();
   }
 
   function loadSavedData() {
     try {
-      const savedBest = localStorage.getItem(STORAGE_KEY_BEST);
+      const savedBest = localStorage.getItem(STORAGE_KEY_BEST_SCORE);
       if (savedBest && !isNaN(Number(savedBest))) {
-        state.bestTimeSec = Number(savedBest);
+        state.bestScore = Number(savedBest);
       }
       const savedCustom = localStorage.getItem(STORAGE_KEY_CUSTOM);
       if (savedCustom) {
@@ -1574,7 +1804,7 @@ html, body {
           return;
         }
       } catch (e) {
-        // fallback to current URL
+        // fallback
       }
     }
     state.shareUrl = location.origin && location.origin !== 'null'
@@ -1652,22 +1882,35 @@ html, body {
     const sixPairs = pickSixPairs();
     state.selectedPairs = sixPairs;
 
-    // Create 12 cards (6 Question cards + 6 Answer cards)
+    // Assign random gimmicks to the 6 pairs
+    const gimmickPool = state.gimmicksEnabled
+      ? shuffle(['star', 'steal', 'bomb', 'radar', 'jackpot', 'normal'])
+      : ['normal', 'normal', 'normal', 'normal', 'normal', 'normal'];
+
     const rawCards = [];
-    sixPairs.forEach((pair) => {
+    sixPairs.forEach((pair, idx) => {
+      const gKey = gimmickPool[idx] || 'normal';
+      const gInfo = GIMMICK_TYPES[gKey] || GIMMICK_TYPES.normal;
+
       rawCards.push({
         pairId: pair.id,
         type: 'q',
-        badge: '📘 개념 · 질문',
+        badge: '📘 개념·질문',
         content: pair.q,
+        gimmick: gInfo.id,
+        gimmickLabel: gInfo.label,
+        gimmickClass: gInfo.pillClass,
         flipped: false,
         matched: false
       });
       rawCards.push({
         pairId: pair.id,
         type: 'a',
-        badge: '💡 정답 · 공식',
+        badge: '💡 정답·공식',
         content: pair.a,
+        gimmick: gInfo.id,
+        gimmickLabel: gInfo.label,
+        gimmickClass: gInfo.pillClass,
         flipped: false,
         matched: false
       });
@@ -1679,14 +1922,50 @@ html, body {
     state.lockBoard = false;
     state.matchedCount = 0;
     state.moves = 0;
+    state.combo = 0;
+    state.score = 0;
+    state.nextMatchDoubleBuff = false;
+    state.rouletteUsed = false;
     state.elapsedSec = 0;
     state.startTime = 0;
     state.currentTeam = 'A';
     state.scoreA = 0;
     state.scoreB = 0;
+    state.pairsA = 0;
+    state.pairsB = 0;
+
+    const rBtn = document.getElementById('btn-roulette');
+    if (rBtn) {
+      rBtn.disabled = false;
+      rBtn.textContent = '🎰 복불복 찬스 뽑기 (1회)';
+    }
+
+    setGimmickBanner(
+      state.gimmicksEnabled
+        ? '🎲 카드마다 복불복 특수 기믹(⭐2배 · 😈점수뺏기 · 💣시한폭탄 · ⚡레이더 · 👑잭팟)이 숨어 있습니다!'
+        : '📘 클래식 공식 짝맞추기 모드입니다. 6쌍의 개념과 공식을 연결하세요!',
+      ''
+    );
 
     renderStatusBar();
     renderCardsGrid();
+  }
+
+  function setGimmickBanner(text, eventClass = '') {
+    const banner = document.getElementById('gimmick-event-banner');
+    const txtEl = document.getElementById('gimmick-banner-text');
+    if (!banner || !txtEl) return;
+    banner.className = 'gimmick-event-banner ' + (eventClass || '');
+    txtEl.innerHTML = text;
+  }
+
+  function showFloatingToast(text, borderColor = '#fbbf24') {
+    const el = document.createElement('div');
+    el.className = 'floating-gimmick-toast';
+    el.style.borderColor = borderColor;
+    el.textContent = text;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1400);
   }
 
   function ensureTimerStarted() {
@@ -1706,44 +1985,44 @@ html, body {
     if (!state.isTeamMode) {
       bar.innerHTML = `
         <div class="status-card">
+          <span class="status-label">🏆 현재 점수</span>
+          <span class="status-val" style="color:#fbbf24;">${state.score.toLocaleString()}점</span>
+        </div>
+        <div class="status-card">
           <span class="status-label">🎯 찾은 공식 짝</span>
           <span class="status-val" style="color:#10b981;">${state.matchedCount} / 6 쌍</span>
         </div>
         <div class="status-card">
-          <span class="status-label">👆 뒤집은 횟수</span>
-          <span class="status-val" style="color:#38bdf8;">${state.moves} 회</span>
+          <span class="status-label">🔥 연속 콤보</span>
+          <span class="status-val" style="color:#f472b6;">${state.combo} COMBO</span>
         </div>
         <div class="status-card">
-          <span class="status-label">⏱️ 경과 시간</span>
-          <span class="status-val" id="stat-timer" style="color:#fbbf24;">${state.elapsedSec.toFixed(1)}초</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">🏆 최고 기록</span>
-          <span class="status-val" style="color:#f472b6;">${state.bestTimeSec ? state.bestTimeSec.toFixed(1) + '초' : '-'}</span>
+          <span class="status-label">⏱️ 시간 / 최고점</span>
+          <span class="status-val" id="stat-timer" style="color:#38bdf8;font-size:1.2rem;">${state.elapsedSec.toFixed(1)}초</span>
         </div>
       `;
     } else {
       bar.innerHTML = `
         <div class="status-card ${state.currentTeam === 'A' ? 'active-turn' : ''}">
           <div>
-            <div class="status-label" style="color:#60a5fa;">🔵 A팀 (1분단)</div>
+            <div class="status-label" style="color:#60a5fa;">🔵 A팀 (1분단) · ${state.pairsA}쌍</div>
             <div style="font-size:0.78rem;color:#fde68a;font-weight:800;">
-              ${state.currentTeam === 'A' ? '👉 현재 A팀 차례! (맞추면 한 번 더!)' : '대기 중'}
+              ${state.currentTeam === 'A' ? '👉 A팀 차례! (맞추면 연속 찬스!)' : '대기 중'}
             </div>
           </div>
-          <span class="status-val" style="color:#60a5fa;">${state.scoreA} 쌍</span>
+          <span class="status-val" style="color:#60a5fa;">${state.scoreA.toLocaleString()}점</span>
         </div>
         <div class="status-card ${state.currentTeam === 'B' ? 'active-turn' : ''}">
           <div>
-            <div class="status-label" style="color:#fb7185;">🔴 B팀 (2분단)</div>
+            <div class="status-label" style="color:#fb7185;">🔴 B팀 (2분단) · ${state.pairsB}쌍</div>
             <div style="font-size:0.78rem;color:#fde68a;font-weight:800;">
-              ${state.currentTeam === 'B' ? '👉 현재 B팀 차례! (맞추면 한 번 더!)' : '대기 중'}
+              ${state.currentTeam === 'B' ? '👉 B팀 차례! (맞추면 연속 찬스!)' : '대기 중'}
             </div>
           </div>
-          <span class="status-val" style="color:#fb7185;">${state.scoreB} 쌍</span>
+          <span class="status-val" style="color:#fb7185;">${state.scoreB.toLocaleString()}점</span>
         </div>
         <div class="status-card">
-          <span class="status-label">🎯 남은 카드 짝</span>
+          <span class="status-label">🎯 남은 공식 짝</span>
           <span class="status-val" style="color:#10b981;">${6 - state.matchedCount} 쌍</span>
         </div>
       `;
@@ -1761,20 +2040,23 @@ html, body {
           card.matched ? 'matched' : ''
         ].join(' ');
 
+        const hasMystery = state.gimmicksEnabled && card.gimmick !== 'normal';
+
         return `
           <div class="card-slot ${stateClasses}" id="card-slot-${idx}" onclick="MatchGame.onCardClick(${idx})">
             <div class="card-inner">
               <!-- Card Back: Big Number 1~12 -->
-              <div class="card-face card-back">
+              <div class="card-face card-back ${hasMystery ? 'has-mystery' : ''}">
+                ${hasMystery ? '<span class="mystery-back-tag">❓ 복불복</span>' : ''}
                 <div class="card-num-circle">${idx + 1}</div>
                 <div class="card-back-sub">🦅 ${idx + 1}번 카드</div>
               </div>
 
-              <!-- Card Front: Formula or Concept -->
+              <!-- Card Front: Formula + Gimmick Pill -->
               <div class="card-face card-front type-${card.type}">
                 <div class="card-top-row">
                   <span class="card-type-badge">${card.badge}</span>
-                  <span style="opacity:0.75;">#${idx + 1}</span>
+                  ${card.gimmickLabel ? `<span class="gimmick-pill ${card.gimmickClass}">${card.gimmickLabel}</span>` : `<span style="opacity:0.7;">#${idx + 1}</span>`}
                 </div>
                 <div class="card-math-content">
                   ${KkachiMathData.renderMathText(card.content)}
@@ -1786,6 +2068,18 @@ html, body {
         `;
       })
       .join('');
+  }
+
+  function addPointsToCurrent(pts) {
+    if (!state.isTeamMode) {
+      state.score = Math.max(0, state.score + pts);
+    } else {
+      if (state.currentTeam === 'A') {
+        state.scoreA = Math.max(0, state.scoreA + pts);
+      } else {
+        state.scoreB = Math.max(0, state.scoreB + pts);
+      }
+    }
   }
 
   function onCardClick(idx) {
@@ -1802,6 +2096,12 @@ html, body {
 
     if (state.firstCardIdx === null) {
       state.firstCardIdx = idx;
+      if (card.gimmick === 'bomb') {
+        setGimmickBanner(
+          '⚠️ 앗! [💣 시한폭탄] 카드를 열었습니다! 이번 턴에 짝을 맞추면 🛠️+250점 해체 대박, 틀리면 💥-50점 폭발!',
+          'event-bomb'
+        );
+      }
       return;
     }
 
@@ -1817,10 +2117,11 @@ html, body {
       firstCard.matched = true;
       secondCard.matched = true;
       state.matchedCount += 1;
+      state.combo += 1;
 
       if (state.isTeamMode) {
-        if (state.currentTeam === 'A') state.scoreA += 1;
-        else state.scoreB += 1;
+        if (state.currentTeam === 'A') state.pairsA += 1;
+        else state.pairsB += 1;
       }
 
       const el1 = document.getElementById(`card-slot-${state.firstCardIdx}`);
@@ -1828,7 +2129,8 @@ html, body {
       if (el1) el1.classList.add('matched');
       if (el2) el2.classList.add('matched');
 
-      KkachiSound.correct(state.matchedCount * 2);
+      applyMatchGimmickReward(firstCard.gimmick);
+
       state.firstCardIdx = null;
       state.secondCardIdx = null;
       state.lockBoard = false;
@@ -1838,14 +2140,25 @@ html, body {
         handleGameClear();
       }
     } else {
-      // MISMATCH -> Wait 1.05s so students can see and memorize, then flip back
+      // MISMATCH
+      state.combo = 0;
       const idx1 = state.firstCardIdx;
       const idx2 = state.secondCardIdx;
       const el1 = document.getElementById(`card-slot-${idx1}`);
       const el2 = document.getElementById(`card-slot-${idx2}`);
+      const hasBomb = firstCard.gimmick === 'bomb' || secondCard.gimmick === 'bomb';
 
       setTimeout(() => {
-        KkachiSound.wrong();
+        if (hasBomb) {
+          KkachiSound.bomb();
+          addPointsToCurrent(-50);
+          const who = state.isTeamMode ? `${state.currentTeam}팀` : '내 점수';
+          setGimmickBanner(`💥 펑!! [💣 시한폭탄] 짝 맞추기에 실패해 폭탄이 터졌습니다! (${who} -50점)`, 'event-bomb');
+          showFloatingToast('💥 펑! 시한폭탄 폭발 (-50점)', '#f43f5e');
+          renderStatusBar();
+        } else {
+          KkachiSound.wrong();
+        }
         if (el1) el1.classList.add('mismatch');
         if (el2) el2.classList.add('mismatch');
       }, 220);
@@ -1863,8 +2176,173 @@ html, body {
         state.secondCardIdx = null;
         state.lockBoard = false;
         renderStatusBar();
-      }, 1100);
+      }, 1150);
     }
+  }
+
+  function applyMatchGimmickReward(gimmick) {
+    let basePts = 100 + (state.combo > 1 ? (state.combo - 1) * 30 : 0);
+    if (state.nextMatchDoubleBuff) {
+      basePts *= 2;
+      state.nextMatchDoubleBuff = false;
+    }
+
+    const teamLabel = state.isTeamMode ? `${state.currentTeam}팀 ` : '';
+
+    if (gimmick === 'star') {
+      const pts = basePts * 2;
+      addPointsToCurrent(pts);
+      KkachiSound.fever(1);
+      setGimmickBanner(`⭐ [더블 스타] 발동! ${teamLabel}점수 2배 획득! (+${pts}점)`, 'event-star');
+      showFloatingToast(`⭐ 점수 2배! +${pts}점`, '#f59e0b');
+    } else if (gimmick === 'steal') {
+      KkachiSound.steal();
+      if (state.isTeamMode) {
+        const oppTeam = state.currentTeam === 'A' ? 'B' : 'A';
+        const oppScore = oppTeam === 'A' ? state.scoreA : state.scoreB;
+        const stolen = Math.min(100, oppScore);
+        if (oppTeam === 'A') state.scoreA -= stolen;
+        else state.scoreB -= stolen;
+        const totalGain = basePts + (stolen > 0 ? stolen : 100);
+        addPointsToCurrent(totalGain);
+        setGimmickBanner(
+          `😈 [스틸 조커] 발동! ${oppTeam}팀의 점수를 뺏어 ${state.currentTeam}팀이 +${totalGain}점 획득!!`,
+          'event-steal'
+        );
+        showFloatingToast(`😈 상대 점수 강탈! +${totalGain}점`, '#c084fc');
+      } else {
+        const pts = basePts + 150;
+        addPointsToCurrent(pts);
+        setGimmickBanner(`😈 [스틸 조커] 보너스 발동! 추가 보너스 +${pts}점 획득!`, 'event-steal');
+        showFloatingToast(`😈 조커 보너스! +${pts}점`, '#c084fc');
+      }
+    } else if (gimmick === 'bomb') {
+      const pts = basePts + 150;
+      addPointsToCurrent(pts);
+      KkachiSound.jackpot();
+      setGimmickBanner(`🛠️ [폭탄 해체 대성공!] 위험한 폭탄 짝을 정확히 맞춰 해체 보너스 +${pts}점 획득!`, 'event-star');
+      showFloatingToast(`🛠️ 폭탄 해체 성공! +${pts}점`, '#10b981');
+    } else if (gimmick === 'radar') {
+      const pts = basePts + 50;
+      addPointsToCurrent(pts);
+      KkachiSound.radar();
+      setGimmickBanner(`⚡ [천리안 레이더] 발동! 아직 안 맞춘 다른 공식 1쌍의 위치를 2초간 자동 투시합니다!`, 'event-radar');
+      showFloatingToast(`⚡ 레이더 발동! 1쌍 위치 투시!`, '#22d3ee');
+      triggerRadarPeek();
+    } else if (gimmick === 'jackpot') {
+      const pts = basePts + 200;
+      addPointsToCurrent(pts);
+      KkachiSound.jackpot();
+      setGimmickBanner(`👑 [황금 까치 잭팟!!] 전설의 잭팟 카드를 맞췄습니다! (+${pts}점)`, 'event-star');
+      showFloatingToast(`👑 황금 잭팟!! +${pts}점`, '#fbbf24');
+    } else {
+      addPointsToCurrent(basePts);
+      KkachiSound.correct(state.matchedCount * 2);
+      const comboTxt = state.combo >= 2 ? ` (${state.combo}연속 콤보!)` : '';
+      setGimmickBanner(`✔ 공식 짝 맞추기 성공! +${basePts}점 획득${comboTxt}`, '');
+    }
+  }
+
+  function triggerRadarPeek() {
+    // Find one unmatched pair and reveal both cards for 2 seconds
+    const unmatched = state.cards
+      .map((c, idx) => ({ c, idx }))
+      .filter((item) => !item.c.matched && !item.c.flipped);
+
+    if (unmatched.length < 2) return;
+    const targetPairId = unmatched[0].c.pairId;
+    const pairIndices = unmatched
+      .filter((item) => item.c.pairId === targetPairId)
+      .map((item) => item.idx);
+
+    pairIndices.forEach((i) => {
+      const el = document.getElementById(`card-slot-${i}`);
+      if (el) el.classList.add('flipped', 'radar-peek');
+    });
+
+    setTimeout(() => {
+      pairIndices.forEach((i) => {
+        if (!state.cards[i].matched && !state.cards[i].flipped) {
+          const el = document.getElementById(`card-slot-${i}`);
+          if (el) el.classList.remove('flipped', 'radar-peek');
+        }
+      });
+    }, 2100);
+  }
+
+  // 1-Time Mystery Roulette Chance Button
+  function spinMysteryRoulette() {
+    if (state.lockBoard || state.rouletteUsed || state.matchedCount === 6) return;
+    state.rouletteUsed = true;
+    const rBtn = document.getElementById('btn-roulette');
+    if (rBtn) {
+      rBtn.disabled = true;
+      rBtn.textContent = '🎰 찬스 사용 완료';
+    }
+
+    ensureTimerStarted();
+    const outcomes = ['auto_match', 'super_radar', 'double_buff'];
+    const pick = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+    if (pick === 'auto_match') {
+      // Automatically match 1 unmatched pair!
+      const unmatched = state.cards
+        .map((c, idx) => ({ c, idx }))
+        .filter((item) => !item.c.matched && !item.c.flipped);
+
+      if (unmatched.length >= 2) {
+        const targetPairId = unmatched[0].c.pairId;
+        const pairItems = unmatched.filter((item) => item.c.pairId === targetPairId);
+        pairItems.forEach((item) => {
+          item.c.flipped = true;
+          item.c.matched = true;
+          const el = document.getElementById(`card-slot-${item.idx}`);
+          if (el) el.classList.add('flipped', 'matched');
+        });
+        state.matchedCount += 1;
+        if (state.isTeamMode) {
+          if (state.currentTeam === 'A') state.pairsA += 1;
+          else state.pairsB += 1;
+        }
+        addPointsToCurrent(150);
+        KkachiSound.jackpot();
+        setGimmickBanner('🎰 [복불복 찬스 대박!] 까치가 날아와 숨겨진 공식 1쌍을 자동으로 맞춰주었습니다! (+150점)', 'event-star');
+        showFloatingToast('🎰 자동 1쌍 매칭 대박! (+150점)', '#fbbf24');
+        renderStatusBar();
+        if (state.matchedCount === 6) handleGameClear();
+        return;
+      }
+    }
+
+    if (pick === 'super_radar') {
+      KkachiSound.radar();
+      setGimmickBanner('🎰 [복불복 찬스!] ⚡ 슈퍼 레이더 가동! 숨겨진 공식 2쌍(4장)을 2.5초간 투시합니다!', 'event-radar');
+      showFloatingToast('🎰 슈퍼 레이더! 4장 투시!', '#22d3ee');
+      const unmatched = state.cards
+        .map((c, idx) => ({ c, idx }))
+        .filter((item) => !item.c.matched && !item.c.flipped)
+        .slice(0, 4);
+
+      unmatched.forEach((item) => {
+        const el = document.getElementById(`card-slot-${item.idx}`);
+        if (el) el.classList.add('flipped', 'radar-peek');
+      });
+      setTimeout(() => {
+        unmatched.forEach((item) => {
+          if (!item.c.matched && !item.c.flipped) {
+            const el = document.getElementById(`card-slot-${item.idx}`);
+            if (el) el.classList.remove('flipped', 'radar-peek');
+          }
+        });
+      }, 2500);
+      return;
+    }
+
+    // double_buff
+    state.nextMatchDoubleBuff = true;
+    KkachiSound.fever(2);
+    setGimmickBanner('🎰 [복불복 찬스!] 🔥 다음번 짝을 맞출 때 획득 점수가 무조건 2배가 됩니다! (⭐더블 스타와 중복 시 4배!)', 'event-steal');
+    showFloatingToast('🔥 다음 성공 점수 2배 버프!', '#ec4899');
   }
 
   function peekAllCards() {
@@ -1908,10 +2386,10 @@ html, body {
     }
 
     if (!state.isTeamMode) {
-      if (!state.bestTimeSec || state.elapsedSec < state.bestTimeSec) {
-        state.bestTimeSec = state.elapsedSec;
+      if (state.score > state.bestScore) {
+        state.bestScore = state.score;
         try {
-          localStorage.setItem(STORAGE_KEY_BEST, String(state.bestTimeSec));
+          localStorage.setItem(STORAGE_KEY_BEST_SCORE, String(state.bestScore));
         } catch (e) {
           // ignore
         }
@@ -1926,17 +2404,17 @@ html, body {
       const reviewEl = document.getElementById('clear-pairs-review');
 
       if (!state.isTeamMode) {
-        titleEl.textContent = '🎉 6쌍 모두 짝맞추기 클리어!';
-        descEl.innerHTML = `총 <strong>${state.moves}번</strong> 뒤집기 · 걸린 시간 <strong>${state.elapsedSec.toFixed(1)}초</strong>!`;
+        titleEl.textContent = `🎉 클리어! 최종 ${state.score.toLocaleString()}점!`;
+        descEl.innerHTML = `걸린 시간 <strong>${state.elapsedSec.toFixed(1)}초</strong> · 시도 <strong>${state.moves}회</strong> · 최고 기록 <strong>${state.bestScore.toLocaleString()}점</strong>`;
       } else {
         if (state.scoreA > state.scoreB) {
-          titleEl.textContent = '🏆 🔵 A팀 (1분단) 승리!';
+          titleEl.textContent = '🏆 🔵 A팀 (1분단) 최종 승리!';
         } else if (state.scoreB > state.scoreA) {
-          titleEl.textContent = '🏆 🔴 B팀 (2분단) 승리!';
+          titleEl.textContent = '🏆 🔴 B팀 (2분단) 최종 승리!';
         } else {
-          titleEl.textContent = '🤝 3 대 3 무승부!';
+          titleEl.textContent = '🤝 동점 무승부!';
         }
-        descEl.innerHTML = `🔵 A팀 <strong>${state.scoreA}쌍</strong> vs 🔴 B팀 <strong>${state.scoreB}쌍</strong> (총 ${state.moves}회 시도)`;
+        descEl.innerHTML = `🔵 A팀 <strong>${state.scoreA.toLocaleString()}점 (${state.pairsA}쌍)</strong> vs 🔴 B팀 <strong>${state.scoreB.toLocaleString()}점 (${state.pairsB}쌍)</strong>`;
       }
 
       reviewEl.innerHTML =
@@ -2069,9 +2547,11 @@ html, body {
     showIntroScreen,
     enterGameScreen,
     setIntroMode,
+    toggleGimmicksEnabled,
     selectChapter,
     startNewGame,
     onCardClick,
+    spinMysteryRoulette,
     peekAllCards,
     toggleTeamMode,
     closeClearAndRestart,

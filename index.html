@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>까치매스 - 고1 수학 공식 12장 짝맞추기 웹앱</title>
+  <title>까치매스 - 고1 수학 공식 12장 복불복 짝맞추기 웹앱</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/style.css" />
@@ -18,54 +18,66 @@
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 시작)
+         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 복불복 안내)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
       <div class="intro-header">
-        <div class="intro-badge">🦅 고등학교 1학년 수학 공식 & 개념 보드게임</div>
-        <h1 class="intro-title">까치매스 : 고1 수학 공식 짝맞추기</h1>
+        <div class="intro-badge">🎲 복불복 특수 기믹(폭탄·스틸·2배·레이더) 탑재!</div>
+        <h1 class="intro-title">까치매스 : 고1 수학 공식 복불복 짝맞추기</h1>
         <p class="intro-subtitle">
-          12장의 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 찾아보세요!
+          12장 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 맞추고 특수 기믹을 터뜨리세요!
         </p>
       </div>
 
       <!-- Visual Pair Example -->
       <div class="intro-example-box">
         <div class="mini-demo-card demo-q">
-          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">📘 개념 · 질문 카드</div>
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">
+            <span>📘 개념 · 질문 카드</span>
+            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
+          </div>
           <div style="font-size:1.05rem;font-weight:800;" id="demo-card-q"></div>
         </div>
-        <div style="font-size:1.4rem;font-weight:900;color:#fbbf24;">↔ 짝! ↔</div>
+        <div style="font-size:1.35rem;font-weight:900;color:#fbbf24;">↔ 짝 성공! ↔</div>
         <div class="mini-demo-card demo-a">
-          <div style="font-size:0.75rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">💡 정답 · 공식 카드</div>
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">
+            <span>💡 정답 · 공식 카드</span>
+            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
+          </div>
           <div style="font-size:1.05rem;font-weight:800;" id="demo-card-a"></div>
         </div>
       </div>
 
-      <!-- 3-Step How to Play Guide -->
-      <div class="guide-steps-grid">
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 1 · 카드 뒤집기</span>
-          <div class="guide-step-title">1번~12번 중 2장 선택</div>
-          <p class="guide-step-desc">
-            뒤집힌 12장 카드 중 두 장을 클릭합니다. 파란색 <strong>개념 카드</strong>와 그에 맞는 초록색 <strong>정답 공식 카드</strong>를 짝지으면 성공!
-          </p>
+      <!-- 5 Mystery Gimmicks Showcase -->
+      <div class="gimmick-showcase-box">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:0.96rem;font-weight:900;color:#fbbf24;">
+            🎰 카드마다 랜덤으로 숨어 있는 5가지 복불복 특수 기믹!
+          </div>
+          <span style="font-size:0.78rem;color:#cbd5e1;">일발 역전의 기회를 노려보세요!</span>
         </div>
 
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 2 · 찬스 활용</span>
-          <div class="guide-step-title">👀 3초 전체 힌트</div>
-          <p class="guide-step-desc">
-            시작 직후나 막혔을 때 <strong>[👀 3초 전체 힌트]</strong>를 누르면 12장 카드의 앞면이 3초 동안 동시에 공개됩니다. 순간 기억력을 발휘하세요!
-          </p>
-        </div>
-
-        <div class="guide-step-card">
-          <span class="guide-step-num">STEP 3 · 두 가지 모드</span>
-          <div class="guide-step-title">타임어택 & 2팀 대결</div>
-          <p class="guide-step-desc">
-            혼자(또는 반 전체가) 최단 시간 기록에 도전하거나, <strong>A팀 vs B팀</strong>으로 나뉘어 짝을 맞춘 팀이 <strong>연속 찬스</strong>를 얻는 팀 대결을 즐길 수 있습니다.
-          </p>
+        <div class="gimmick-showcase-grid">
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#fde68a;">⭐ 더블 스타</div>
+            <p class="gimmick-info-desc">이 공식 짝을 맞추면 기본 점수의 <strong>2배(+200점)</strong> 획득!</p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#e9d5ff;">😈 상대 점수 뺏기</div>
+            <p class="gimmick-info-desc">팀전에서 <strong>상대 팀 점수 100점을 강탈!</strong> (개인전은 +250점)</p>
+          </div>
+          <div class="gimmick-info-item" style="border-color:rgba(244,63,94,0.45);">
+            <div class="gimmick-info-title" style="color:#fda4af;">💣 시한폭탄 (주의!)</div>
+            <p class="gimmick-info-desc">열고 <strong>틀리면 💥-50점 폭발!</strong> 짝을 <strong>맞추면 🛠️해체 보너스 +250점!</strong></p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#a5f3fc;">⚡ 천리안 레이더</div>
+            <p class="gimmick-info-desc">맞추는 즉시 <strong>아직 안 맞춘 다른 1쌍을 2초간 자동 투시!</strong></p>
+          </div>
+          <div class="gimmick-info-item">
+            <div class="gimmick-info-title" style="color:#f472b6;">👑 황금 까치 잭팟</div>
+            <p class="gimmick-info-desc">맞추는 순간 터지는 <strong>+300점 대박 잭팟</strong> 카드!</p>
+          </div>
         </div>
       </div>
 
@@ -78,18 +90,18 @@
         <div class="mode-select-grid">
           <button type="button" class="mode-option-btn active" id="intro-mode-solo" onclick="MatchGame.setIntroMode(false)">
             <div style="font-weight:900;font-size:1rem;color:#38bdf8;margin-bottom:2px;">⏱️ 1인 / 반 전체 타임어택</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">최단 시간과 최소 횟수로 6쌍 모두 맞추기</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">폭탄을 해체하고 최고 점수와 최단 시간 기록에 도전!</div>
           </button>
           <button type="button" class="mode-option-btn" id="intro-mode-team" onclick="MatchGame.setIntroMode(true)">
-            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (2팀 대결)</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">짝을 맞추면 한 번 더 뒤집는 분단·모둠 대항전</div>
+            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (복불복 대결)</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">맞추면 연속 찬스! 점수 뺏기(😈)와 폭탄(💣)으로 일발 역전!</div>
           </button>
         </div>
       </div>
 
       <!-- Start Game Button & Utility Links -->
       <button class="btn-start-huge" onclick="MatchGame.enterGameScreen()">
-        🚀 게임 시작하기! (12장 카드판 열기)
+        🚀 복불복 게임 시작하기! (12장 카드판 열기)
       </button>
 
       <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
@@ -107,26 +119,29 @@
         <div class="brand-box" onclick="MatchGame.showIntroScreen()" title="첫 화면(게임 설명)으로 이동">
           <span class="brand-icon">🦅</span>
           <div>
-            <div class="brand-title">고1 수학 공식 짝맞추기</div>
-            <div class="brand-sub">파란 카드(개념·질문)와 초록 카드(정답·공식) 6쌍(12장)을 뒤집어 짝을 맞추세요!</div>
+            <div class="brand-title">고1 수학 공식 복불복 짝맞추기</div>
+            <div class="brand-sub">파란 카드(개념)와 초록 카드(공식) 짝을 맞추고 💣폭탄과 😈점수뺏기를 노리세요!</div>
           </div>
         </div>
 
         <div class="action-group">
           <button class="btn" onclick="MatchGame.showIntroScreen()">
-            📖 게임 설명
+            📖 설명
+          </button>
+          <button class="btn btn-purple" id="btn-roulette" onclick="MatchGame.spinMysteryRoulette()">
+            🎰 복불복 찬스 뽑기 (1회)
           </button>
           <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
             👀 3초 전체 힌트
           </button>
           <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
-            🆚 2팀 대결 모드 켜기
+            🆚 2팀 대결 켜기
           </button>
           <button class="btn" onclick="MatchGame.openCustomModal()">
-            ✏️ 내 문제 넣기
+            ✏️ 내 문제
           </button>
           <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
-            📲 QR · 앱 설치
+            📲 QR·앱
           </button>
           <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
             🔄 새 카드 섞기
@@ -139,6 +154,14 @@
 
       <!-- Grade 1 Math Chapter Filter Tabs -->
       <nav class="chapter-tabs" id="chapter-tabs"></nav>
+
+      <!-- Live Mystery Gimmick Event Banner -->
+      <div class="gimmick-event-banner" id="gimmick-event-banner">
+        <span id="gimmick-banner-text">🎲 카드에 숨겨진 복불복 기믹(⭐2배 · 😈점수뺏기 · 💣폭탄 · ⚡레이더 · 👑잭팟)을 찾아보세요!</span>
+        <button class="btn" style="padding:4px 10px;font-size:0.76rem;" id="btn-gimmick-toggle" onclick="MatchGame.toggleGimmicksEnabled()">
+          🎲 복불복 ON
+        </button>
+      </div>
 
       <!-- Live Status / Score Bar -->
       <section class="status-bar" id="status-bar"></section>

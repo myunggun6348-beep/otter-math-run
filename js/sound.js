@@ -1,25 +1,14 @@
 /**
  * 까치매스 (KKACHI MATH) Web Audio API Arcade Sound Synthesizer
- * 별도 오디오 파일 없이 즉각적인 타격감과 콤보 상승 사운드를 제공합니다.
+ * 콤보 상승 사운드 및 복불복 특수 기믹(폭탄, 스틸, 잭팟, 레이더) 효과음 내장
  */
 (function (global) {
   let ctx = null;
   let muted = false;
 
-  // Pentatonic + Major scale frequencies for combo pitch escalation
   const COMBO_FREQS = [
-    523.25, // C5 (1 combo)
-    587.33, // D5 (2)
-    659.25, // E5 (3)
-    698.46, // F5 (4)
-    783.99, // G5 (5 - FEVER)
-    880.00, // A5 (6)
-    987.77, // B5 (7)
-    1046.50, // C6 (8)
-    1174.66, // D6 (9)
-    1318.51, // E6 (10 - SUPER FEVER)
-    1396.91, // F6 (11)
-    1567.98  // G6 (12+)
+    523.25, 587.33, 659.25, 698.46, 783.99, 880.00,
+    987.77, 1046.50, 1174.66, 1318.51, 1396.91, 1567.98
   ];
 
   function getCtx() {
@@ -68,11 +57,6 @@
     click() {
       playTone(680, 'sine', 0.06, 0.08);
     },
-    join() {
-      // Friendly magpie chirp
-      playTone(740, 'triangle', 0.09, 0.11, 0);
-      playTone(987.77, 'triangle', 0.13, 0.13, 0.07);
-    },
     correct(combo = 1) {
       const idx = Math.min(COMBO_FREQS.length - 1, Math.max(0, (combo || 1) - 1));
       const base = COMBO_FREQS[idx];
@@ -80,7 +64,6 @@
       playTone(base * 1.25, 'sine', 0.18, 0.14, 0.055);
     },
     fever(level = 1) {
-      // Exciting power-up arpeggio
       const notes = level >= 2
         ? [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98]
         : [440, 554.37, 659.25, 880, 1108.73];
@@ -89,20 +72,31 @@
       });
     },
     wrong() {
-      // Ice freeze / buzz sound
-      playTone(220, 'sawtooth', 0.16, 0.14, 0);
-      playTone(164.81, 'sawtooth', 0.25, 0.14, 0.09);
+      playTone(220, 'sawtooth', 0.15, 0.13, 0);
+      playTone(164.81, 'sawtooth', 0.22, 0.13, 0.08);
     },
-    countdown(isGo = false) {
-      if (isGo) {
-        playTone(880, 'triangle', 0.14, 0.18, 0);
-        playTone(1174.66, 'triangle', 0.28, 0.2, 0.06);
-      } else {
-        playTone(440, 'sine', 0.12, 0.14, 0);
-      }
+    bomb() {
+      // Low explosive rumble descending
+      [180, 140, 110, 85, 65].forEach((f, i) => {
+        playTone(f, 'sawtooth', 0.18, 0.2, i * 0.045);
+      });
     },
-    tickUrgent() {
-      playTone(880, 'sine', 0.05, 0.07, 0);
+    steal() {
+      // Mischievous rising-falling-rising synth
+      playTone(587.33, 'triangle', 0.1, 0.15, 0);
+      playTone(440, 'triangle', 0.1, 0.15, 0.08);
+      playTone(880, 'sawtooth', 0.22, 0.16, 0.16);
+    },
+    jackpot() {
+      // Coin cascade fanfare
+      [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98, 2093.0].forEach((f, i) => {
+        playTone(f, 'triangle', 0.18, 0.16, i * 0.05);
+      });
+    },
+    radar() {
+      // High-tech sonar ping
+      playTone(1174.66, 'sine', 0.14, 0.15, 0);
+      playTone(1567.98, 'sine', 0.24, 0.14, 0.12);
     },
     victory() {
       const melody = [

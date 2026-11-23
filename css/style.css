@@ -1,5 +1,5 @@
 /* ==========================================================================
-   까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 카드 게임 스타일
+   까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 & 복불복 특수 기믹 스타일
    ========================================================================== */
 :root {
   --bg-dark: #0b1120;
@@ -39,22 +39,22 @@ html, body {
 }
 
 /* ==========================================================================
-   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 시작)
+   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 복불복 안내)
    ========================================================================== */
 .intro-screen {
-  max-width: 860px;
-  margin: 16px auto;
+  max-width: 890px;
+  margin: 12px auto;
   background: var(--bg-panel);
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 26px;
-  padding: 34px 32px;
+  padding: 32px 30px;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7);
   animation: fadeIn 0.28s ease;
 }
 
 @media (max-width: 640px) {
   .intro-screen {
-    padding: 24px 18px;
+    padding: 22px 16px;
   }
 }
 
@@ -65,7 +65,7 @@ html, body {
 
 .intro-header {
   text-align: center;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
 
 .intro-badge {
@@ -74,16 +74,16 @@ html, body {
   gap: 6px;
   padding: 6px 16px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  color: #38bdf8;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
   font-size: 0.86rem;
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .intro-title {
-  font-size: clamp(1.75rem, 3.8vw, 2.5rem);
+  font-size: clamp(1.75rem, 3.8vw, 2.45rem);
   font-weight: 900;
   line-height: 1.25;
   margin-bottom: 8px;
@@ -94,7 +94,7 @@ html, body {
 
 .intro-subtitle {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
@@ -107,16 +107,16 @@ html, body {
   background: rgba(11, 17, 32, 0.65);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 16px 20px;
-  margin-bottom: 22px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .mini-demo-card {
   flex: 1;
-  min-width: 210px;
-  max-width: 270px;
-  padding: 14px 16px;
+  min-width: 200px;
+  max-width: 265px;
+  padding: 12px 14px;
   border-radius: 14px;
   text-align: center;
 }
@@ -131,56 +131,50 @@ html, body {
   border: 2px solid #34d399;
 }
 
-.guide-steps-grid {
+/* Mystery Gimmick Cards Showcase in Intro */
+.gimmick-showcase-box {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.55));
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.gimmick-showcase-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
 }
 
-@media (max-width: 720px) {
-  .guide-steps-grid {
-    grid-template-columns: 1fr;
-  }
+.gimmick-info-item {
+  background: rgba(11, 17, 32, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 12px;
 }
 
-.guide-step-card {
-  background: rgba(11, 17, 32, 0.65);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.guide-step-num {
-  display: inline-block;
-  font-size: 0.76rem;
+.gimmick-info-title {
+  font-size: 0.88rem;
   font-weight: 900;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
-  margin-bottom: 8px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.guide-step-title {
-  font-size: 1.02rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: #f8fafc;
-}
-
-.guide-step-desc {
-  font-size: 0.86rem;
+.gimmick-info-desc {
+  font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.38;
 }
 
 .intro-config-box {
   background: rgba(11, 17, 32, 0.55);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 22px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
 }
 
 .config-label {
@@ -195,7 +189,7 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 @media (max-width: 560px) {
@@ -205,7 +199,7 @@ html, body {
 }
 
 .mode-option-btn {
-  padding: 14px 16px;
+  padding: 13px 16px;
   border-radius: 14px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
@@ -223,8 +217,8 @@ html, body {
 
 .btn-start-huge {
   width: 100%;
-  padding: 18px 28px;
-  font-size: 1.25rem;
+  padding: 17px 26px;
+  font-size: 1.22rem;
   font-weight: 900;
   border-radius: 18px;
   border: none;
@@ -245,7 +239,7 @@ html, body {
 }
 
 /* ==========================================================================
-   GAME SCREEN: TOP BAR, TABS, STATUS & 12 CARDS
+   GAME SCREEN: TOP BAR, TABS, GIMMICK BANNER, STATUS & 12 CARDS
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -257,7 +251,7 @@ html, body {
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   padding: 14px 20px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
@@ -273,7 +267,7 @@ html, body {
 }
 
 .brand-title {
-  font-size: 1.35rem;
+  font-size: 1.32rem;
   font-weight: 900;
   background: linear-gradient(90deg, #38bdf8, #34d399);
   -webkit-background-clip: text;
@@ -281,7 +275,7 @@ html, body {
 }
 
 .brand-sub {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   font-weight: 600;
 }
@@ -298,10 +292,10 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 15px;
+  padding: 9px 14px;
   border-radius: 11px;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-main);
@@ -318,6 +312,12 @@ html, body {
   transform: translateY(0) scale(0.97);
 }
 
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-primary {
   background: linear-gradient(135deg, #2563eb, #06b6d4);
   border-color: transparent;
@@ -330,6 +330,13 @@ html, body {
   border-color: transparent;
 }
 
+.btn-purple {
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 6px 18px -4px rgba(236, 72, 153, 0.45);
+}
+
 .btn-emerald {
   background: linear-gradient(135deg, #059669, #10b981);
   border-color: transparent;
@@ -340,13 +347,13 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .tab-btn {
-  padding: 9px 16px;
+  padding: 8px 15px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 800;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
@@ -367,19 +374,72 @@ html, body {
   box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
 }
 
+/* Live Mystery Gimmick Event Banner */
+.gimmick-event-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  margin-bottom: 12px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  transition: all 0.25s ease;
+}
+
+.gimmick-event-banner.event-star {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: #f59e0b;
+  color: #fde68a;
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.3);
+}
+
+.gimmick-event-banner.event-steal {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: #c084fc;
+  color: #f3e8ff;
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
+}
+
+.gimmick-event-banner.event-bomb {
+  background: rgba(244, 63, 94, 0.22);
+  border-color: #f43f5e;
+  color: #fecdd3;
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.45);
+  animation: bombFlash 0.45s ease;
+}
+
+.gimmick-event-banner.event-radar {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: #22d3ee;
+  color: #cffafe;
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.35);
+}
+
+@keyframes bombFlash {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
 /* Status / Score Bar */
 .status-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .status-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -392,13 +452,13 @@ html, body {
 }
 
 .status-label {
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .status-val {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
@@ -407,7 +467,7 @@ html, body {
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 15px;
   perspective: 1200px;
 }
 
@@ -426,7 +486,7 @@ html, body {
 }
 
 .card-slot {
-  height: 185px;
+  height: 188px;
   position: relative;
   cursor: pointer;
 }
@@ -444,6 +504,11 @@ html, body {
   transform: rotateY(180deg);
 }
 
+.card-slot.radar-peek .card-front {
+  border-color: #22d3ee !important;
+  box-shadow: 0 0 32px rgba(34, 211, 238, 0.8) !important;
+}
+
 .card-face {
   position: absolute;
   inset: 0;
@@ -454,7 +519,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 14px;
   box-shadow: 0 14px 28px -8px rgba(0, 0, 0, 0.55);
 }
 
@@ -465,21 +530,39 @@ html, body {
   transition: border-color 0.18s, transform 0.18s;
 }
 
+.card-back.has-mystery {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: inset 0 0 18px rgba(245, 158, 11, 0.12);
+}
+
 .card-slot:hover .card-back {
   border-color: #38bdf8;
   transform: translateY(-3px);
 }
 
+.mystery-back-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
 .card-num-circle {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 999px;
   background: rgba(56, 189, 248, 0.14);
   border: 2px solid rgba(56, 189, 248, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.9rem;
+  font-size: 1.85rem;
   font-weight: 900;
   color: #38bdf8;
   margin-bottom: 8px;
@@ -535,12 +618,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 800;
+  gap: 4px;
 }
 
 .card-type-badge {
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: 999px;
 }
 
@@ -554,8 +638,52 @@ html, body {
   color: #a7f3d0;
 }
 
+/* Gimmick Pill on Card Front */
+.gimmick-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.gimmick-star {
+  background: rgba(245, 158, 11, 0.28);
+  color: #fde68a;
+  border: 1px solid #f59e0b;
+}
+
+.gimmick-steal {
+  background: rgba(168, 85, 247, 0.3);
+  color: #f3e8ff;
+  border: 1px solid #c084fc;
+}
+
+.gimmick-bomb {
+  background: rgba(244, 63, 94, 0.32);
+  color: #fecdd3;
+  border: 1px solid #f43f5e;
+  animation: pulseBomb 0.8s infinite alternate;
+}
+
+.gimmick-radar {
+  background: rgba(6, 182, 212, 0.28);
+  color: #cffafe;
+  border: 1px solid #22d3ee;
+}
+
+.gimmick-jackpot {
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+  color: #ffffff;
+}
+
+@keyframes pulseBomb {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
 .card-math-content {
-  font-size: 1.18rem;
+  font-size: 1.15rem;
   font-weight: 800;
   line-height: 1.45;
   word-break: keep-all;
@@ -563,7 +691,7 @@ html, body {
 }
 
 .card-match-stamp {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 900;
   color: #fbbf24;
   visibility: hidden;
@@ -571,6 +699,33 @@ html, body {
 
 .card-slot.matched .card-match-stamp {
   visibility: visible;
+}
+
+/* Floating Gimmick Popup Effect */
+.floating-gimmick-toast {
+  position: fixed;
+  top: 22%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 2px solid #fbbf24;
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #ffffff;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  z-index: 300;
+  animation: toastFloat 1.35s ease forwards;
+  white-space: nowrap;
+}
+
+@keyframes toastFloat {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+  20% { opacity: 1; transform: translate(-50%, -10px) scale(1.06); }
+  75% { opacity: 1; transform: translate(-50%, -18px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -38px) scale(0.95); }
 }
 
 /* Math Typography */
@@ -615,7 +770,7 @@ html, body {
   padding: 0 2px;
 }
 
-/* Modals (Clear Celebration & Simple Custom Editor) */
+/* Modals */
 .modal-backdrop {
   position: fixed;
   inset: 0;
