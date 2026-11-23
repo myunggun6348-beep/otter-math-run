@@ -3,30 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#050b14" />
+  <meta name="theme-color" content="#060c17" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="수달런 3D" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 고1 수학 몬스터 러너</title>
+  <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <style>/* ==========================================================================
-   수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 3D 러너 & 몬스터 격파 액션 스타일
-   (1·2·3번 보기 겹침 완벽 해결: 3열 고정 홀로그램 방패 + 3D 몬스터 번호 연동)
+   수달런 3D (OTTER MATH RUN 3D) - 직관적인 첫 화면 & 깔끔한 인게임 아케이드 UI
    ========================================================================== */
 :root {
-  --bg-dark: #050b14;
-  --bg-panel: #0f1b2d;
-  --border-subtle: rgba(148, 163, 184, 0.22);
+  --bg-dark: #060c17;
+  --bg-panel: #0f1b2e;
+  --bg-card: #15233b;
+  --border-subtle: rgba(148, 163, 184, 0.2);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --accent-sky: #38bdf8;
   --accent-emerald: #10b981;
   --accent-amber: #f59e0b;
   --accent-rose: #f43f5e;
+  --accent-purple: #a855f7;
 }
 
 * {
@@ -41,31 +42,35 @@ html, body {
   min-height: 100vh;
   background-color: var(--bg-dark);
   background-image:
-    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.16), transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.14), transparent 40%);
+    radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.15), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(168, 85, 247, 0.14), transparent 40%);
   color: var(--text-main);
   font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 }
 
 .app-wrap {
-  max-width: 1140px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 14px 18px 32px;
+  padding: 16px 18px 32px;
 }
 
 /* ==========================================================================
-   SCREEN 1: 3D INTRO & LIVE 3D OTTER PREVIEW (첫 화면)
+   SCREEN 1: CLEAN & INTUITIVE FIRST PAGE (첫 화면 - 한눈에 들어오는 게임 설명)
    ========================================================================== */
 .intro-screen {
-  max-width: 900px;
-  margin: 8px auto;
+  max-width: 860px;
+  margin: 6px auto;
   background: var(--bg-panel);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-radius: 26px;
-  padding: 26px 28px;
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 28px;
+  padding: 28px 30px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.25s ease;
+}
+
+@media (max-width: 640px) {
+  .intro-screen { padding: 20px 16px; }
 }
 
 @keyframes fadeIn {
@@ -73,23 +78,27 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Hero Banner */
 .intro-hero {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 22px;
-  flex-wrap: wrap;
+  gap: 24px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.6));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 22px;
+  padding: 18px 22px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .intro-canvas-box {
-  width: 225px;
-  height: 145px;
-  border-radius: 20px;
+  width: 200px;
+  height: 130px;
+  border-radius: 16px;
   overflow: hidden;
   border: 2px solid #38bdf8;
   background: #050b14;
-  box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.3);
   flex-shrink: 0;
 }
 
@@ -97,18 +106,18 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 14px;
+  padding: 4px 12px;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
-  border: 1px solid rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.45);
   color: #7dd3fc;
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   font-weight: 900;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .intro-title {
-  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
+  font-size: clamp(1.6rem, 3.2vw, 2.15rem);
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 6px;
@@ -118,17 +127,28 @@ html, body {
 }
 
 .intro-subtitle {
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  color: #cbd5e1;
+  font-size: 0.96rem;
   font-weight: 600;
   line-height: 1.45;
+}
+
+/* Visual 3-Step How-To-Play Cards */
+.howto-section-title {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #7dd3fc;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .guide-steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 720px) {
@@ -136,41 +156,80 @@ html, body {
 }
 
 .guide-step-card {
-  background: rgba(5, 11, 20, 0.72);
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 13px 15px;
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
 }
 
-.guide-step-num {
-  display: inline-block;
-  font-size: 0.74rem;
-  font-weight: 900;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
-  margin-bottom: 5px;
+.step-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.55rem;
+  margin-bottom: 2px;
 }
+
+.step-1 .step-icon-circle { background: rgba(56, 189, 248, 0.18); border: 1px solid rgba(56, 189, 248, 0.45); }
+.step-2 .step-icon-circle { background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.45); }
+.step-3 .step-icon-circle { background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.45); }
 
 .guide-step-title {
-  font-size: 0.96rem;
-  font-weight: 800;
-  margin-bottom: 4px;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #ffffff;
 }
 
 .guide-step-desc {
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: var(--text-muted);
   line-height: 1.45;
+  word-break: keep-all;
 }
 
+.keycap-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.keycap {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #060c17;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-bottom-width: 3px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #e2e8f0;
+}
+
+/* Clean Pre-game Config Box */
 .intro-config-box {
-  background: rgba(5, 11, 20, 0.6);
+  background: rgba(6, 12, 23, 0.55);
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 15px 18px;
-  margin-bottom: 18px;
+  border-radius: 20px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.config-row {
+  margin-bottom: 14px;
+}
+
+.config-row:last-child {
+  margin-bottom: 0;
 }
 
 .config-label {
@@ -185,7 +244,6 @@ html, body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 12px;
 }
 
 @media (max-width: 600px) {
@@ -193,8 +251,8 @@ html, body {
 }
 
 .skin-btn {
-  padding: 9px 10px;
-  border-radius: 13px;
+  padding: 10px;
+  border-radius: 14px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
   color: var(--text-main);
@@ -203,10 +261,14 @@ html, body {
   transition: all 0.15s;
 }
 
+.skin-btn:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
 .skin-btn.active {
   border-color: #38bdf8;
-  background: rgba(56, 189, 248, 0.16);
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.18);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
 }
 
 .chapter-tabs {
@@ -228,21 +290,21 @@ html, body {
 }
 
 .tab-btn.active {
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(56, 189, 248, 0.22);
   color: #38bdf8;
   border-color: #38bdf8;
 }
 
 .btn-start-huge {
   width: 100%;
-  padding: 16px 26px;
-  font-size: 1.2rem;
+  padding: 17px 26px;
+  font-size: 1.25rem;
   font-weight: 900;
   border-radius: 18px;
   border: none;
   color: #ffffff;
   background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4);
-  box-shadow: 0 12px 30px -6px rgba(124, 58, 237, 0.6);
+  box-shadow: 0 12px 30px -6px rgba(124, 58, 237, 0.65);
   cursor: pointer;
   transition: transform 0.18s;
 }
@@ -252,9 +314,10 @@ html, body {
 }
 
 /* ==========================================================================
-   SCREEN 2: 3D THIRD-PERSON PERSPECTIVE RUNNER STAGE
+   SCREEN 2: STREAMLINED IN-GAME ARCADE UI (플레이 중 화면)
    ========================================================================== */
-.top-bar {
+/* 1. Unified Slim Arcade HUD Bar */
+.game-hud-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -262,9 +325,72 @@ html, body {
   gap: 10px;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 10px 16px;
   margin-bottom: 10px;
+  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.6);
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 12px;
+  background: rgba(6, 12, 23, 0.65);
+  border: 1px solid var(--border-subtle);
+  font-weight: 900;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ultimate Gauge Pill inside HUD */
+.ult-meter-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  color: #e9d5ff;
+  font-weight: 900;
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ult-meter-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.45), rgba(236, 72, 153, 0.45));
+  transition: width 0.25s ease;
+  pointer-events: none;
+}
+
+.ult-meter-btn.ready {
+  background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6);
+  border-color: #fde68a;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(236, 72, 153, 0.75);
+  animation: pulseUlt 0.55s infinite alternate;
+}
+
+@keyframes pulseUlt {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
 }
 
 .btn {
@@ -289,92 +415,82 @@ html, body {
 .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
 .btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #050b14; border-color: transparent; }
 
-.btn-ultimate-ready {
-  background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6) !important;
-  color: #ffffff !important;
-  border-color: #fde68a !important;
-  box-shadow: 0 0 22px rgba(236, 72, 153, 0.75);
-  animation: pulseUlt 0.55s infinite alternate;
-}
-
-@keyframes pulseUlt {
-  from { transform: scale(1); }
-  to { transform: scale(1.07); }
-}
-
-.hud-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-@media (max-width: 640px) {
-  .hud-bar { grid-template-columns: repeat(2, 1fr); }
-}
-
-.hud-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 13px;
-  padding: 9px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.hud-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
-.hud-val { font-size: 1.22rem; font-weight: 900; font-variant-numeric: tabular-nums; }
-
-/* Question Board */
-.question-board {
-  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+/* 2. Spotlight Math Question Banner + Integrated Timer Progress Bar */
+.question-spotlight {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #172554, #0f172a);
   border: 2px solid #38bdf8;
-  border-radius: 16px;
-  padding: 12px 18px;
-  margin-bottom: 10px;
+  border-radius: 18px;
+  padding: 14px 20px 18px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  box-shadow: 0 8px 25px -8px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 28px -8px rgba(56, 189, 248, 0.4);
 }
 
-.q-badge-pill {
-  padding: 4px 11px;
-  border-radius: 999px;
-  background: rgba(244, 63, 94, 0.25);
-  border: 1px solid rgba(244, 63, 94, 0.5);
-  color: #fda4af;
-  font-size: 0.76rem;
+.q-wave-tag {
+  padding: 5px 12px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #7dd3fc;
+  font-size: 0.8rem;
   font-weight: 900;
   white-space: nowrap;
 }
 
 .q-main-text {
-  font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+  font-size: clamp(1.12rem, 2.2vw, 1.42rem);
   font-weight: 900;
   color: #ffffff;
   text-align: center;
   flex: 1;
+  line-height: 1.35;
 }
 
-/* 3D Viewport Stage Container */
+.q-timer-chip {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fde68a;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.q-progress-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.q-progress-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #fbbf24, #f43f5e);
+  transition: width 0.08s linear;
+}
+
+/* 3. Unobstructed 100% Full-View 3D Viewport */
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 410px;
+  height: 335px;
   border-radius: 22px;
   overflow: hidden;
-  border: 2px solid rgba(56, 189, 248, 0.45);
-  box-shadow: 0 22px 50px -12px rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(56, 189, 248, 0.42);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.85);
   margin-bottom: 12px;
   background: #050b14;
 }
 
 .canvas-stage-wrap.fever-glow {
   border-color: #f59e0b;
-  box-shadow: 0 0 42px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
 }
 
 .canvas-stage-wrap.shake-hit {
@@ -397,81 +513,109 @@ html, body {
   cursor: pointer;
 }
 
-/* Non-Overlapping 3-Column Hologram Formula Shields docked cleanly at top of 3D Stage! */
-.holo-shields-dock {
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  right: 14px;
+/* 4. Single, Clean 3-Column Monster Target Choice Cards directly below the 3D Lanes! */
+.answer-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  z-index: 15;
-  pointer-events: none;
 }
 
-@media (max-width: 640px) {
-  .holo-shields-dock {
-    gap: 6px;
-    left: 8px;
-    right: 8px;
-    top: 8px;
+@media (max-width: 680px) {
+  .answer-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
-.holo-shield {
-  pointer-events: auto;
-  min-height: 78px;
-  border-radius: 15px;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(6px);
-  border: 2.5px solid rgba(56, 189, 248, 0.75);
-  padding: 9px 14px;
+.answer-target-card {
+  position: relative;
+  min-height: 92px;
+  border-radius: 18px;
+  background: var(--bg-panel);
+  border: 2.5px solid rgba(148, 163, 184, 0.3);
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.75);
-  transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.25s ease;
+  box-shadow: 0 12px 26px -8px rgba(0, 0, 0, 0.65);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.holo-shield:hover {
-  transform: translateY(-3px) scale(1.02);
-  border-color: #fbbf24;
-  background: rgba(30, 41, 59, 0.96);
+.answer-target-card:hover {
+  transform: translateY(-4px);
 }
 
-.holo-shield.lane-0 { border-color: #a78bfa; }
-.holo-shield.lane-1 { border-color: #fb7185; }
-.holo-shield.lane-2 { border-color: #34d399; }
+.answer-target-card:active {
+  transform: translateY(0) scale(0.98);
+}
 
-.holo-shield.selected-lane {
+.answer-target-card.lane-0 {
+  border-color: rgba(167, 139, 250, 0.7);
+  background: linear-gradient(160deg, rgba(76, 29, 149, 0.35), rgba(15, 27, 46, 0.95));
+}
+.answer-target-card.lane-0:hover {
+  border-color: #c4b5fd;
+  box-shadow: 0 12px 28px -6px rgba(167, 139, 250, 0.45);
+}
+
+.answer-target-card.lane-1 {
+  border-color: rgba(251, 113, 133, 0.7);
+  background: linear-gradient(160deg, rgba(136, 19, 55, 0.35), rgba(15, 27, 46, 0.95));
+}
+.answer-target-card.lane-1:hover {
+  border-color: #fda4af;
+  box-shadow: 0 12px 28px -6px rgba(251, 113, 133, 0.45);
+}
+
+.answer-target-card.lane-2 {
+  border-color: rgba(52, 211, 153, 0.7);
+  background: linear-gradient(160deg, rgba(6, 78, 59, 0.38), rgba(15, 27, 46, 0.95));
+}
+.answer-target-card.lane-2:hover {
+  border-color: #6ee7b7;
+  box-shadow: 0 12px 28px -6px rgba(52, 211, 153, 0.45);
+}
+
+.answer-target-card.selected-lane {
   border-color: #fbbf24 !important;
-  box-shadow: 0 0 24px rgba(245, 158, 11, 0.65);
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.55);
 }
 
-.holo-shield.shield-correct {
+.answer-target-card.shield-correct {
   border-color: #10b981 !important;
-  background: rgba(6, 95, 70, 0.96) !important;
-  transform: scale(1.06);
+  background: rgba(6, 95, 70, 0.95) !important;
+  transform: scale(1.04);
 }
 
-.holo-shield.shield-wrong {
+.answer-target-card.shield-wrong {
   border-color: #f43f5e !important;
-  background: rgba(136, 19, 55, 0.96) !important;
+  background: rgba(136, 19, 55, 0.95) !important;
 }
 
-.holo-shield.shield-ko {
-  opacity: 0.15;
-  transform: scale(0.9);
-  pointer-events: none;
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.card-formula-body {
+  font-size: 1.22rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  margin: auto 0;
+  line-height: 1.35;
 }
 
 /* Crash Explanation Overlay */
 .crash-tip-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 11, 20, 0.9);
+  background: rgba(5, 11, 20, 0.92);
   backdrop-filter: blur(6px);
   z-index: 40;
   display: none;
@@ -483,54 +627,6 @@ html, body {
 }
 
 .crash-tip-overlay.active { display: flex; }
-
-/* Bottom Left / Center / Right 3D Lane Attack Buttons */
-.controls-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 640px) {
-  .controls-bar { grid-template-columns: 1fr; }
-}
-
-.jump-ctrl-btn {
-  padding: 13px 15px;
-  border-radius: 15px;
-  background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.45);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.14s;
-}
-
-.jump-ctrl-btn:hover {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: #fbbf24;
-  transform: translateY(-2px);
-}
-
-.ctrl-lane-badge {
-  padding: 4px 9px;
-  border-radius: 8px;
-  background: rgba(56, 189, 248, 0.22);
-  color: #7dd3fc;
-  font-size: 0.8rem;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.ctrl-formula-text {
-  font-size: 0.96rem;
-  font-weight: 800;
-  text-align: right;
-  flex: 1;
-}
 
 /* Math Typography */
 .math-inline {
@@ -584,180 +680,175 @@ html, body {
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: 3D INTRO & LIVE 3D OTTER PREVIEW (첫 화면)
+         SCREEN 1: CLEAN & INTUITIVE FIRST PAGE (첫 화면 - 한눈에 보는 설명)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
+      <!-- Hero Banner -->
       <div class="intro-hero">
         <div class="intro-canvas-box">
-          <canvas id="intro-otter-canvas" width="225" height="145"></canvas>
+          <canvas id="intro-otter-canvas" width="200" height="130"></canvas>
         </div>
-        <div style="flex:1;min-width:260px;">
-          <div class="intro-badge">🕶️ 서브웨이 서퍼 / 템플런 스타일 3인칭 3D 입체 액션!</div>
-          <h1 class="intro-title">수달런 3D : 고1 수학 몬스터 러너</h1>
+        <div style="flex:1;min-width:250px;">
+          <div class="intro-badge">🦦 고등학교 1학년 수학 3D 액션 러너</div>
+          <h1 class="intro-title">수달런 3D : 수학 몬스터 격파!</h1>
           <p class="intro-subtitle">
-            3D 입체 다리 위를 달리는 수달의 등 뒤(3인칭 시점)에서 바라보며 질주합니다!<br />
-            저 멀리 지평선에서 다가오는 <strong>왼쪽(1번) · 중앙(2번) · 오른쪽(3번) 3D 몬스터</strong> 중 정답 몬스터에게 레인을 바꿔 <strong>🌊 3D 워터캐논 & 황금 부메랑</strong>으로 날려버리세요!
+            3D 다리를 달리는 수달 앞을 <strong>①번 · ②번 · ③번 몬스터</strong>가 막아섭니다.<br />
+            <strong>정답 공식을 든 몬스터</strong>를 골라 워터캐논으로 시원하게 날려버리세요!
           </p>
         </div>
       </div>
 
-      <!-- 3-Step 3D Action Guide -->
+      <!-- Visual 3-Step How-To-Play -->
+      <div class="howto-section-title">🎮 10초 만에 배우는 게임 방법</div>
       <div class="guide-steps-grid">
-        <div class="guide-step-card">
-          <span class="guide-step-num">3D ACTION 1 · 입체 질주</span>
-          <div class="guide-step-title">좌 · 중 · 우 3D 레인 이동 & 점프</div>
+        <div class="guide-step-card step-1">
+          <div class="step-icon-circle">📋</div>
+          <div class="guide-step-title">1. 문제 확인</div>
           <p class="guide-step-desc">
-            3D 다리 위를 달리며 회전하는 3D 조개 코인(🐚)을 먹고, 지평선 너머에서 점점 커지며 다가오는 3마리 3D 몬스터의 수식 방패를 확인합니다.
+            상단 전광판에 나오는 <strong>고1 수학 문제</strong>와 다가오는 3마리 몬스터를 봅니다.
           </p>
+          <div class="keycap-row">
+            <span class="keycap">🦇 ① 왼쪽</span>
+            <span class="keycap">👹 ② 중앙</span>
+            <span class="keycap">👾 ③ 오른쪽</span>
+          </div>
         </div>
 
-        <div class="guide-step-card">
-          <span class="guide-step-num">3D ACTION 2 · 3D 조준 격파</span>
-          <div class="guide-step-title">정답 레인으로 뱅크 이동 & 발사!</div>
+        <div class="guide-step-card step-2">
+          <div class="step-icon-circle">🎯</div>
+          <div class="guide-step-title">2. 정답 몬스터 공격!</div>
           <p class="guide-step-desc">
-            정답 몬스터(<strong>⬅️1번 왼쪽 / ⬆️2번 중앙 / ➡️3번 오른쪽</strong>)를 클릭하면 카메라가 입체적으로 기울며 3D 워터캐논으로 몬스터를 저 하늘로 날려버립니다!
+            정답 보기 카드를 <strong>마우스로 클릭</strong>하거나 <strong>키보드</strong>를 눌러 조준 발사합니다!
           </p>
+          <div class="keycap-row">
+            <span class="keycap">1</span>
+            <span class="keycap">2</span>
+            <span class="keycap">3</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">또는</span>
+            <span class="keycap">←</span>
+            <span class="keycap">↑</span>
+            <span class="keycap">→</span>
+          </div>
         </div>
 
-        <div class="guide-step-card">
-          <span class="guide-step-num">3D ACTION 3 · 3D 메가 궁극기</span>
-          <div class="guide-step-title">🔥 100% 3D 하이퍼 워터 브레스!</div>
+        <div class="guide-step-card step-3">
+          <div class="step-icon-circle">🔥</div>
+          <div class="guide-step-title">3. 100% 메가 필살기</div>
           <p class="guide-step-desc">
-            게이지 100% 달성 시 <strong>[🔥 3D 메가 궁극기]</strong> 발동! 3차원 터널 전체를 휩쓰는 무지개 레이저로 좌·중·우 몬스터 3마리를 동시에 폭파합니다!
+            몬스터를 3마리 격파해 게이지가 100% 차면 <strong>어려운 문제도 한 방에 전원 폭파!</strong>
           </p>
+          <div class="keycap-row">
+            <span class="keycap">Space</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">또는</span>
+            <span class="keycap">🔥 필살기 버튼</span>
+          </div>
         </div>
       </div>
 
-      <!-- Pre-game Settings (3D Otter Skin, Chapter & Speed) -->
+      <!-- Clean Pre-game Config Box -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 출격할 3D 수달 용사 & 3D 무기 선택 (좌측 3D 화면에서 실시간 미리보기!)</label>
-        <div class="skin-grid">
-          <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 3D 아기 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">3D 황금 조개 부메랑</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 3D 우등생 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">3D 플라즈마 워터 레이저</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 3D 호버보드 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">3D 네온 서핑 웨이브</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 3D 황금왕관 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">3D 썬더 메테오 캐논</div>
-          </button>
+        <div class="config-row">
+          <label class="config-label">🦦 내 3D 수달 캐릭터 선택</label>
+          <div class="skin-grid">
+            <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
+              <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 아기 수달</div>
+              <div style="font-size:0.74rem;color:var(--text-muted);">황금 조개 부메랑</div>
+            </button>
+            <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
+              <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 우등생 수달</div>
+              <div style="font-size:0.74rem;color:var(--text-muted);">플라즈마 워터 레이저</div>
+            </button>
+            <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
+              <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 호버보드 수달</div>
+              <div style="font-size:0.74rem;color:var(--text-muted);">네온 서핑 웨이브</div>
+            </button>
+            <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
+              <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 황금왕관 수달</div>
+              <div style="font-size:0.74rem;color:var(--text-muted);">썬더 메테오 캐논</div>
+            </button>
+          </div>
         </div>
 
-        <label class="config-label">📚 2. 달릴 고1 수학 3D 월드(단원) 선택</label>
-        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:12px;"></div>
-
-        <label class="config-label">⚡ 3. 3D 질주 속도 (난이도)</label>
-        <div class="chapter-tabs">
-          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 질주 (9초)</button>
-          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 3D 질주 (6.5초)</button>
-          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 초음속 3D 부스터 (4.5초)</button>
+        <div class="config-row" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
+          <div style="flex:1;min-width:260px;">
+            <label class="config-label">📚 출제 단원 (고1 수학)</label>
+            <div class="chapter-tabs" id="intro-chapter-tabs"></div>
+          </div>
+          <div>
+            <label class="config-label">⚡ 몬스터 접근 속도</label>
+            <div class="chapter-tabs">
+              <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 (9초)</button>
+              <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 보통 (6.5초)</button>
+              <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 빠름 (4.5초)</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
-        🕶️ 수달런 3D 출격하기! (3인칭 입체 러너 시작)
+        🚀 수달런 3D 출발하기!
       </button>
 
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;">
         <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 스마트폰 QR · 앱 설치</button>
       </div>
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: 3D THIRD-PERSON PERSPECTIVE RUNNER STAGE
+         SCREEN 2: STREAMLINED IN-GAME ARCADE UI (플레이 중 화면)
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
-      <header class="top-bar">
-        <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="OtterRun.showIntro()">
-          <span style="font-size:1.65rem;">🦦🕶️</span>
-          <div>
-            <div style="font-size:1.15rem;font-weight:900;color:#38bdf8;">수달런 3D : 고1 수학 몬스터 러너</div>
-            <div style="font-size:0.76rem;color:var(--text-muted);">왼쪽(1번/←) · 중앙(2번/↑) · 오른쪽(3번/→) 중 정답 3D 몬스터를 클릭해 격파하세요!</div>
-          </div>
+      <!-- 1. Unified Slim Arcade HUD Bar -->
+      <header class="game-hud-bar">
+        <div class="hud-group">
+          <button class="btn" onclick="OtterRun.showIntro()">🏠 첫 화면</button>
+          <div class="hud-pill" id="hud-hearts" title="수달 체력">❤️❤️❤️❤️❤️</div>
+          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 방어막</button>
         </div>
 
-        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
-          <button class="btn" onclick="OtterRun.showIntro()">📖 첫 화면</button>
-          <button class="btn" id="btn-ultimate" disabled onclick="OtterRun.fireUltimateSkill()">
-            ⚡ 3D 필살기 충전 (0%)
+        <div class="hud-group">
+          <button class="ult-meter-btn" id="btn-ultimate" disabled onclick="OtterRun.fireUltimateSkill()">
+            <div class="ult-meter-fill" id="ult-meter-fill"></div>
+            <span style="position:relative;z-index:2;" id="ult-btn-label">⚡ 필살기 35%</span>
           </button>
-          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 3D 방어막(1회)</button>
-          <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 QR·앱</button>
-          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 재출격</button>
-          <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()">🔊</button>
+        </div>
+
+        <div class="hud-group">
+          <div class="hud-pill" style="color:#f472b6;" id="hud-combo">🔥 0 COMBO</div>
+          <div class="hud-pill" style="color:#fbbf24;" id="hud-score">🐚 0점</div>
+          <button class="btn btn-primary" onclick="OtterRun.startGame()" title="처음부터 다시">🔄</button>
+          <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()" title="소리 켜기/끄기">🔊</button>
         </div>
       </header>
 
-      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:8px;"></nav>
-
-      <!-- HUD Bar -->
-      <section class="hud-bar">
-        <div class="hud-card">
-          <span class="hud-label">❤️ 체력 & 방어막</span>
-          <span class="hud-val" id="hud-hearts" style="font-size:1.1rem;">❤️❤️❤️❤️❤️</span>
-        </div>
-        <div class="hud-card">
-          <span class="hud-label">⚡ 3D 궁극기 게이지</span>
-          <span class="hud-val" id="hud-ult" style="color:#c084fc;">0%</span>
-        </div>
-        <div class="hud-card">
-          <span class="hud-label">🐚 격파 점수</span>
-          <span class="hud-val" id="hud-score" style="color:#fbbf24;">0점</span>
-        </div>
-        <div class="hud-card">
-          <span class="hud-label">🔥 연속 격파</span>
-          <span class="hud-val" id="hud-combo" style="color:#f472b6;">0 COMBO</span>
-        </div>
-      </section>
-
-      <!-- Math Question Board -->
-      <section class="question-board">
-        <span class="q-badge-pill" id="q-gate-num">3D WAVE #1 / 10</span>
+      <!-- 2. Spotlight Math Question Banner + Live Timer Progress Bar -->
+      <section class="question-spotlight">
+        <span class="q-wave-tag" id="q-gate-num">WAVE 1 / 10</span>
         <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
-        <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">3D 접근 중</span>
+        <span class="q-timer-chip" id="q-time-label">6.5초</span>
+        <div class="q-progress-track">
+          <div class="q-progress-fill" id="q-progress-fill"></div>
+        </div>
       </section>
 
-      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + Non-Overlapping 3-Column Hologram Shields -->
+      <!-- 3. Unobstructed 100% Full-View 3D Viewport (Click left/center/right monster directly or use cards below!) -->
       <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <canvas id="runner-canvas" width="960" height="410"></canvas>
-
-        <!-- Non-overlapping 3-Column Hologram Formula Shields docked cleanly above the 3D lanes! -->
-        <div class="holo-shields-dock">
-          <div class="holo-shield lane-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
-          <div class="holo-shield lane-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
-          <div class="holo-shield lane-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
-        </div>
+        <canvas id="runner-canvas" width="960" height="335"></canvas>
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:2.2rem;margin-bottom:4px;">💢 쾅! 오답 3D 몬스터 방패에 충돌했어요!</div>
-          <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
-          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.95rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
-          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 다음 3D 몬스터 웨이브로 돌격합니다...</div>
+          <div style="font-size:2.1rem;margin-bottom:4px;">💢 쾅! 오답 몬스터 방패에 부딪혔어요!</div>
+          <div style="font-size:1.15rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
+          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.96rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
+          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 다음 몬스터 웨이브로 돌격합니다...</div>
         </div>
       </main>
 
-      <!-- Bottom Left / Center / Right 3D Lane Attack Buttons -->
-      <section class="controls-bar">
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(0)">
-          <span class="ctrl-lane-badge">⬅️ 1번 왼쪽 레인 (키 1 / ←)</span>
-          <span class="ctrl-formula-text" id="ctrl-text-0"></span>
-        </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(1)">
-          <span class="ctrl-lane-badge">⬆️ 2번 중앙 레인 (키 2 / ↑)</span>
-          <span class="ctrl-formula-text" id="ctrl-text-1"></span>
-        </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(2)">
-          <span class="ctrl-lane-badge">➡️ 3번 오른쪽 레인 (키 3 / →)</span>
-          <span class="ctrl-formula-text" id="ctrl-text-2"></span>
-        </button>
+      <!-- 4. Single, Clean 3-Column Monster Target Choice Cards directly below the 3D Lanes! -->
+      <section class="answer-cards-grid">
+        <div class="answer-target-card lane-0" id="plat-card-0" onclick="OtterRun.jumpToFloorAndDash(0)"></div>
+        <div class="answer-target-card lane-1" id="plat-card-1" onclick="OtterRun.jumpToFloorAndDash(1)"></div>
+        <div class="answer-target-card lane-2" id="plat-card-2" onclick="OtterRun.jumpToFloorAndDash(2)"></div>
       </section>
     </section>
   </div>
@@ -773,10 +864,10 @@ html, body {
 
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="OtterRun.closeResultAndRestart()">
-          🕶️ 한 번 더 3D 출격!
+          🚀 한 번 더 출격!
         </button>
         <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="OtterRun.closeResultAndIntro()">
-          📖 첫 화면(3D 무기 바꾸기)
+          🏠 첫 화면으로
         </button>
       </div>
     </div>
@@ -1686,10 +1777,10 @@ html, body {
 
     // 3D Camera state
     camX: 0,
-    camY: 162,
+    camY: 146,
     camRoll: 0,
     fov: 410,
-    horizonY: 132,
+    horizonY: 86,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -2336,21 +2427,25 @@ html, body {
     const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
     const shieldStr = state.hasShield ? ' 🛡️' : '';
     document.getElementById('hud-hearts').textContent = heartStr + shieldStr;
-    document.getElementById('hud-ult').textContent = `${Math.min(100, Math.floor(state.ultGauge))}%`;
-    document.getElementById('hud-score').textContent = `${state.score.toLocaleString()}점`;
+    document.getElementById('hud-score').textContent = `🐚 ${state.score.toLocaleString()}점`;
     document.getElementById('hud-combo').textContent =
-      state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `${state.combo} COMBO`;
+      state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `🔥 ${state.combo} COMBO`;
+
+    const pct = Math.min(100, Math.floor(state.ultGauge));
+    const fillEl = document.getElementById('ult-meter-fill');
+    if (fillEl) fillEl.style.width = `${pct}%`;
 
     const ultBtn = document.getElementById('btn-ultimate');
-    if (ultBtn) {
-      if (state.ultGauge >= 100) {
+    const ultLbl = document.getElementById('ult-btn-label');
+    if (ultBtn && ultLbl) {
+      if (pct >= 100) {
         ultBtn.disabled = false;
-        ultBtn.className = 'btn btn-ultimate-ready';
-        ultBtn.textContent = '🔥 3D 메가 워터캐논 발사! (100%)';
+        ultBtn.classList.add('ready');
+        ultLbl.textContent = '🔥 메가 필살기 발사! (Space)';
       } else {
         ultBtn.disabled = true;
-        ultBtn.className = 'btn';
-        ultBtn.textContent = `⚡ 3D 필살기 충전 (${Math.floor(state.ultGauge)}%)`;
+        ultBtn.classList.remove('ready');
+        ultLbl.textContent = `⚡ 필살기 충전 ${pct}%`;
       }
     }
 
@@ -2372,7 +2467,7 @@ html, body {
     state.gateCount += 1;
     state.isDashing = false;
     state.otterSpin = 0;
-    state.monsterZ = 1220; // Starts far in the 3D horizon!
+    state.monsterZ = 1220;
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
 
@@ -2383,32 +2478,35 @@ html, body {
       { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
     ]);
 
-    document.getElementById('q-gate-num').textContent = `3D WAVE #${state.gateCount} / ${state.targetGates}`;
+    document.getElementById('q-gate-num').textContent = `WAVE ${state.gateCount} / ${state.targetGates}`;
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
+
+    const laneMeta = [
+      { title: '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#c4b5fd' },
+      { title: '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#fda4af' },
+      { title: '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#6ee7b7' }
+    ];
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
-      const monName = idx === 0 ? '⬅️ ①번 다크배트 (왼쪽)' : idx === 1 ? '⬆️ ②번 고블린 (중앙)' : '➡️ ③번 킹슬라임 (오른쪽)';
-      let bonusHtml = '';
-      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
-      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
-      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️방패</span>`;
+      const meta = laneMeta[idx];
+      let bonusHtml = `<span style="color:var(--text-muted);font-size:0.72rem;">${meta.key}</span>`;
+      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐ 점수 2배</span>`;
+      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️ 체력 +1</span>`;
+      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️ 방어막</span>`;
 
       if (cardEl) {
-        cardEl.className = `holo-shield lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
+        cardEl.className = `answer-target-card lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
         cardEl.innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:900;color:#7dd3fc;">
-            <span>${monName}</span>
+          <div class="card-header-row" style="color:${meta.col};">
+            <span>${meta.title}</span>
             ${bonusHtml}
           </div>
-          <div style="font-size:1.1rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
+          <div class="card-formula-body">
             ${KkachiMathData.renderMathText(opt.text)}
           </div>
         `;
       }
-
-      const ctrlEl = document.getElementById(`ctrl-text-${idx}`);
-      if (ctrlEl) ctrlEl.innerHTML = KkachiMathData.renderMathText(opt.text);
     });
   }
 
@@ -2603,7 +2701,13 @@ html, body {
     const remSec = Math.max(0, (state.monsterZ - state.otterZ3D) / Math.max(1, monSpeedZ));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '🌊 3D 워터캐논 발사!!' : `충돌까지 ${remSec.toFixed(1)}초`;
+      timeLbl.textContent = state.isDashing ? '🌊 발사!!' : `${remSec.toFixed(1)}초`;
+    }
+
+    const progFill = document.getElementById('q-progress-fill');
+    if (progFill) {
+      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - state.otterZ3D) / (1220 - state.otterZ3D)) * 100));
+      progFill.style.width = `${remPct}%`;
     }
 
     // Check 3D Collision!
@@ -2784,9 +2888,9 @@ html, body {
       ctx.restore();
     }
 
-    // 4. Draw Approaching 3D Monsters & 3D Laser Pointer Tethers from the Top 3 Formula Shields!
-    const dockCentersX = [W * 0.175, W * 0.5, W * 0.825];
-    const tetherColors = ['rgba(167, 139, 250, 0.45)', 'rgba(251, 113, 133, 0.45)', 'rgba(52, 211, 153, 0.45)'];
+    // 4. Draw Approaching 3D Monsters & 3D Laser Guide Lines connecting to the 3 Bottom Choice Cards!
+    const dockCentersX = [W * 0.165, W * 0.5, W * 0.835];
+    const tetherColors = ['rgba(167, 139, 250, 0.38)', 'rgba(251, 113, 133, 0.38)', 'rgba(52, 211, 153, 0.38)'];
 
     [0, 1, 2].forEach((ln) => {
       if (!state.monstersAlive[ln]) return;
@@ -2794,14 +2898,14 @@ html, body {
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
 
-      // Dashed 3D Laser Tether connecting Top Formula Card to Approaching 3D Monster
+      // Dashed 3D Laser Guide Line connecting Bottom Choice Card to Approaching 3D Monster
       ctx.save();
       ctx.strokeStyle = tetherColors[ln];
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 6]);
       ctx.beginPath();
-      ctx.moveTo(dockCentersX[ln], 90);
-      ctx.lineTo(pMon.x, pMon.y - 65 * pMon.scale);
+      ctx.moveTo(dockCentersX[ln], H);
+      ctx.lineTo(pMon.x, pMon.y + 6);
       ctx.stroke();
       ctx.restore();
 
@@ -3107,8 +3211,12 @@ html, body {
   function initControls() {
     const canvas = document.getElementById('runner-canvas');
     if (canvas) {
-      canvas.addEventListener('pointerdown', () => {
-        freeHop();
+      canvas.addEventListener('pointerdown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / Math.max(1, rect.width);
+        if (relX < 0.34) jumpToFloorAndDash(0);
+        else if (relX > 0.66) jumpToFloorAndDash(2);
+        else jumpToFloorAndDash(1);
       });
     }
 

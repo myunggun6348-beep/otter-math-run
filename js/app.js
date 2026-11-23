@@ -43,10 +43,10 @@
 
     // 3D Camera state
     camX: 0,
-    camY: 162,
+    camY: 146,
     camRoll: 0,
     fov: 410,
-    horizonY: 132,
+    horizonY: 86,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -693,21 +693,25 @@
     const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
     const shieldStr = state.hasShield ? ' 🛡️' : '';
     document.getElementById('hud-hearts').textContent = heartStr + shieldStr;
-    document.getElementById('hud-ult').textContent = `${Math.min(100, Math.floor(state.ultGauge))}%`;
-    document.getElementById('hud-score').textContent = `${state.score.toLocaleString()}점`;
+    document.getElementById('hud-score').textContent = `🐚 ${state.score.toLocaleString()}점`;
     document.getElementById('hud-combo').textContent =
-      state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `${state.combo} COMBO`;
+      state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `🔥 ${state.combo} COMBO`;
+
+    const pct = Math.min(100, Math.floor(state.ultGauge));
+    const fillEl = document.getElementById('ult-meter-fill');
+    if (fillEl) fillEl.style.width = `${pct}%`;
 
     const ultBtn = document.getElementById('btn-ultimate');
-    if (ultBtn) {
-      if (state.ultGauge >= 100) {
+    const ultLbl = document.getElementById('ult-btn-label');
+    if (ultBtn && ultLbl) {
+      if (pct >= 100) {
         ultBtn.disabled = false;
-        ultBtn.className = 'btn btn-ultimate-ready';
-        ultBtn.textContent = '🔥 3D 메가 워터캐논 발사! (100%)';
+        ultBtn.classList.add('ready');
+        ultLbl.textContent = '🔥 메가 필살기 발사! (Space)';
       } else {
         ultBtn.disabled = true;
-        ultBtn.className = 'btn';
-        ultBtn.textContent = `⚡ 3D 필살기 충전 (${Math.floor(state.ultGauge)}%)`;
+        ultBtn.classList.remove('ready');
+        ultLbl.textContent = `⚡ 필살기 충전 ${pct}%`;
       }
     }
 
@@ -729,7 +733,7 @@
     state.gateCount += 1;
     state.isDashing = false;
     state.otterSpin = 0;
-    state.monsterZ = 1220; // Starts far in the 3D horizon!
+    state.monsterZ = 1220;
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
 
@@ -740,32 +744,35 @@
       { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
     ]);
 
-    document.getElementById('q-gate-num').textContent = `3D WAVE #${state.gateCount} / ${state.targetGates}`;
+    document.getElementById('q-gate-num').textContent = `WAVE ${state.gateCount} / ${state.targetGates}`;
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
+
+    const laneMeta = [
+      { title: '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#c4b5fd' },
+      { title: '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#fda4af' },
+      { title: '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#6ee7b7' }
+    ];
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
-      const monName = idx === 0 ? '⬅️ ①번 다크배트 (왼쪽)' : idx === 1 ? '⬆️ ②번 고블린 (중앙)' : '➡️ ③번 킹슬라임 (오른쪽)';
-      let bonusHtml = '';
-      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
-      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
-      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️방패</span>`;
+      const meta = laneMeta[idx];
+      let bonusHtml = `<span style="color:var(--text-muted);font-size:0.72rem;">${meta.key}</span>`;
+      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐ 점수 2배</span>`;
+      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️ 체력 +1</span>`;
+      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️ 방어막</span>`;
 
       if (cardEl) {
-        cardEl.className = `holo-shield lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
+        cardEl.className = `answer-target-card lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
         cardEl.innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:900;color:#7dd3fc;">
-            <span>${monName}</span>
+          <div class="card-header-row" style="color:${meta.col};">
+            <span>${meta.title}</span>
             ${bonusHtml}
           </div>
-          <div style="font-size:1.1rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
+          <div class="card-formula-body">
             ${KkachiMathData.renderMathText(opt.text)}
           </div>
         `;
       }
-
-      const ctrlEl = document.getElementById(`ctrl-text-${idx}`);
-      if (ctrlEl) ctrlEl.innerHTML = KkachiMathData.renderMathText(opt.text);
     });
   }
 
@@ -960,7 +967,13 @@
     const remSec = Math.max(0, (state.monsterZ - state.otterZ3D) / Math.max(1, monSpeedZ));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '🌊 3D 워터캐논 발사!!' : `충돌까지 ${remSec.toFixed(1)}초`;
+      timeLbl.textContent = state.isDashing ? '🌊 발사!!' : `${remSec.toFixed(1)}초`;
+    }
+
+    const progFill = document.getElementById('q-progress-fill');
+    if (progFill) {
+      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - state.otterZ3D) / (1220 - state.otterZ3D)) * 100));
+      progFill.style.width = `${remPct}%`;
     }
 
     // Check 3D Collision!
@@ -1141,9 +1154,9 @@
       ctx.restore();
     }
 
-    // 4. Draw Approaching 3D Monsters & 3D Laser Pointer Tethers from the Top 3 Formula Shields!
-    const dockCentersX = [W * 0.175, W * 0.5, W * 0.825];
-    const tetherColors = ['rgba(167, 139, 250, 0.45)', 'rgba(251, 113, 133, 0.45)', 'rgba(52, 211, 153, 0.45)'];
+    // 4. Draw Approaching 3D Monsters & 3D Laser Guide Lines connecting to the 3 Bottom Choice Cards!
+    const dockCentersX = [W * 0.165, W * 0.5, W * 0.835];
+    const tetherColors = ['rgba(167, 139, 250, 0.38)', 'rgba(251, 113, 133, 0.38)', 'rgba(52, 211, 153, 0.38)'];
 
     [0, 1, 2].forEach((ln) => {
       if (!state.monstersAlive[ln]) return;
@@ -1151,14 +1164,14 @@
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
 
-      // Dashed 3D Laser Tether connecting Top Formula Card to Approaching 3D Monster
+      // Dashed 3D Laser Guide Line connecting Bottom Choice Card to Approaching 3D Monster
       ctx.save();
       ctx.strokeStyle = tetherColors[ln];
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 6]);
       ctx.beginPath();
-      ctx.moveTo(dockCentersX[ln], 90);
-      ctx.lineTo(pMon.x, pMon.y - 65 * pMon.scale);
+      ctx.moveTo(dockCentersX[ln], H);
+      ctx.lineTo(pMon.x, pMon.y + 6);
       ctx.stroke();
       ctx.restore();
 
@@ -1464,8 +1477,12 @@
   function initControls() {
     const canvas = document.getElementById('runner-canvas');
     if (canvas) {
-      canvas.addEventListener('pointerdown', () => {
-        freeHop();
+      canvas.addEventListener('pointerdown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / Math.max(1, rect.width);
+        if (relX < 0.34) jumpToFloorAndDash(0);
+        else if (relX > 0.66) jumpToFloorAndDash(2);
+        else jumpToFloorAndDash(1);
       });
     }
 
