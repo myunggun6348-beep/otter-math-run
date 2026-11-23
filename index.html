@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 런게임</title>
+  <title>수달런 (OTTER MATH RUN) - 직접 달리고 점프하는 고1 수학 런게임</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/style.css" />
@@ -18,17 +18,19 @@
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 수달 선택)
+         SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
       <div class="intro-hero">
-        <div class="intro-otter-showcase" id="intro-otter-preview"></div>
+        <div class="intro-canvas-box">
+          <canvas id="intro-otter-canvas" width="190" height="135"></canvas>
+        </div>
         <div style="flex:1;min-width:260px;">
-          <div class="intro-badge">🦦 쿠키런 스타일 고1 수학 점프 & 부스터 런게임</div>
+          <div class="intro-badge">🦦 다리를 파닥이며 직접 달리고 점프하는 횡스크롤 런게임</div>
           <h1 class="intro-title">수달런 : 고1 수학 질주!</h1>
           <p class="intro-subtitle">
-            귀여운 수달과 함께 강물을 가르며 달리세요!<br />
-            다가오는 <strong>3개의 수학 관문(1번·2번·3번 발판)</strong> 중 <strong>정답 발판으로 점프 & 부스터 돌진</strong>해 장애물을 돌파하는 액션 런게임입니다.
+            귀여운 수달이 네 발로 강변 다리를 직접 뛰어갑니다!<br />
+            앞에서 다가오는 <strong>3층 발판(🔼3층 구름 · ➡️2층 다리 · 🔽1층 강변)</strong> 중 <strong>정답 발판으로 폴짝 점프해 직접 달려나가 돌파</strong>하세요!
           </p>
         </div>
       </div>
@@ -36,66 +38,65 @@
       <!-- 3-Step How to Play Guide -->
       <div class="guide-steps-grid">
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 1 · 관문 등장</span>
-          <div class="guide-step-title">다가오는 3개의 발판 확인</div>
+          <span class="guide-step-num">STEP 1 · 강변 질주</span>
+          <div class="guide-step-title">네 발로 달리는 수달 & 조개 수집</div>
           <p class="guide-step-desc">
-            수달이 조개(🐚)를 먹으며 달리는 동안 상단에 <strong>고1 수학 문제</strong>가 뜨고 오른쪽에서 <strong>1번(위)·2번(중간)·3번(아래) 발판</strong>이 다가옵니다.
+            수달이 강변을 직접 달리는 동안 화면을 클릭(또는 <strong>Space</strong>)하면 폴짝 점프해 공중의 조개(🐚)를 먹을 수 있습니다.
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 2 · 점프 & 부스터</span>
-          <div class="guide-step-title">정답 발판 클릭 (또는 1·2·3 키)</div>
+          <span class="guide-step-num">STEP 2 · 3층 발판 도약</span>
+          <div class="guide-step-title">정답 층으로 포물선 점프 & 전진!</div>
           <p class="guide-step-desc">
-            정답이 적힌 발판을 클릭(또는 키보드 <strong>1·2·3 / ↑·→·↓</strong>)하면 수달이 그 발판으로 점프해 <strong>🌊 워터 부스터</strong>로 관문을 와장창 돌파합니다!
+            정답이 적힌 층(<strong>1번 3층 구름 / 2번 2층 다리 / 3번 1층 강변</strong>)을 누르면 수달이 그 발판 위로 <strong>포물선 점프하며 앞으로 직접 달려나가</strong> 관문을 통과합니다!
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 3 · 피버 & 아이템</span>
-          <div class="guide-step-title">5콤보 서핑 피버 & 복불복 발판</div>
+          <span class="guide-step-num">STEP 3 · 공중제비 & 피버</span>
+          <div class="guide-step-title">360° 공중제비 & 5콤보 서핑 질주</div>
           <p class="guide-step-desc">
-            5연속 돌파 시 <strong>🏄 서핑 피버(점수 2배)</strong> 변신! 발판에 붙은 <strong>⭐2배·❤️하트회복·🛡️물방울방패</strong> 아이템을 챙겨 최장 거리를 달리세요!
+            정답 발판을 밟으면 수달이 신나게 <strong>공중제비</strong>를 돌며 보너스(⭐2배·❤️회복·🛡️방패)를 얻고, 5연속 돌파 시 <strong>🏄 파도타기 피버</strong>가 터집니다!
           </p>
         </div>
       </div>
 
       <!-- Pre-game Settings (Otter Skin, Chapter & Speed) -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 함께 달릴 귀여운 수달 캐릭터를 골라주세요</label>
+        <label class="config-label">🦦 1. 함께 달릴 수달 캐릭터 코스튬 선택 (좌측 화면에서 실시간 미리보기!)</label>
         <div class="skin-grid">
           <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.95rem;color:#38bdf8;">🦦 아기 조개 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개를 든 귀염둥이</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 아기 조개 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">분홍 볼터치 귀염둥이</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.95rem;color:#34d399;">🎓 고1 우등생 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">안경 + 학사모 장착</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 고1 우등생 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">안경 + 학사모 장착</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.95rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">선글라스 + 서핑보드</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">선글라스 + 서핑보드</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.95rem;color:#f472b6;">👑 황금 왕관 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">전설의 수학 마법사</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 황금 왕관 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">왕관 + 붉은 망토 휘날림</div>
           </button>
         </div>
 
         <label class="config-label">📚 2. 달릴 고1 수학 월드(단원) 선택</label>
-        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:14px;"></div>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:12px;"></div>
 
-        <label class="config-label">⚡ 3. 관문 접근 속도 (난이도)</label>
+        <label class="config-label">⚡ 3. 달리기 속도 (난이도)</label>
         <div class="chapter-tabs">
-          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 질주 (9초)</button>
-          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 질주 (6.5초)</button>
-          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 질주 (4.5초)</button>
+          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 달리기 (9초)</button>
+          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 달리기 (6.5초)</button>
+          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 전력질주 (4.5초)</button>
         </div>
       </div>
 
-      <!-- Start Game Button -->
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
-        🚀 수달런 출발하기! (점프 & 부스터 질주 시작)
+        🚀 수달런 출발하기! (직접 달리고 점프하기)
       </button>
 
       <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
@@ -104,35 +105,34 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문)
+         SCREEN 2: SIDE-SCROLLING CANVAS RUNNER STAGE (게임 진행 화면)
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
       <header class="top-bar">
         <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="OtterRun.showIntro()">
-          <span style="font-size:1.75rem;">🦦</span>
+          <span style="font-size:1.65rem;">🦦</span>
           <div>
-            <div style="font-size:1.2rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 질주!</div>
-            <div style="font-size:0.78rem;color:var(--text-muted);">정답 발판(1·2·3번)을 클릭하거나 키보드(1·2·3 / ↑·→·↓)를 눌러 돌파하세요!</div>
+            <div style="font-size:1.15rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 질주!</div>
+            <div style="font-size:0.76rem;color:var(--text-muted);">정답 발판(1·2·3번)을 누르면 수달이 그 발판 위로 직접 점프해 달려나갑니다!</div>
           </div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
           <button class="btn" onclick="OtterRun.showIntro()">📖 첫 화면(설명)</button>
-          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 물방울 방패(1회)</button>
+          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 방패(1회)</button>
           <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 QR·앱</button>
-          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 처음부터 다시 달리기</button>
+          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 다시 달리기</button>
           <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()">🔊</button>
         </div>
       </header>
 
-      <!-- Chapter Filter Tabs in Game -->
-      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:10px;"></nav>
+      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:8px;"></nav>
 
-      <!-- HUD Bar (Hearts, Distance, Score, Combo) -->
+      <!-- HUD Bar -->
       <section class="hud-bar">
         <div class="hud-card">
-          <span class="hud-label">❤️ 수달 체력 & 방패</span>
-          <span class="hud-val" id="hud-hearts" style="font-size:1.15rem;">❤️❤️❤️❤️❤️</span>
+          <span class="hud-label">❤️ 체력 & 방패</span>
+          <span class="hud-val" id="hud-hearts" style="font-size:1.1rem;">❤️❤️❤️❤️❤️</span>
         </div>
         <div class="hud-card">
           <span class="hud-label">🏃 달린 거리</span>
@@ -148,85 +148,55 @@
         </div>
       </section>
 
-      <!-- Giant Math Question Prompt Board -->
+      <!-- Math Question Board -->
       <section class="question-board">
-        <span class="q-badge-pill" id="q-gate-num">GATE #1</span>
+        <span class="q-badge-pill" id="q-gate-num">GATE #1 / 10</span>
         <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
-        <div class="approach-meter">
-          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;" id="q-time-label">관문 접근 중</div>
-          <div class="approach-track">
-            <div class="approach-fill" id="q-approach-bar"></div>
-          </div>
-        </div>
+        <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">달리는 중</span>
       </section>
 
-      <!-- 3-Lane Parallax Running Track Stage -->
-      <main class="runner-track-stage" id="runner-stage">
-        <!-- Lane 0 (Top Sky Lane) -->
-        <div class="track-lane" id="track-lane-0" onclick="OtterRun.jumpAndDash(0)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">🔼 1번 하늘 발판 (키보드 1 / ↑)</span>
+      <!-- 60FPS Side-Scrolling Canvas World + Approaching 3-Floor Platforms -->
+      <main class="canvas-stage-wrap" id="canvas-stage-wrap">
+        <canvas id="runner-canvas" width="960" height="360"></canvas>
+
+        <!-- Approaching 3-Story Answer Platforms synced with Canvas X position -->
+        <div class="canvas-gates-overlay" id="gates-overlay" style="left: 75%;">
+          <div class="platform-card floor-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
+          <div class="platform-card floor-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
+          <div class="platform-card floor-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
         </div>
 
-        <!-- Lane 1 (Middle Bridge Lane) -->
-        <div class="track-lane active-lane" id="track-lane-1" onclick="OtterRun.jumpAndDash(1)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">➡️ 2번 중앙 발판 (키보드 2 / →)</span>
-        </div>
-
-        <!-- Lane 2 (Bottom Water Lane) -->
-        <div class="track-lane" id="track-lane-2" onclick="OtterRun.jumpAndDash(2)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">🔽 3번 물길 발판 (키보드 3 / ↓)</span>
-        </div>
-
-        <!-- Floating Collectible Clams Container -->
-        <div id="coins-layer"></div>
-
-        <!-- Cute Otter Character -->
-        <div class="otter-character lane-1" id="otter-actor">
-          <div class="otter-booster-jet"></div>
-          <div class="otter-svg-wrap" id="otter-svg-box"></div>
-        </div>
-
-        <!-- Approaching 3-Lane Math Gate Wall -->
-        <div class="gate-column" id="gate-column" style="left: 72%;">
-          <div class="gate-platform" id="gate-plat-0" onclick="event.stopPropagation(); OtterRun.jumpAndDash(0)"></div>
-          <div class="gate-platform" id="gate-plat-1" onclick="event.stopPropagation(); OtterRun.jumpAndDash(1)"></div>
-          <div class="gate-platform" id="gate-plat-2" onclick="event.stopPropagation(); OtterRun.jumpAndDash(2)"></div>
-        </div>
-
-        <!-- Wrong Gate Crash & 1-Line Explanation Overlay -->
+        <!-- Wrong Platform Crash & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:2.4rem;margin-bottom:4px;">💢 쿵! 오답 관문 충돌!</div>
+          <div style="font-size:2.2rem;margin-bottom:4px;">💢 앗! 수달이 발판에서 미끄러졌어요!</div>
           <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
-          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.96rem;color:#e0f2fe;margin-bottom:12px;" id="crash-tip-text"></div>
-          <div style="font-size:0.82rem;color:#7dd3fc;font-weight:800;">잠시 후 수달이 다시 힘을 내어 달립니다...</div>
+          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.95rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
+          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 수달이 털고 일어나 다시 뛰어갑니다...</div>
         </div>
       </main>
 
-      <!-- Bottom Quick Jump & Booster Dash Buttons -->
+      <!-- Bottom Quick Jump & Sprint Buttons -->
       <section class="controls-bar">
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(0)">
-          <span class="ctrl-lane-badge">🔼 1번 점프 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(0)">
+          <span class="ctrl-lane-badge">🔼 1번 (3층 구름 점프!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-0"></span>
         </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(1)">
-          <span class="ctrl-lane-badge">➡️ 2번 중앙 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(1)">
+          <span class="ctrl-lane-badge">➡️ 2번 (2층 다리 점프!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-1"></span>
         </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(2)">
-          <span class="ctrl-lane-badge">🔽 3번 물길 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(2)">
+          <span class="ctrl-lane-badge">🔽 3번 (1층 강변 질주!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-2"></span>
         </button>
       </section>
     </section>
   </div>
 
-  <!-- Game Over / Stage Clear Result Modal -->
+  <!-- Result Modal -->
   <div class="modal-backdrop" id="modal-result">
     <div class="modal-box">
-      <div style="width:110px;height:110px;margin:0 auto 10px;" id="result-otter-box"></div>
+      <div style="font-size:3.2rem;margin-bottom:6px;">🦦🏁</div>
       <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">질주 완료!</h2>
       <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 

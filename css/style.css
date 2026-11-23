@@ -1,5 +1,5 @@
 /* ==========================================================================
-   수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 & 부스터 런게임 스타일
+   수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 캔버스 수달 달리기 & 점프 런게임 스타일
    ========================================================================== */
 :root {
   --bg-dark: #07111e;
@@ -33,27 +33,27 @@ html, body {
 }
 
 .app-wrap {
-  max-width: 1180px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 16px 18px 36px;
+  padding: 14px 18px 32px;
 }
 
 /* ==========================================================================
-   SCREEN 1: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 & 수달 스킨 선택)
+   SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
    ========================================================================== */
 .intro-screen {
-  max-width: 900px;
+  max-width: 880px;
   margin: 8px auto;
   background: var(--bg-panel);
   border: 1px solid rgba(56, 189, 248, 0.38);
   border-radius: 26px;
-  padding: 28px 28px;
+  padding: 26px 28px;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.75);
-  animation: fadeIn 0.28s ease;
+  animation: fadeIn 0.25s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -61,34 +61,20 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 22px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
-  text-align: left;
+  margin-bottom: 20px;
 }
 
-@media (max-width: 640px) {
-  .intro-screen { padding: 20px 16px; }
-  .intro-hero { text-align: center; }
-}
-
-.intro-otter-showcase {
-  width: 135px;
+.intro-canvas-box {
+  width: 190px;
   height: 135px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(16, 185, 129, 0.08));
-  border: 3px solid #38bdf8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
-  animation: otterBob 1.6s ease-in-out infinite alternate;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #38bdf8;
+  background: #0c4a6e;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.3);
   flex-shrink: 0;
-}
-
-@keyframes otterBob {
-  from { transform: translateY(-4px) rotate(-2deg); }
-  to { transform: translateY(5px) rotate(3deg); }
 }
 
 .intro-badge {
@@ -106,7 +92,7 @@ html, body {
 }
 
 .intro-title {
-  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
+  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 6px;
@@ -117,15 +103,16 @@ html, body {
 
 .intro-subtitle {
   color: var(--text-muted);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  line-height: 1.45;
 }
 
 .guide-steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 @media (max-width: 720px) {
@@ -136,43 +123,42 @@ html, body {
   background: rgba(7, 17, 30, 0.72);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 13px 15px;
 }
 
 .guide-step-num {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 900;
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   background: rgba(56, 189, 248, 0.18);
   color: #38bdf8;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .guide-step-title {
-  font-size: 0.98rem;
+  font-size: 0.96rem;
   font-weight: 800;
   margin-bottom: 4px;
 }
 
 .guide-step-desc {
-  font-size: 0.83rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   line-height: 1.45;
 }
 
-/* Skin & Config Box */
 .intro-config-box {
   background: rgba(7, 17, 30, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 16px 18px;
+  padding: 15px 18px;
   margin-bottom: 18px;
 }
 
 .config-label {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-weight: 800;
   color: #cbd5e1;
   margin-bottom: 8px;
@@ -183,7 +169,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 @media (max-width: 600px) {
@@ -191,42 +177,38 @@ html, body {
 }
 
 .skin-btn {
-  padding: 10px;
-  border-radius: 14px;
+  padding: 9px 10px;
+  border-radius: 13px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
   color: var(--text-main);
   cursor: pointer;
   text-align: center;
-  transition: all 0.16s;
-}
-
-.skin-btn:hover {
-  border-color: rgba(56, 189, 248, 0.5);
+  transition: all 0.15s;
 }
 
 .skin-btn.active {
   border-color: #38bdf8;
   background: rgba(56, 189, 248, 0.16);
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
 }
 
 .chapter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
 }
 
 .tab-btn {
   padding: 7px 14px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 800;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.16s;
+  transition: all 0.15s;
 }
 
 .tab-btn.active {
@@ -237,8 +219,8 @@ html, body {
 
 .btn-start-huge {
   width: 100%;
-  padding: 17px 26px;
-  font-size: 1.22rem;
+  padding: 16px 26px;
+  font-size: 1.2rem;
   font-weight: 900;
   border-radius: 18px;
   border: none;
@@ -246,16 +228,15 @@ html, body {
   background: linear-gradient(135deg, #0284c7, #06b6d4, #10b981);
   box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.6);
   cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition: transform 0.18s;
 }
 
 .btn-start-huge:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 36px -6px rgba(6, 182, 212, 0.8);
+  transform: translateY(-2px);
 }
 
 /* ==========================================================================
-   SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문 트랙)
+   SCREEN 2: SIDE-SCROLLING CANVAS RUNNER STAGE
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -265,25 +246,25 @@ html, body {
   gap: 10px;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 12px 18px;
-  margin-bottom: 12px;
+  border-radius: 16px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 13px;
+  gap: 5px;
+  padding: 7px 12px;
   border-radius: 10px;
   font-weight: 800;
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.14s;
 }
 
 .btn:hover { background: rgba(255, 255, 255, 0.14); }
@@ -291,389 +272,140 @@ html, body {
 .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
 .btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #07111e; border-color: transparent; }
 
-/* HUD Stats Bar */
 .hud-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .hud-bar { grid-template-columns: repeat(2, 1fr); }
 }
 
 .hud-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: 13px;
+  padding: 9px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.hud-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
-.hud-val { font-size: 1.3rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.hud-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+.hud-val { font-size: 1.22rem; font-weight: 900; font-variant-numeric: tabular-nums; }
 
-/* Giant Question Prompt Banner above Track */
+/* Question Board */
 .question-board {
   background: linear-gradient(135deg, #172554, #0f172a);
   border: 2px solid #38bdf8;
-  border-radius: 18px;
-  padding: 14px 20px;
-  margin-bottom: 12px;
+  border-radius: 16px;
+  padding: 12px 18px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  box-shadow: 0 10px 30px -8px rgba(56, 189, 248, 0.35);
-  position: relative;
-  overflow: hidden;
+  gap: 14px;
+  box-shadow: 0 8px 25px -8px rgba(56, 189, 248, 0.35);
 }
 
 .q-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(56, 189, 248, 0.22);
   color: #7dd3fc;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 900;
   white-space: nowrap;
 }
 
 .q-main-text {
-  font-size: clamp(1.1rem, 2.2vw, 1.42rem);
+  font-size: clamp(1.05rem, 2.1vw, 1.35rem);
   font-weight: 900;
   color: #ffffff;
   text-align: center;
   flex: 1;
-  line-height: 1.4;
 }
 
-/* Approach Distance Gauge */
-.approach-meter {
-  width: 130px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.approach-track {
-  width: 100%;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-
-.approach-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #f59e0b, #f43f5e);
-  width: 0%;
-  transition: width 0.1s linear;
-}
-
-/* ==========================================================================
-   3-LANE PARALLAX RUNNING TRACK STAGE
-   ========================================================================== */
-.runner-track-stage {
+/* Canvas Stage Container */
+.canvas-stage-wrap {
   position: relative;
   width: 100%;
   height: 360px;
   border-radius: 22px;
   overflow: hidden;
-  border: 2px solid rgba(56, 189, 248, 0.4);
-  background: linear-gradient(180deg, #0c4a6e 0%, #0369a1 34%, #0284c7 66%, #0f766e 100%);
+  border: 2px solid rgba(56, 189, 248, 0.45);
   box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.75);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  background: #0c4a6e;
 }
 
-.runner-track-stage.fever-mode {
+.canvas-stage-wrap.fever-glow {
   border-color: #f59e0b;
-  box-shadow: 0 0 40px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 38px rgba(245, 158, 11, 0.55);
 }
 
-/* Scrolling Track Lanes (3 Horizontal Lanes) */
-.track-lane {
-  position: relative;
+#runner-canvas {
   width: 100%;
-  height: 33.333%;
-  border-bottom: 2px dashed rgba(255, 255, 255, 0.18);
-  display: flex;
-  align-items: center;
-  padding-left: 16px;
-  transition: background 0.18s;
+  height: 100%;
+  display: block;
   cursor: pointer;
 }
 
-.track-lane:last-child {
-  border-bottom: none;
-}
-
-.track-lane:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.track-lane.active-lane {
-  background: rgba(56, 189, 248, 0.12);
-}
-
-.lane-water-lines {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 70px,
-    rgba(255, 255, 255, 0.08) 70px,
-    rgba(255, 255, 255, 0.08) 110px
-  );
-  animation: scrollTrack 0.7s linear infinite;
-  pointer-events: none;
-}
-
-.runner-track-stage.fever-mode .lane-water-lines {
-  animation-duration: 0.35s;
-}
-
-@keyframes scrollTrack {
-  from { background-position-x: 0px; }
-  to { background-position-x: -110px; }
-}
-
-.lane-label-tag {
-  position: relative;
-  z-index: 2;
-  font-size: 0.76rem;
-  font-weight: 900;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: rgba(7, 17, 30, 0.55);
-  color: rgba(255, 255, 255, 0.75);
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   THE CUTE OTTER CHARACTER (달리고 점프하는 수달)
-   ========================================================================== */
-.otter-character {
-  position: absolute;
-  left: 11%;
-  width: 104px;
-  height: 98px;
-  z-index: 20;
-  transition: top 0.22s cubic-bezier(0.2, 0.9, 0.32, 1.25), left 0.22s ease, transform 0.22s ease;
-  pointer-events: none;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
-}
-
-.otter-character.lane-0 { top: 11px; }
-.otter-character.lane-1 { top: 131px; }
-.otter-character.lane-2 { top: 251px; }
-
-.otter-character.jumping {
-  transform: scale(1.14) rotate(-8deg);
-}
-
-.otter-character.dashing {
-  transform: scale(1.18) translateX(24px);
-}
-
-.otter-character.hurt {
-  animation: otterHurtShake 0.45s ease;
-}
-
-@keyframes otterHurtShake {
-  0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-14px) rotate(-15deg); }
-  75% { transform: translateX(10px) rotate(12deg); }
-}
-
-.otter-svg-wrap {
-  width: 100%;
-  height: 100%;
-  animation: otterRunCycle 0.28s ease-in-out infinite alternate;
-}
-
-@keyframes otterRunCycle {
-  from { transform: translateY(-3px) rotate(-2deg); }
-  to { transform: translateY(3px) rotate(3deg); }
-}
-
-/* Water Jet Booster Flame behind Otter */
-.otter-booster-jet {
-  position: absolute;
-  left: -38px;
-  top: 36px;
-  width: 48px;
-  height: 28px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, #38bdf8, #e0f2fe);
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-
-.otter-character.dashing .otter-booster-jet,
-.runner-track-stage.fever-mode .otter-booster-jet {
-  opacity: 1;
-  animation: jetFlicker 0.12s infinite alternate;
-}
-
-@keyframes jetFlicker {
-  from { transform: scaleX(0.9); }
-  to { transform: scaleX(1.35); }
-}
-
-/* Collectible Floating Clams on Track */
-.track-coin {
-  position: absolute;
-  font-size: 1.5rem;
-  z-index: 8;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
-  transition: transform 0.15s, opacity 0.15s;
-}
-
-/* ==========================================================================
-   APPROACHING 3-LANE MATH GATE PLATFORMS (다가오는 정답/오답 발판 관문)
-   ========================================================================== */
-.gate-column {
+/* Floating HTML Formula Labels synced over the approaching Canvas Platforms */
+.canvas-gates-overlay {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 270px;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 8px 0;
+  width: 245px;
   pointer-events: auto;
+  z-index: 15;
 }
 
-@media (max-width: 680px) {
-  .gate-column { width: 205px; }
-}
-
-.gate-platform {
-  height: 102px;
-  margin: 0 8px;
-  border-radius: 16px;
+.platform-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 76px;
+  border-radius: 14px;
   background: rgba(15, 23, 42, 0.92);
-  border: 3px solid #38bdf8;
-  padding: 10px 14px;
+  border: 2.5px solid #38bdf8;
+  padding: 7px 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-  transition: transform 0.14s, border-color 0.14s, background 0.14s;
-  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+  transition: transform 0.14s, border-color 0.14s;
 }
 
-.gate-platform:hover {
+.platform-card:hover {
   transform: scale(1.04);
   border-color: #fbbf24;
-  background: rgba(30, 41, 59, 0.98);
 }
 
-.gate-platform.lane-selected {
+.platform-card.target-floor {
   border-color: #fbbf24;
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.55);
 }
 
-.gate-platform.gate-correct {
+.platform-card.plat-correct {
   border-color: #10b981 !important;
   background: rgba(6, 95, 70, 0.95) !important;
-  transform: scale(1.08);
 }
 
-.gate-platform.gate-wrong {
+.platform-card.plat-wrong {
   border-color: #f43f5e !important;
   background: rgba(136, 19, 55, 0.95) !important;
 }
 
-.gate-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.74rem;
-  font-weight: 900;
-  color: #93c5fd;
-}
+/* Floor heights matching Canvas Y coordinates (3층 하늘 / 2층 다리 / 1층 강변) */
+.platform-card.floor-0 { top: 24px; }
+.platform-card.floor-1 { top: 132px; }
+.platform-card.floor-2 { top: 240px; }
 
-.gate-bonus-tag {
-  padding: 1px 7px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 900;
-}
-
-.bonus-star { background: rgba(245, 158, 11, 0.25); color: #fde68a; border: 1px solid #f59e0b; }
-.bonus-heart { background: rgba(244, 63, 94, 0.25); color: #fecdd3; border: 1px solid #f43f5e; }
-.bonus-shield { background: rgba(6, 182, 212, 0.25); color: #cffafe; border: 1px solid #22d3ee; }
-
-.gate-formula-box {
-  font-size: 1.08rem;
-  font-weight: 900;
-  color: #ffffff;
-  text-align: center;
-  margin: auto 0;
-  line-height: 1.3;
-}
-
-/* Quick Jump & Dash Control Buttons below Track */
-.controls-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 640px) {
-  .controls-bar { grid-template-columns: 1fr; gap: 8px; }
-}
-
-.jump-ctrl-btn {
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.4);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.jump-ctrl-btn:hover {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: #38bdf8;
-  transform: translateY(-2px);
-}
-
-.jump-ctrl-btn:active {
-  transform: scale(0.98);
-}
-
-.ctrl-lane-badge {
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
-  font-size: 0.82rem;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.ctrl-formula-text {
-  font-size: 1rem;
-  font-weight: 800;
-  text-align: right;
-  flex: 1;
-}
-
-/* Explanation Overlay inside Track on Wrong Gate Collision */
+/* Crash Explanation Overlay */
 .crash-tip-overlay {
   position: absolute;
   inset: 0;
@@ -688,8 +420,54 @@ html, body {
   text-align: center;
 }
 
-.crash-tip-overlay.active {
+.crash-tip-overlay.active { display: flex; }
+
+/* Bottom Jump Controls */
+.controls-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .controls-bar { grid-template-columns: 1fr; }
+}
+
+.jump-ctrl-btn {
+  padding: 13px 15px;
+  border-radius: 15px;
+  background: var(--bg-panel);
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  color: var(--text-main);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.14s;
+}
+
+.jump-ctrl-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.ctrl-lane-badge {
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-size: 0.8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.ctrl-formula-text {
+  font-size: 0.96rem;
+  font-weight: 800;
+  text-align: right;
+  flex: 1;
 }
 
 /* Math Typography */
@@ -699,9 +477,7 @@ html, body {
   color: #ffffff;
   padding: 0 2px;
 }
-
 .m-fn { font-style: normal; font-weight: 800; }
-
 .m-frac {
   display: inline-flex;
   flex-direction: column;
@@ -711,7 +487,6 @@ html, body {
   margin: 0 3px;
   line-height: 1.05;
 }
-
 .m-num { border-bottom: 1.5px solid currentColor; padding: 0 3px 1px; }
 .m-den { padding: 1px 3px 0; }
 .m-sqrt { display: inline-flex; align-items: center; }
@@ -729,9 +504,7 @@ html, body {
   padding: 20px;
   z-index: 200;
 }
-
 .modal-backdrop.active { display: flex; }
-
 .modal-box {
   background: var(--bg-panel);
   border: 2px solid rgba(56, 189, 248, 0.45);

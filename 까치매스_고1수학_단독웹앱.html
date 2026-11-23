@@ -10,11 +10,11 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 런게임</title>
+  <title>수달런 (OTTER MATH RUN) - 직접 달리고 점프하는 고1 수학 런게임</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <style>/* ==========================================================================
-   수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 & 부스터 런게임 스타일
+   수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 캔버스 수달 달리기 & 점프 런게임 스타일
    ========================================================================== */
 :root {
   --bg-dark: #07111e;
@@ -48,27 +48,27 @@ html, body {
 }
 
 .app-wrap {
-  max-width: 1180px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 16px 18px 36px;
+  padding: 14px 18px 32px;
 }
 
 /* ==========================================================================
-   SCREEN 1: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 & 수달 스킨 선택)
+   SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
    ========================================================================== */
 .intro-screen {
-  max-width: 900px;
+  max-width: 880px;
   margin: 8px auto;
   background: var(--bg-panel);
   border: 1px solid rgba(56, 189, 248, 0.38);
   border-radius: 26px;
-  padding: 28px 28px;
+  padding: 26px 28px;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.75);
-  animation: fadeIn 0.28s ease;
+  animation: fadeIn 0.25s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -76,34 +76,20 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 22px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
-  text-align: left;
+  margin-bottom: 20px;
 }
 
-@media (max-width: 640px) {
-  .intro-screen { padding: 20px 16px; }
-  .intro-hero { text-align: center; }
-}
-
-.intro-otter-showcase {
-  width: 135px;
+.intro-canvas-box {
+  width: 190px;
   height: 135px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(16, 185, 129, 0.08));
-  border: 3px solid #38bdf8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
-  animation: otterBob 1.6s ease-in-out infinite alternate;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #38bdf8;
+  background: #0c4a6e;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.3);
   flex-shrink: 0;
-}
-
-@keyframes otterBob {
-  from { transform: translateY(-4px) rotate(-2deg); }
-  to { transform: translateY(5px) rotate(3deg); }
 }
 
 .intro-badge {
@@ -121,7 +107,7 @@ html, body {
 }
 
 .intro-title {
-  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
+  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 6px;
@@ -132,15 +118,16 @@ html, body {
 
 .intro-subtitle {
   color: var(--text-muted);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  line-height: 1.45;
 }
 
 .guide-steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 @media (max-width: 720px) {
@@ -151,43 +138,42 @@ html, body {
   background: rgba(7, 17, 30, 0.72);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 13px 15px;
 }
 
 .guide-step-num {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 900;
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   background: rgba(56, 189, 248, 0.18);
   color: #38bdf8;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .guide-step-title {
-  font-size: 0.98rem;
+  font-size: 0.96rem;
   font-weight: 800;
   margin-bottom: 4px;
 }
 
 .guide-step-desc {
-  font-size: 0.83rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   line-height: 1.45;
 }
 
-/* Skin & Config Box */
 .intro-config-box {
   background: rgba(7, 17, 30, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 16px 18px;
+  padding: 15px 18px;
   margin-bottom: 18px;
 }
 
 .config-label {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-weight: 800;
   color: #cbd5e1;
   margin-bottom: 8px;
@@ -198,7 +184,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 @media (max-width: 600px) {
@@ -206,42 +192,38 @@ html, body {
 }
 
 .skin-btn {
-  padding: 10px;
-  border-radius: 14px;
+  padding: 9px 10px;
+  border-radius: 13px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
   color: var(--text-main);
   cursor: pointer;
   text-align: center;
-  transition: all 0.16s;
-}
-
-.skin-btn:hover {
-  border-color: rgba(56, 189, 248, 0.5);
+  transition: all 0.15s;
 }
 
 .skin-btn.active {
   border-color: #38bdf8;
   background: rgba(56, 189, 248, 0.16);
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
 }
 
 .chapter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
 }
 
 .tab-btn {
   padding: 7px 14px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 800;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.16s;
+  transition: all 0.15s;
 }
 
 .tab-btn.active {
@@ -252,8 +234,8 @@ html, body {
 
 .btn-start-huge {
   width: 100%;
-  padding: 17px 26px;
-  font-size: 1.22rem;
+  padding: 16px 26px;
+  font-size: 1.2rem;
   font-weight: 900;
   border-radius: 18px;
   border: none;
@@ -261,16 +243,15 @@ html, body {
   background: linear-gradient(135deg, #0284c7, #06b6d4, #10b981);
   box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.6);
   cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition: transform 0.18s;
 }
 
 .btn-start-huge:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 36px -6px rgba(6, 182, 212, 0.8);
+  transform: translateY(-2px);
 }
 
 /* ==========================================================================
-   SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문 트랙)
+   SCREEN 2: SIDE-SCROLLING CANVAS RUNNER STAGE
    ========================================================================== */
 .top-bar {
   display: flex;
@@ -280,25 +261,25 @@ html, body {
   gap: 10px;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 12px 18px;
-  margin-bottom: 12px;
+  border-radius: 16px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 13px;
+  gap: 5px;
+  padding: 7px 12px;
   border-radius: 10px;
   font-weight: 800;
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.14s;
 }
 
 .btn:hover { background: rgba(255, 255, 255, 0.14); }
@@ -306,389 +287,140 @@ html, body {
 .btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
 .btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #07111e; border-color: transparent; }
 
-/* HUD Stats Bar */
 .hud-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .hud-bar { grid-template-columns: repeat(2, 1fr); }
 }
 
 .hud-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: 13px;
+  padding: 9px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.hud-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
-.hud-val { font-size: 1.3rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.hud-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+.hud-val { font-size: 1.22rem; font-weight: 900; font-variant-numeric: tabular-nums; }
 
-/* Giant Question Prompt Banner above Track */
+/* Question Board */
 .question-board {
   background: linear-gradient(135deg, #172554, #0f172a);
   border: 2px solid #38bdf8;
-  border-radius: 18px;
-  padding: 14px 20px;
-  margin-bottom: 12px;
+  border-radius: 16px;
+  padding: 12px 18px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  box-shadow: 0 10px 30px -8px rgba(56, 189, 248, 0.35);
-  position: relative;
-  overflow: hidden;
+  gap: 14px;
+  box-shadow: 0 8px 25px -8px rgba(56, 189, 248, 0.35);
 }
 
 .q-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(56, 189, 248, 0.22);
   color: #7dd3fc;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 900;
   white-space: nowrap;
 }
 
 .q-main-text {
-  font-size: clamp(1.1rem, 2.2vw, 1.42rem);
+  font-size: clamp(1.05rem, 2.1vw, 1.35rem);
   font-weight: 900;
   color: #ffffff;
   text-align: center;
   flex: 1;
-  line-height: 1.4;
 }
 
-/* Approach Distance Gauge */
-.approach-meter {
-  width: 130px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.approach-track {
-  width: 100%;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-
-.approach-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #f59e0b, #f43f5e);
-  width: 0%;
-  transition: width 0.1s linear;
-}
-
-/* ==========================================================================
-   3-LANE PARALLAX RUNNING TRACK STAGE
-   ========================================================================== */
-.runner-track-stage {
+/* Canvas Stage Container */
+.canvas-stage-wrap {
   position: relative;
   width: 100%;
   height: 360px;
   border-radius: 22px;
   overflow: hidden;
-  border: 2px solid rgba(56, 189, 248, 0.4);
-  background: linear-gradient(180deg, #0c4a6e 0%, #0369a1 34%, #0284c7 66%, #0f766e 100%);
+  border: 2px solid rgba(56, 189, 248, 0.45);
   box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.75);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  background: #0c4a6e;
 }
 
-.runner-track-stage.fever-mode {
+.canvas-stage-wrap.fever-glow {
   border-color: #f59e0b;
-  box-shadow: 0 0 40px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 38px rgba(245, 158, 11, 0.55);
 }
 
-/* Scrolling Track Lanes (3 Horizontal Lanes) */
-.track-lane {
-  position: relative;
+#runner-canvas {
   width: 100%;
-  height: 33.333%;
-  border-bottom: 2px dashed rgba(255, 255, 255, 0.18);
-  display: flex;
-  align-items: center;
-  padding-left: 16px;
-  transition: background 0.18s;
+  height: 100%;
+  display: block;
   cursor: pointer;
 }
 
-.track-lane:last-child {
-  border-bottom: none;
-}
-
-.track-lane:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.track-lane.active-lane {
-  background: rgba(56, 189, 248, 0.12);
-}
-
-.lane-water-lines {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 70px,
-    rgba(255, 255, 255, 0.08) 70px,
-    rgba(255, 255, 255, 0.08) 110px
-  );
-  animation: scrollTrack 0.7s linear infinite;
-  pointer-events: none;
-}
-
-.runner-track-stage.fever-mode .lane-water-lines {
-  animation-duration: 0.35s;
-}
-
-@keyframes scrollTrack {
-  from { background-position-x: 0px; }
-  to { background-position-x: -110px; }
-}
-
-.lane-label-tag {
-  position: relative;
-  z-index: 2;
-  font-size: 0.76rem;
-  font-weight: 900;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: rgba(7, 17, 30, 0.55);
-  color: rgba(255, 255, 255, 0.75);
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   THE CUTE OTTER CHARACTER (달리고 점프하는 수달)
-   ========================================================================== */
-.otter-character {
-  position: absolute;
-  left: 11%;
-  width: 104px;
-  height: 98px;
-  z-index: 20;
-  transition: top 0.22s cubic-bezier(0.2, 0.9, 0.32, 1.25), left 0.22s ease, transform 0.22s ease;
-  pointer-events: none;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
-}
-
-.otter-character.lane-0 { top: 11px; }
-.otter-character.lane-1 { top: 131px; }
-.otter-character.lane-2 { top: 251px; }
-
-.otter-character.jumping {
-  transform: scale(1.14) rotate(-8deg);
-}
-
-.otter-character.dashing {
-  transform: scale(1.18) translateX(24px);
-}
-
-.otter-character.hurt {
-  animation: otterHurtShake 0.45s ease;
-}
-
-@keyframes otterHurtShake {
-  0%, 100% { transform: translateX(0) rotate(0); }
-  25% { transform: translateX(-14px) rotate(-15deg); }
-  75% { transform: translateX(10px) rotate(12deg); }
-}
-
-.otter-svg-wrap {
-  width: 100%;
-  height: 100%;
-  animation: otterRunCycle 0.28s ease-in-out infinite alternate;
-}
-
-@keyframes otterRunCycle {
-  from { transform: translateY(-3px) rotate(-2deg); }
-  to { transform: translateY(3px) rotate(3deg); }
-}
-
-/* Water Jet Booster Flame behind Otter */
-.otter-booster-jet {
-  position: absolute;
-  left: -38px;
-  top: 36px;
-  width: 48px;
-  height: 28px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, #38bdf8, #e0f2fe);
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-
-.otter-character.dashing .otter-booster-jet,
-.runner-track-stage.fever-mode .otter-booster-jet {
-  opacity: 1;
-  animation: jetFlicker 0.12s infinite alternate;
-}
-
-@keyframes jetFlicker {
-  from { transform: scaleX(0.9); }
-  to { transform: scaleX(1.35); }
-}
-
-/* Collectible Floating Clams on Track */
-.track-coin {
-  position: absolute;
-  font-size: 1.5rem;
-  z-index: 8;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
-  transition: transform 0.15s, opacity 0.15s;
-}
-
-/* ==========================================================================
-   APPROACHING 3-LANE MATH GATE PLATFORMS (다가오는 정답/오답 발판 관문)
-   ========================================================================== */
-.gate-column {
+/* Floating HTML Formula Labels synced over the approaching Canvas Platforms */
+.canvas-gates-overlay {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 270px;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 8px 0;
+  width: 245px;
   pointer-events: auto;
+  z-index: 15;
 }
 
-@media (max-width: 680px) {
-  .gate-column { width: 205px; }
-}
-
-.gate-platform {
-  height: 102px;
-  margin: 0 8px;
-  border-radius: 16px;
+.platform-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 76px;
+  border-radius: 14px;
   background: rgba(15, 23, 42, 0.92);
-  border: 3px solid #38bdf8;
-  padding: 10px 14px;
+  border: 2.5px solid #38bdf8;
+  padding: 7px 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-  transition: transform 0.14s, border-color 0.14s, background 0.14s;
-  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+  transition: transform 0.14s, border-color 0.14s;
 }
 
-.gate-platform:hover {
+.platform-card:hover {
   transform: scale(1.04);
   border-color: #fbbf24;
-  background: rgba(30, 41, 59, 0.98);
 }
 
-.gate-platform.lane-selected {
+.platform-card.target-floor {
   border-color: #fbbf24;
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.55);
 }
 
-.gate-platform.gate-correct {
+.platform-card.plat-correct {
   border-color: #10b981 !important;
   background: rgba(6, 95, 70, 0.95) !important;
-  transform: scale(1.08);
 }
 
-.gate-platform.gate-wrong {
+.platform-card.plat-wrong {
   border-color: #f43f5e !important;
   background: rgba(136, 19, 55, 0.95) !important;
 }
 
-.gate-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.74rem;
-  font-weight: 900;
-  color: #93c5fd;
-}
+/* Floor heights matching Canvas Y coordinates (3층 하늘 / 2층 다리 / 1층 강변) */
+.platform-card.floor-0 { top: 24px; }
+.platform-card.floor-1 { top: 132px; }
+.platform-card.floor-2 { top: 240px; }
 
-.gate-bonus-tag {
-  padding: 1px 7px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 900;
-}
-
-.bonus-star { background: rgba(245, 158, 11, 0.25); color: #fde68a; border: 1px solid #f59e0b; }
-.bonus-heart { background: rgba(244, 63, 94, 0.25); color: #fecdd3; border: 1px solid #f43f5e; }
-.bonus-shield { background: rgba(6, 182, 212, 0.25); color: #cffafe; border: 1px solid #22d3ee; }
-
-.gate-formula-box {
-  font-size: 1.08rem;
-  font-weight: 900;
-  color: #ffffff;
-  text-align: center;
-  margin: auto 0;
-  line-height: 1.3;
-}
-
-/* Quick Jump & Dash Control Buttons below Track */
-.controls-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 640px) {
-  .controls-bar { grid-template-columns: 1fr; gap: 8px; }
-}
-
-.jump-ctrl-btn {
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.4);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.jump-ctrl-btn:hover {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: #38bdf8;
-  transform: translateY(-2px);
-}
-
-.jump-ctrl-btn:active {
-  transform: scale(0.98);
-}
-
-.ctrl-lane-badge {
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
-  font-size: 0.82rem;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.ctrl-formula-text {
-  font-size: 1rem;
-  font-weight: 800;
-  text-align: right;
-  flex: 1;
-}
-
-/* Explanation Overlay inside Track on Wrong Gate Collision */
+/* Crash Explanation Overlay */
 .crash-tip-overlay {
   position: absolute;
   inset: 0;
@@ -703,8 +435,54 @@ html, body {
   text-align: center;
 }
 
-.crash-tip-overlay.active {
+.crash-tip-overlay.active { display: flex; }
+
+/* Bottom Jump Controls */
+.controls-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .controls-bar { grid-template-columns: 1fr; }
+}
+
+.jump-ctrl-btn {
+  padding: 13px 15px;
+  border-radius: 15px;
+  background: var(--bg-panel);
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  color: var(--text-main);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.14s;
+}
+
+.jump-ctrl-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.ctrl-lane-badge {
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-size: 0.8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.ctrl-formula-text {
+  font-size: 0.96rem;
+  font-weight: 800;
+  text-align: right;
+  flex: 1;
 }
 
 /* Math Typography */
@@ -714,9 +492,7 @@ html, body {
   color: #ffffff;
   padding: 0 2px;
 }
-
 .m-fn { font-style: normal; font-weight: 800; }
-
 .m-frac {
   display: inline-flex;
   flex-direction: column;
@@ -726,7 +502,6 @@ html, body {
   margin: 0 3px;
   line-height: 1.05;
 }
-
 .m-num { border-bottom: 1.5px solid currentColor; padding: 0 3px 1px; }
 .m-den { padding: 1px 3px 0; }
 .m-sqrt { display: inline-flex; align-items: center; }
@@ -744,9 +519,7 @@ html, body {
   padding: 20px;
   z-index: 200;
 }
-
 .modal-backdrop.active { display: flex; }
-
 .modal-box {
   background: var(--bg-panel);
   border: 2px solid rgba(56, 189, 248, 0.45);
@@ -764,17 +537,19 @@ html, body {
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 수달 선택)
+         SCREEN 1: INTRO & LIVE RUNNING OTTER PREVIEW (첫 화면)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
       <div class="intro-hero">
-        <div class="intro-otter-showcase" id="intro-otter-preview"></div>
+        <div class="intro-canvas-box">
+          <canvas id="intro-otter-canvas" width="190" height="135"></canvas>
+        </div>
         <div style="flex:1;min-width:260px;">
-          <div class="intro-badge">🦦 쿠키런 스타일 고1 수학 점프 & 부스터 런게임</div>
+          <div class="intro-badge">🦦 다리를 파닥이며 직접 달리고 점프하는 횡스크롤 런게임</div>
           <h1 class="intro-title">수달런 : 고1 수학 질주!</h1>
           <p class="intro-subtitle">
-            귀여운 수달과 함께 강물을 가르며 달리세요!<br />
-            다가오는 <strong>3개의 수학 관문(1번·2번·3번 발판)</strong> 중 <strong>정답 발판으로 점프 & 부스터 돌진</strong>해 장애물을 돌파하는 액션 런게임입니다.
+            귀여운 수달이 네 발로 강변 다리를 직접 뛰어갑니다!<br />
+            앞에서 다가오는 <strong>3층 발판(🔼3층 구름 · ➡️2층 다리 · 🔽1층 강변)</strong> 중 <strong>정답 발판으로 폴짝 점프해 직접 달려나가 돌파</strong>하세요!
           </p>
         </div>
       </div>
@@ -782,66 +557,65 @@ html, body {
       <!-- 3-Step How to Play Guide -->
       <div class="guide-steps-grid">
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 1 · 관문 등장</span>
-          <div class="guide-step-title">다가오는 3개의 발판 확인</div>
+          <span class="guide-step-num">STEP 1 · 강변 질주</span>
+          <div class="guide-step-title">네 발로 달리는 수달 & 조개 수집</div>
           <p class="guide-step-desc">
-            수달이 조개(🐚)를 먹으며 달리는 동안 상단에 <strong>고1 수학 문제</strong>가 뜨고 오른쪽에서 <strong>1번(위)·2번(중간)·3번(아래) 발판</strong>이 다가옵니다.
+            수달이 강변을 직접 달리는 동안 화면을 클릭(또는 <strong>Space</strong>)하면 폴짝 점프해 공중의 조개(🐚)를 먹을 수 있습니다.
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 2 · 점프 & 부스터</span>
-          <div class="guide-step-title">정답 발판 클릭 (또는 1·2·3 키)</div>
+          <span class="guide-step-num">STEP 2 · 3층 발판 도약</span>
+          <div class="guide-step-title">정답 층으로 포물선 점프 & 전진!</div>
           <p class="guide-step-desc">
-            정답이 적힌 발판을 클릭(또는 키보드 <strong>1·2·3 / ↑·→·↓</strong>)하면 수달이 그 발판으로 점프해 <strong>🌊 워터 부스터</strong>로 관문을 와장창 돌파합니다!
+            정답이 적힌 층(<strong>1번 3층 구름 / 2번 2층 다리 / 3번 1층 강변</strong>)을 누르면 수달이 그 발판 위로 <strong>포물선 점프하며 앞으로 직접 달려나가</strong> 관문을 통과합니다!
           </p>
         </div>
 
         <div class="guide-step-card">
-          <span class="guide-step-num">STEP 3 · 피버 & 아이템</span>
-          <div class="guide-step-title">5콤보 서핑 피버 & 복불복 발판</div>
+          <span class="guide-step-num">STEP 3 · 공중제비 & 피버</span>
+          <div class="guide-step-title">360° 공중제비 & 5콤보 서핑 질주</div>
           <p class="guide-step-desc">
-            5연속 돌파 시 <strong>🏄 서핑 피버(점수 2배)</strong> 변신! 발판에 붙은 <strong>⭐2배·❤️하트회복·🛡️물방울방패</strong> 아이템을 챙겨 최장 거리를 달리세요!
+            정답 발판을 밟으면 수달이 신나게 <strong>공중제비</strong>를 돌며 보너스(⭐2배·❤️회복·🛡️방패)를 얻고, 5연속 돌파 시 <strong>🏄 파도타기 피버</strong>가 터집니다!
           </p>
         </div>
       </div>
 
       <!-- Pre-game Settings (Otter Skin, Chapter & Speed) -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 함께 달릴 귀여운 수달 캐릭터를 골라주세요</label>
+        <label class="config-label">🦦 1. 함께 달릴 수달 캐릭터 코스튬 선택 (좌측 화면에서 실시간 미리보기!)</label>
         <div class="skin-grid">
           <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.95rem;color:#38bdf8;">🦦 아기 조개 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개를 든 귀염둥이</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 아기 조개 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">분홍 볼터치 귀염둥이</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.95rem;color:#34d399;">🎓 고1 우등생 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">안경 + 학사모 장착</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 고1 우등생 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">안경 + 학사모 장착</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.95rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">선글라스 + 서핑보드</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">선글라스 + 서핑보드</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.95rem;color:#f472b6;">👑 황금 왕관 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">전설의 수학 마법사</div>
+            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 황금 왕관 수달</div>
+            <div style="font-size:0.74rem;color:var(--text-muted);">왕관 + 붉은 망토 휘날림</div>
           </button>
         </div>
 
         <label class="config-label">📚 2. 달릴 고1 수학 월드(단원) 선택</label>
-        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:14px;"></div>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:12px;"></div>
 
-        <label class="config-label">⚡ 3. 관문 접근 속도 (난이도)</label>
+        <label class="config-label">⚡ 3. 달리기 속도 (난이도)</label>
         <div class="chapter-tabs">
-          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 질주 (9초)</button>
-          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 질주 (6.5초)</button>
-          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 질주 (4.5초)</button>
+          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 달리기 (9초)</button>
+          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 달리기 (6.5초)</button>
+          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 전력질주 (4.5초)</button>
         </div>
       </div>
 
-      <!-- Start Game Button -->
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
-        🚀 수달런 출발하기! (점프 & 부스터 질주 시작)
+        🚀 수달런 출발하기! (직접 달리고 점프하기)
       </button>
 
       <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
@@ -850,35 +624,34 @@ html, body {
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문)
+         SCREEN 2: SIDE-SCROLLING CANVAS RUNNER STAGE (게임 진행 화면)
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
       <header class="top-bar">
         <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="OtterRun.showIntro()">
-          <span style="font-size:1.75rem;">🦦</span>
+          <span style="font-size:1.65rem;">🦦</span>
           <div>
-            <div style="font-size:1.2rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 질주!</div>
-            <div style="font-size:0.78rem;color:var(--text-muted);">정답 발판(1·2·3번)을 클릭하거나 키보드(1·2·3 / ↑·→·↓)를 눌러 돌파하세요!</div>
+            <div style="font-size:1.15rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 질주!</div>
+            <div style="font-size:0.76rem;color:var(--text-muted);">정답 발판(1·2·3번)을 누르면 수달이 그 발판 위로 직접 점프해 달려나갑니다!</div>
           </div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
           <button class="btn" onclick="OtterRun.showIntro()">📖 첫 화면(설명)</button>
-          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 물방울 방패(1회)</button>
+          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 방패(1회)</button>
           <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 QR·앱</button>
-          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 처음부터 다시 달리기</button>
+          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 다시 달리기</button>
           <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()">🔊</button>
         </div>
       </header>
 
-      <!-- Chapter Filter Tabs in Game -->
-      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:10px;"></nav>
+      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:8px;"></nav>
 
-      <!-- HUD Bar (Hearts, Distance, Score, Combo) -->
+      <!-- HUD Bar -->
       <section class="hud-bar">
         <div class="hud-card">
-          <span class="hud-label">❤️ 수달 체력 & 방패</span>
-          <span class="hud-val" id="hud-hearts" style="font-size:1.15rem;">❤️❤️❤️❤️❤️</span>
+          <span class="hud-label">❤️ 체력 & 방패</span>
+          <span class="hud-val" id="hud-hearts" style="font-size:1.1rem;">❤️❤️❤️❤️❤️</span>
         </div>
         <div class="hud-card">
           <span class="hud-label">🏃 달린 거리</span>
@@ -894,85 +667,55 @@ html, body {
         </div>
       </section>
 
-      <!-- Giant Math Question Prompt Board -->
+      <!-- Math Question Board -->
       <section class="question-board">
-        <span class="q-badge-pill" id="q-gate-num">GATE #1</span>
+        <span class="q-badge-pill" id="q-gate-num">GATE #1 / 10</span>
         <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
-        <div class="approach-meter">
-          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;" id="q-time-label">관문 접근 중</div>
-          <div class="approach-track">
-            <div class="approach-fill" id="q-approach-bar"></div>
-          </div>
-        </div>
+        <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">달리는 중</span>
       </section>
 
-      <!-- 3-Lane Parallax Running Track Stage -->
-      <main class="runner-track-stage" id="runner-stage">
-        <!-- Lane 0 (Top Sky Lane) -->
-        <div class="track-lane" id="track-lane-0" onclick="OtterRun.jumpAndDash(0)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">🔼 1번 하늘 발판 (키보드 1 / ↑)</span>
+      <!-- 60FPS Side-Scrolling Canvas World + Approaching 3-Floor Platforms -->
+      <main class="canvas-stage-wrap" id="canvas-stage-wrap">
+        <canvas id="runner-canvas" width="960" height="360"></canvas>
+
+        <!-- Approaching 3-Story Answer Platforms synced with Canvas X position -->
+        <div class="canvas-gates-overlay" id="gates-overlay" style="left: 75%;">
+          <div class="platform-card floor-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
+          <div class="platform-card floor-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
+          <div class="platform-card floor-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
         </div>
 
-        <!-- Lane 1 (Middle Bridge Lane) -->
-        <div class="track-lane active-lane" id="track-lane-1" onclick="OtterRun.jumpAndDash(1)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">➡️ 2번 중앙 발판 (키보드 2 / →)</span>
-        </div>
-
-        <!-- Lane 2 (Bottom Water Lane) -->
-        <div class="track-lane" id="track-lane-2" onclick="OtterRun.jumpAndDash(2)">
-          <div class="lane-water-lines"></div>
-          <span class="lane-label-tag">🔽 3번 물길 발판 (키보드 3 / ↓)</span>
-        </div>
-
-        <!-- Floating Collectible Clams Container -->
-        <div id="coins-layer"></div>
-
-        <!-- Cute Otter Character -->
-        <div class="otter-character lane-1" id="otter-actor">
-          <div class="otter-booster-jet"></div>
-          <div class="otter-svg-wrap" id="otter-svg-box"></div>
-        </div>
-
-        <!-- Approaching 3-Lane Math Gate Wall -->
-        <div class="gate-column" id="gate-column" style="left: 72%;">
-          <div class="gate-platform" id="gate-plat-0" onclick="event.stopPropagation(); OtterRun.jumpAndDash(0)"></div>
-          <div class="gate-platform" id="gate-plat-1" onclick="event.stopPropagation(); OtterRun.jumpAndDash(1)"></div>
-          <div class="gate-platform" id="gate-plat-2" onclick="event.stopPropagation(); OtterRun.jumpAndDash(2)"></div>
-        </div>
-
-        <!-- Wrong Gate Crash & 1-Line Explanation Overlay -->
+        <!-- Wrong Platform Crash & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:2.4rem;margin-bottom:4px;">💢 쿵! 오답 관문 충돌!</div>
+          <div style="font-size:2.2rem;margin-bottom:4px;">💢 앗! 수달이 발판에서 미끄러졌어요!</div>
           <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
-          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.96rem;color:#e0f2fe;margin-bottom:12px;" id="crash-tip-text"></div>
-          <div style="font-size:0.82rem;color:#7dd3fc;font-weight:800;">잠시 후 수달이 다시 힘을 내어 달립니다...</div>
+          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.95rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
+          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 수달이 털고 일어나 다시 뛰어갑니다...</div>
         </div>
       </main>
 
-      <!-- Bottom Quick Jump & Booster Dash Buttons -->
+      <!-- Bottom Quick Jump & Sprint Buttons -->
       <section class="controls-bar">
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(0)">
-          <span class="ctrl-lane-badge">🔼 1번 점프 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(0)">
+          <span class="ctrl-lane-badge">🔼 1번 (3층 구름 점프!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-0"></span>
         </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(1)">
-          <span class="ctrl-lane-badge">➡️ 2번 중앙 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(1)">
+          <span class="ctrl-lane-badge">➡️ 2번 (2층 다리 점프!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-1"></span>
         </button>
-        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(2)">
-          <span class="ctrl-lane-badge">🔽 3번 물길 돌진</span>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpToFloorAndDash(2)">
+          <span class="ctrl-lane-badge">🔽 3번 (1층 강변 질주!)</span>
           <span class="ctrl-formula-text" id="ctrl-text-2"></span>
         </button>
       </section>
     </section>
   </div>
 
-  <!-- Game Over / Stage Clear Result Modal -->
+  <!-- Result Modal -->
   <div class="modal-backdrop" id="modal-result">
     <div class="modal-box">
-      <div style="width:110px;height:110px;margin:0 auto 10px;" id="result-otter-box"></div>
+      <div style="font-size:3.2rem;margin-bottom:6px;">🦦🏁</div>
       <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">질주 완료!</h2>
       <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 
@@ -1838,7 +1581,7 @@ html, body {
 })(window);
 </script>
   <script>/**
- * 수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 & 부스터 런게임 메인 로직
+ * 수달런 (OTTER MATH RUN) - 60FPS 횡스크롤 캔버스에서 네 발로 직접 달리고 점프하는 고1 수학 런게임
  */
 (function (global) {
   const SPEED_MAP = {
@@ -1847,6 +1590,9 @@ html, body {
     fast: 4500
   };
 
+  // Floor Y coordinates on the 960x360 canvas (where the otter's feet land)
+  const FLOOR_Y = [92, 200, 308];
+
   const state = {
     screen: 'intro', // 'intro' | 'game'
     skin: 'basic',   // 'basic' | 'scholar' | 'surfer' | 'king'
@@ -1854,18 +1600,40 @@ html, body {
     speedKey: 'normal',
     gateDurationMs: 6500,
 
+    // Intro preview animation
+    introRafId: null,
+    introPhase: 0,
+    introOtterY: 102,
+    introOtterVy: 0,
+
     // Active run state
     running: false,
     pausedForCrash: false,
     isDashing: false,
-    otterLane: 1, // 0 (Top), 1 (Middle), 2 (Bottom)
+    targetFloor: 2, // 0 (3층 구름), 1 (2층 다리), 2 (1층 강변 바닥)
+
+    // Physical Otter coordinates & physics on the 960x360 canvas
+    otterX: 145,
+    otterBaseX: 145,
+    otterY: FLOOR_Y[2],
+    otterVy: 0,
+    otterGravity: 0.62,
+    otterJumpCount: 0,
+    otterSpin: 0,     // radians for 360° backflip celebration
+    otterPhase: 0,    // leg running cycle phase
     otterMood: 'run', // 'run' | 'happy' | 'hurt'
 
+    // World scroll & particles
+    scrollX: 0,
+    dustParticles: [], // footstep puffs & celebration stars
+    coins: [],         // collectible floating seashells & fish
+    lastCoinSpawn: 0,
+
+    // Game stats
     hearts: 5,
     maxHearts: 5,
     hasShield: false,
     freeShieldUsed: false,
-
     distance: 0,
     score: 0,
     combo: 0,
@@ -1873,16 +1641,13 @@ html, body {
     gateCount: 0,
     targetGates: 10,
 
+    // Current Math Gate state
     questionPool: [],
     currentQ: null,
-    gateOptions: [], // [{ text, isCorrect, bonus }]
-    gateStartTime: 0,
-    gateProgress: 0, // 0..1
-    history: [], // [{ q, ans, tip, passed }]
+    gateOptions: [],
+    gateX: 740, // Canvas X coordinate of approaching 3-story platforms (960 -> otterX)
+    history: [],
 
-    // Floating coins on track
-    coins: [],
-    lastCoinSpawn: 0,
     lastFrameTime: 0,
     rafId: null,
 
@@ -1892,138 +1657,349 @@ html, body {
   };
 
   // =========================================================================
-  // CUTE OTTER SVG GENERATOR (4 Skins + 3 Facial Expressions + Shield Bubble)
+  // 60FPS ARTICULATED RUNNING OTTER RENDERER (Side-Profile with Swinging Legs!)
   // =========================================================================
-  function buildOtterSVG(skin = 'basic', mood = 'run', fever = false, shielded = false) {
-    const useSurfboard = skin === 'surfer' || fever;
+  function drawArticulatedOtter(ctx, x, y, phase, opts = {}) {
+    const skin = opts.skin || 'basic';
+    const mood = opts.mood || 'run';
+    const airborne = Boolean(opts.airborne);
+    const spin = opts.spin || 0;
+    const fever = Boolean(opts.fever);
+    const shielded = Boolean(opts.shielded);
+    const scale = opts.scale || 1;
 
-    // Eyes based on mood
-    let eyesSvg = '';
-    if (mood === 'happy') {
-      eyesSvg = `
-        <path d="M 38 40 Q 43 34 48 40" stroke="#1e293b" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-        <path d="M 64 40 Q 69 34 74 40" stroke="#1e293b" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-      `;
-    } else if (mood === 'hurt') {
-      eyesSvg = `
-        <path d="M 38 36 L 47 43 M 47 36 L 38 43" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 65 36 L 74 43 M 74 36 L 65 43" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-      `;
-    } else {
-      eyesSvg = `
-        <circle cx="43" cy="39" r="5" fill="#0f172a"/>
-        <circle cx="44.8" cy="37.2" r="1.8" fill="#ffffff"/>
-        <circle cx="69" cy="39" r="5" fill="#0f172a"/>
-        <circle cx="70.8" cy="37.2" r="1.8" fill="#ffffff"/>
-      `;
+    ctx.save();
+    ctx.translate(x, y - 26 * scale);
+    ctx.scale(scale, scale);
+    if (spin !== 0) {
+      ctx.rotate(spin);
     }
 
-    // Accessories based on skin
-    let hatSvg = '';
-    let glassesSvg = '';
-    let capeSvg = '';
-    let boardSvg = '';
+    // Running leg swing angles
+    const legAngle = airborne ? 0.55 : Math.sin(phase) * 0.65;
+    const bodyBounce = airborne ? 0 : Math.abs(Math.sin(phase)) * -4.5;
+    const bodyTilt = airborne ? -0.14 : Math.cos(phase) * 0.06;
 
-    if (useSurfboard) {
-      boardSvg = `
-        <ellipse cx="56" cy="92" rx="46" ry="9" fill="#06b6d4" stroke="#e0f2fe" stroke-width="2.5"/>
-        <path d="M 22 92 L 90 92" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-      `;
+    ctx.translate(0, bodyBounce);
+    ctx.rotate(bodyTilt);
+
+    // 1. Surfboard (if surfer skin or 5+ combo FEVER)
+    if (skin === 'surfer' || fever) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(2, 26, 44, 7, 0, 0, Math.PI * 2);
+      ctx.fillStyle = fever ? '#f59e0b' : '#06b6d4';
+      ctx.fill();
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = '#e0f2fe';
+      ctx.stroke();
+      ctx.restore();
     }
-    if (skin === 'surfer') {
-      glassesSvg = `
-        <rect x="35" y="34" width="17" height="10" rx="3" fill="#0284c7" stroke="#e0f2fe" stroke-width="1.5"/>
-        <rect x="60" y="34" width="17" height="10" rx="3" fill="#0284c7" stroke="#e0f2fe" stroke-width="1.5"/>
-        <line x1="52" y1="38" x2="60" y2="38" stroke="#e0f2fe" stroke-width="2"/>
-      `;
-    }
-    if (skin === 'scholar') {
-      glassesSvg = `
-        <circle cx="43" cy="39" r="7.5" fill="none" stroke="#ef4444" stroke-width="2.4"/>
-        <circle cx="69" cy="39" r="7.5" fill="none" stroke="#ef4444" stroke-width="2.4"/>
-        <line x1="50.5" y1="39" x2="61.5" y2="39" stroke="#ef4444" stroke-width="2.2"/>
-      `;
-      hatSvg = `
-        <polygon points="56,7 26,19 56,28 86,19" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-        <rect x="40" y="23" width="32" height="6" rx="2" fill="#334155"/>
-        <path d="M 78 21 L 82 33" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="82" cy="34" r="2.5" fill="#fbbf24"/>
-      `;
-    }
+
+    // 2. Fluttering Cape (if King skin)
     if (skin === 'king') {
-      capeSvg = `
-        <path d="M 32 55 Q 10 72 16 88 L 40 82 Z" fill="#e11d48" stroke="#fbbf24" stroke-width="2"/>
-      `;
-      hatSvg = `
-        <polygon points="37,24 41,9 50,18 56,6 62,18 71,9 75,24" fill="#fbbf24" stroke="#d97706" stroke-width="1.8"/>
-        <circle cx="56" cy="18" r="2.5" fill="#e11d48"/>
-      `;
+      ctx.save();
+      const wave = Math.sin(phase * 1.4) * 5;
+      ctx.beginPath();
+      ctx.moveTo(-6, -8);
+      ctx.quadraticCurveTo(-32, -14 + wave, -44, 6 + wave);
+      ctx.lineTo(-18, 12);
+      ctx.closePath();
+      ctx.fillStyle = '#e11d48';
+      ctx.fill();
+      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = '#fbbf24';
+      ctx.stroke();
+      ctx.restore();
     }
 
-    const shieldSvg = shielded
-      ? `<circle cx="56" cy="54" r="49" fill="rgba(56, 189, 248, 0.18)" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6 4"/>`
-      : '';
+    // 3. Wagging Otter Tail (extends to the left)
+    ctx.save();
+    const tailWag = Math.sin(phase * 1.1) * 0.22;
+    ctx.translate(-22, 6);
+    ctx.rotate(tailWag);
+    ctx.beginPath();
+    ctx.moveTo(0, -4);
+    ctx.quadraticCurveTo(-26, 0, -32, 8);
+    ctx.quadraticCurveTo(-22, 14, 0, 6);
+    ctx.closePath();
+    ctx.fillStyle = '#7c4a21';
+    ctx.fill();
+    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = '#4a290e';
+    ctx.stroke();
+    ctx.restore();
 
-    return `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 106" width="100%" height="100%">
-        ${boardSvg}
-        ${capeSvg}
-        <!-- Wagging Otter Tail -->
-        <path d="M 30 76 Q 8 72 12 84 Q 18 92 34 85" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
-        <!-- Little Feet -->
-        <ellipse cx="42" cy="88" rx="9" ry="5.5" fill="#6b3e1a"/>
-        <ellipse cx="70" cy="88" rx="9" ry="5.5" fill="#6b3e1a"/>
-        <!-- Plump Otter Body -->
-        <ellipse cx="56" cy="68" rx="26" ry="23" fill="#9a6232" stroke="#5c3415" stroke-width="2"/>
-        <!-- Cream Belly -->
-        <ellipse cx="58" cy="70" rx="17" ry="16" fill="#fde6c4"/>
-        <!-- Cute Ears -->
-        <circle cx="32" cy="28" r="7.5" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
-        <circle cx="32" cy="28" r="4" fill="#f5cba7"/>
-        <circle cx="80" cy="28" r="7.5" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
-        <circle cx="80" cy="28" r="4" fill="#f5cba7"/>
-        <!-- Round Otter Head -->
-        <ellipse cx="56" cy="40" rx="27" ry="22" fill="#9a6232" stroke="#5c3415" stroke-width="2"/>
-        <!-- Cream Muzzle Cheeks -->
-        <ellipse cx="50" cy="47" rx="10" ry="7.5" fill="#fef3c7"/>
-        <ellipse cx="62" cy="47" rx="10" ry="7.5" fill="#fef3c7"/>
-        <!-- Rosy Pink Blushes -->
-        <ellipse cx="34" cy="46" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.75"/>
-        <ellipse cx="78" cy="46" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.75"/>
-        <!-- Eyes -->
-        ${eyesSvg}
-        ${glassesSvg}
-        <!-- Cute Triangle Nose & Smile -->
-        <polygon points="56,46 51,41 61,41" fill="#27272a"/>
-        <path d="M 56 46 Q 51 52 46 49 M 56 46 Q 61 52 66 49" stroke="#5c3415" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <!-- Whiskers -->
-        <line x1="25" y1="44" x2="36" y2="45" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="24" y1="49" x2="36" y2="48" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="76" y1="45" x2="87" y2="44" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="76" y1="48" x2="88" y2="49" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- Golden Seashell held on tummy -->
-        <path d="M 47 68 Q 58 56 69 68 L 64 77 L 52 77 Z" fill="#fbbf24" stroke="#d97706" stroke-width="1.8"/>
-        <line x1="58" y1="62" x2="58" y2="76" stroke="#d97706" stroke-width="1.4"/>
-        <line x1="53" y1="64" x2="55" y2="76" stroke="#d97706" stroke-width="1.4"/>
-        <line x1="63" y1="64" x2="61" y2="76" stroke="#d97706" stroke-width="1.4"/>
-        <!-- Little Paws holding the shell -->
-        <circle cx="45" cy="69" r="5.5" fill="#7c4a21"/>
-        <circle cx="71" cy="69" r="5.5" fill="#7c4a21"/>
-        ${hatSvg}
-        ${shieldSvg}
-      </svg>
-    `;
+    // 4. Far Hind Leg & Far Front Leg (Darker brown, behind torso)
+    drawLimb(ctx, -14, 13, -legAngle, '#6b3e1a');
+    drawLimb(ctx, 14, 13, legAngle, '#6b3e1a');
+
+    // 5. Plump Side-Profile Otter Torso
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 26, 15, -0.05, 0, Math.PI * 2);
+    ctx.fillStyle = '#9a6232';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#4a290e';
+    ctx.stroke();
+
+    // Soft Cream Underbelly
+    ctx.beginPath();
+    ctx.ellipse(3, 9, 20, 9, -0.05, 0, Math.PI);
+    ctx.fillStyle = '#fde6c4';
+    ctx.fill();
+    ctx.restore();
+
+    // 6. Near Hind Leg & Near Front Leg (Alternating stride!)
+    drawLimb(ctx, -12, 14, legAngle, '#8b5428');
+    drawLimb(ctx, 16, 14, -legAngle, '#8b5428');
+
+    // 7. Golden Seashell held at chest
+    ctx.save();
+    ctx.translate(10, 4);
+    ctx.beginPath();
+    ctx.arc(0, 0, 7, Math.PI, 0);
+    ctx.lineTo(4, 6);
+    ctx.lineTo(-4, 6);
+    ctx.closePath();
+    ctx.fillStyle = '#fbbf24';
+    ctx.fill();
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = '#b45309';
+    ctx.stroke();
+    ctx.restore();
+
+    // 8. Cute Side-Profile Otter Head (Facing Right)
+    ctx.save();
+    ctx.translate(22, -10);
+
+    // Back Ear
+    ctx.beginPath();
+    ctx.arc(-8, -12, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#7c4a21';
+    ctx.fill();
+    ctx.strokeStyle = '#4a290e';
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    // Main Head Sphere
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 17, 14.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#9a6232';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#4a290e';
+    ctx.stroke();
+
+    // Chubby Cream Snout / Muzzle on Right
+    ctx.beginPath();
+    ctx.ellipse(11, 3, 9.5, 7.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#fef3c7';
+    ctx.fill();
+
+    // Rosy Pink Cheek Blush
+    ctx.beginPath();
+    ctx.ellipse(3, 5, 4.2, 2.8, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#fb7185';
+    ctx.fill();
+
+    // Cute Dark Nose Tip
+    ctx.beginPath();
+    ctx.ellipse(18, 0, 3.2, 2.4, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e293b';
+    ctx.fill();
+
+    // Smile mouth
+    ctx.beginPath();
+    ctx.arc(13, 4, 3.5, 0.2, Math.PI * 0.85);
+    ctx.strokeStyle = '#4a290e';
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    // Whiskers
+    ctx.beginPath();
+    ctx.moveTo(12, 3);
+    ctx.lineTo(22, 1);
+    ctx.moveTo(12, 5);
+    ctx.lineTo(22, 6);
+    ctx.strokeStyle = '#5c3415';
+    ctx.lineWidth = 1.3;
+    ctx.stroke();
+
+    // Expressive Eye
+    if (mood === 'happy') {
+      ctx.beginPath();
+      ctx.arc(6, -3, 4, Math.PI * 1.1, Math.PI * 1.9);
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.6;
+      ctx.stroke();
+    } else if (mood === 'hurt') {
+      ctx.beginPath();
+      ctx.moveTo(3, -6);
+      ctx.lineTo(9, 0);
+      ctx.moveTo(9, -6);
+      ctx.lineTo(3, 0);
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(6, -3, 4.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(7.4, -4.4, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    }
+
+    // Skin Headwear & Glasses
+    if (skin === 'scholar') {
+      // Red Glasses
+      ctx.beginPath();
+      ctx.arc(6, -3, 6.2, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // Mortarboard Graduation Cap
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.moveTo(-15, -14);
+      ctx.lineTo(2, -21);
+      ctx.lineTo(18, -14);
+      ctx.lineTo(2, -9);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    } else if (skin === 'surfer') {
+      // Cool Sunglasses
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(1, -7, 11, 7);
+      ctx.strokeStyle = '#e0f2fe';
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(1, -7, 11, 7);
+    } else if (skin === 'king') {
+      // Golden Crown
+      ctx.beginPath();
+      ctx.moveTo(-9, -12);
+      ctx.lineTo(-7, -23);
+      ctx.lineTo(-1, -16);
+      ctx.lineTo(4, -25);
+      ctx.lineTo(9, -16);
+      ctx.lineTo(14, -22);
+      ctx.lineTo(12, -12);
+      ctx.closePath();
+      ctx.fillStyle = '#fbbf24';
+      ctx.fill();
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    ctx.restore(); // End Head
+
+    // 9. Protective Water Bubble Shield
+    if (shielded) {
+      ctx.beginPath();
+      ctx.arc(4, 0, 44, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+      ctx.fill();
+      ctx.lineWidth = 2.2;
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.restore();
+  }
+
+  function drawLimb(ctx, hipX, hipY, angle, color) {
+    ctx.save();
+    ctx.translate(hipX, hipY);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.roundRect(-4.5, 0, 9, 15, 4.5);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = '#4a290e';
+    ctx.stroke();
+    // Little web paw at bottom
+    ctx.beginPath();
+    ctx.ellipse(2, 14, 5.5, 3.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 
   // =========================================================================
-  // INITIALIZATION & NAVIGATION
+  // INTRO MINI CANVAS LOOP (Shows the Otter running & jumping on First Screen!)
+  // =========================================================================
+  function startIntroPreviewLoop() {
+    if (state.introRafId) cancelAnimationFrame(state.introRafId);
+    const canvas = document.getElementById('intro-otter-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function frame() {
+      if (state.screen !== 'intro') return;
+      state.introPhase += 0.24;
+
+      // Occasional cute automatic hop
+      if (state.introOtterY >= 104 && Math.random() < 0.018) {
+        state.introOtterVy = -6.8;
+      }
+      state.introOtterY += state.introOtterVy;
+      state.introOtterVy += 0.42;
+      if (state.introOtterY >= 104) {
+        state.introOtterY = 104;
+        state.introOtterVy = 0;
+      }
+
+      // Draw mini background
+      const grad = ctx.createLinearGradient(0, 0, 0, 135);
+      grad.addColorStop(0, '#0c4a6e');
+      grad.addColorStop(0.75, '#0284c7');
+      grad.addColorStop(0.76, '#10b981');
+      grad.addColorStop(1, '#047857');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 190, 135);
+
+      // Scrolling ground dashes
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      const offset = (state.introPhase * 12) % 40;
+      for (let x = -offset; x < 190; x += 40) {
+        ctx.fillRect(x, 112, 22, 4);
+      }
+
+      // Draw Running Otter
+      drawArticulatedOtter(ctx, 88, state.introOtterY, state.introPhase, {
+        skin: state.skin,
+        mood: state.introOtterY < 100 ? 'happy' : 'run',
+        airborne: state.introOtterY < 102,
+        scale: 0.92
+      });
+
+      state.introRafId = requestAnimationFrame(frame);
+    }
+
+    state.introRafId = requestAnimationFrame(frame);
+  }
+
+  // =========================================================================
+  // INITIALIZATION & SETTINGS
   // =========================================================================
   async function init() {
     registerServiceWorker();
     await detectShareUrl();
-    renderIntroOtter();
     renderChapterTabs();
-    initKeyboardControls();
+    initControls();
+    startIntroPreviewLoop();
   }
 
   function registerServiceWorker() {
@@ -2055,13 +2031,6 @@ html, body {
       : location.href;
   }
 
-  function renderIntroOtter() {
-    const box = document.getElementById('intro-otter-preview');
-    if (box) {
-      box.innerHTML = `<div style="width:105px;height:105px;">${buildOtterSVG(state.skin, 'happy', false, false)}</div>`;
-    }
-  }
-
   function selectSkin(skinKey) {
     KkachiSound.click();
     state.skin = skinKey;
@@ -2069,8 +2038,6 @@ html, body {
       const btn = document.getElementById(`skin-btn-${k}`);
       if (btn) btn.classList.toggle('active', k === skinKey);
     });
-    renderIntroOtter();
-    renderGameOtter();
   }
 
   function setSpeed(spdKey) {
@@ -2117,11 +2084,11 @@ html, body {
     state.screen = 'intro';
     document.getElementById('screen-intro').style.display = 'block';
     document.getElementById('screen-game').style.display = 'none';
-    renderIntroOtter();
+    startIntroPreviewLoop();
   }
 
   // =========================================================================
-  // RUNNER GAMEPLAY ENGINE
+  // MAIN SIDE-SCROLLING RUNNER GAMEPLAY
   // =========================================================================
   function shuffle(arr) {
     const a = arr.slice();
@@ -2147,6 +2114,7 @@ html, body {
 
   function startGame() {
     stopRunLoop();
+    if (state.introRafId) cancelAnimationFrame(state.introRafId);
     KkachiSound.fever(1);
 
     state.screen = 'game';
@@ -2158,9 +2126,18 @@ html, body {
     state.running = true;
     state.pausedForCrash = false;
     state.isDashing = false;
-    state.otterLane = 1;
+    state.targetFloor = 2; // Start running on 1층 ground river bridge
+    state.otterX = state.otterBaseX;
+    state.otterY = FLOOR_Y[2];
+    state.otterVy = 0;
+    state.otterJumpCount = 0;
+    state.otterSpin = 0;
+    state.otterPhase = 0;
     state.otterMood = 'run';
 
+    state.scrollX = 0;
+    state.dustParticles = [];
+    state.coins = [];
     state.hearts = 5;
     state.hasShield = false;
     state.freeShieldUsed = false;
@@ -2170,22 +2147,19 @@ html, body {
     state.maxCombo = 0;
     state.gateCount = 0;
     state.history = [];
-    state.coins = [];
 
     const shieldBtn = document.getElementById('btn-shield-chance');
     if (shieldBtn) {
       shieldBtn.disabled = false;
-      shieldBtn.textContent = '🛡️ 무료 물방울 방패(1회)';
+      shieldBtn.textContent = '🛡️ 무료 방패(1회)';
     }
 
     state.questionPool = buildQuestionPool();
-    updateLaneUI();
-    renderGameOtter();
     updateHudUI();
     spawnNextGate();
 
     state.lastFrameTime = performance.now();
-    state.rafId = requestAnimationFrame(runLoop);
+    state.rafId = requestAnimationFrame(gameLoop);
   }
 
   function stopRunLoop() {
@@ -2196,30 +2170,6 @@ html, body {
     }
   }
 
-  function renderGameOtter() {
-    const box = document.getElementById('otter-svg-box');
-    if (!box) return;
-    const isFever = state.combo >= 5;
-    box.innerHTML = buildOtterSVG(state.skin, state.otterMood, isFever, state.hasShield);
-
-    const stage = document.getElementById('runner-stage');
-    if (stage) stage.classList.toggle('fever-mode', isFever);
-  }
-
-  function updateLaneUI() {
-    const actor = document.getElementById('otter-actor');
-    if (actor) {
-      actor.classList.remove('lane-0', 'lane-1', 'lane-2');
-      actor.classList.add(`lane-${state.otterLane}`);
-    }
-    [0, 1, 2].forEach((i) => {
-      const tr = document.getElementById(`track-lane-${i}`);
-      const gp = document.getElementById(`gate-plat-${i}`);
-      if (tr) tr.classList.toggle('active-lane', i === state.otterLane);
-      if (gp) gp.classList.toggle('lane-selected', i === state.otterLane);
-    });
-  }
-
   function updateHudUI() {
     const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
     const shieldStr = state.hasShield ? ' 🛡️' : '';
@@ -2228,6 +2178,9 @@ html, body {
     document.getElementById('hud-score').textContent = `${state.score.toLocaleString()}점`;
     document.getElementById('hud-combo').textContent =
       state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `${state.combo} COMBO`;
+
+    const wrap = document.getElementById('canvas-stage-wrap');
+    if (wrap) wrap.classList.toggle('fever-glow', state.combo >= 5);
   }
 
   function spawnNextGate() {
@@ -2235,7 +2188,6 @@ html, body {
       finishRun(true);
       return;
     }
-
     if (state.questionPool.length === 0) {
       state.questionPool = buildQuestionPool();
     }
@@ -2245,74 +2197,104 @@ html, body {
     state.gateCount += 1;
     state.isDashing = false;
     state.otterMood = 'run';
-    renderGameOtter();
+    state.otterSpin = 0;
+    state.gateX = 760; // Starts on the right side of the 960px canvas
 
-    // Assign random bonus items to the 3 platforms
     const bonusPool = shuffle(['star', 'heart', 'shield', 'none', 'none']);
-    const rawOptions = [
+    state.gateOptions = shuffle([
       { text: q.ans, isCorrect: true, bonus: bonusPool[0] },
       { text: q.w1, isCorrect: false, bonus: bonusPool[1] },
       { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
-    ];
-    state.gateOptions = shuffle(rawOptions);
+    ]);
 
     document.getElementById('q-gate-num').textContent = `GATE #${state.gateCount} / ${state.targetGates}`;
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
     state.gateOptions.forEach((opt, idx) => {
-      const plat = document.getElementById(`gate-plat-${idx}`);
-      const laneName = idx === 0 ? '🔼 1번 발판' : idx === 1 ? '➡️ 2번 발판' : '🔽 3번 발판';
+      const cardEl = document.getElementById(`plat-card-${idx}`);
+      const floorName = idx === 0 ? '🔼 3층 구름 발판' : idx === 1 ? '➡️ 2층 다리 발판' : '🔽 1층 강변 발판';
       let bonusHtml = '';
-      if (opt.bonus === 'star') bonusHtml = `<span class="gate-bonus-tag bonus-star">⭐ 점수 2배</span>`;
-      else if (opt.bonus === 'heart') bonusHtml = `<span class="gate-bonus-tag bonus-heart">❤️ 체력+1</span>`;
-      else if (opt.bonus === 'shield') bonusHtml = `<span class="gate-bonus-tag bonus-shield">🛡️ 방패</span>`;
+      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
+      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
+      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️방패</span>`;
 
-      if (plat) {
-        plat.className = `gate-platform ${idx === state.otterLane ? 'lane-selected' : ''}`;
-        plat.innerHTML = `
-          <div class="gate-top-bar">
-            <span>${laneName}</span>
+      if (cardEl) {
+        cardEl.className = `platform-card floor-${idx} ${idx === state.targetFloor ? 'target-floor' : ''}`;
+        cardEl.innerHTML = `
+          <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:900;color:#93c5fd;">
+            <span>${floorName}</span>
             ${bonusHtml}
           </div>
-          <div class="gate-formula-box">${KkachiMathData.renderMathText(opt.text)}</div>
+          <div style="font-size:1.02rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
+            ${KkachiMathData.renderMathText(opt.text)}
+          </div>
         `;
       }
 
-      const ctrlTxt = document.getElementById(`ctrl-text-${idx}`);
-      if (ctrlTxt) {
-        ctrlTxt.innerHTML = KkachiMathData.renderMathText(opt.text);
-      }
+      const ctrlEl = document.getElementById(`ctrl-text-${idx}`);
+      if (ctrlEl) ctrlEl.innerHTML = KkachiMathData.renderMathText(opt.text);
     });
-
-    state.gateStartTime = performance.now();
-    state.gateProgress = 0;
-    const gateCol = document.getElementById('gate-column');
-    if (gateCol) gateCol.style.left = '76%';
   }
 
-  // Player clicks a lane or presses 1/2/3 -> Otter jumps to that lane and booster-dashes through the gate!
-  function jumpAndDash(laneIdx) {
+  // Player clicks a platform or presses 1/2/3 -> Otter physically jumps in a parabolic arc to that floor AND sprints forward!
+  function jumpToFloorAndDash(floorIdx) {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
-
     KkachiSound.click();
-    state.otterLane = laneIdx;
-    state.isDashing = true;
-    updateLaneUI();
 
-    const actor = document.getElementById('otter-actor');
-    if (actor) {
-      actor.classList.add('jumping', 'dashing');
-      setTimeout(() => actor.classList.remove('jumping'), 220);
+    state.targetFloor = floorIdx;
+    state.isDashing = true;
+
+    // Launch parabolic jump arc toward the target floor height
+    const targetY = FLOOR_Y[floorIdx];
+    const dy = targetY - state.otterY;
+    if (dy < -10) {
+      // Jumping UP to 2층 or 3층 platform
+      state.otterVy = dy < -120 ? -14.8 : -11.2;
+    } else if (dy > 10) {
+      // Diving DOWN to lower platform
+      state.otterVy = -4.5;
+    } else {
+      // Hop on current floor
+      state.otterVy = -7.5;
     }
+
+    // Spawn burst of water/dust jump particles under otter's feet
+    for (let i = 0; i < 8; i++) {
+      state.dustParticles.push({
+        x: state.otterX,
+        y: state.otterY,
+        vx: -2 - Math.random() * 4,
+        vy: -1 - Math.random() * 3,
+        size: 4 + Math.random() * 5,
+        color: '#bae6fd',
+        life: 1
+      });
+    }
+
+    [0, 1, 2].forEach((i) => {
+      const el = document.getElementById(`plat-card-${i}`);
+      if (el) el.classList.toggle('target-floor', i === floorIdx);
+    });
   }
 
-  function changeLaneOnly(delta) {
+  // Free jump when clicking the canvas track (to collect coins or hop while thinking)
+  function freeHop() {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
-    const next = Math.max(0, Math.min(2, state.otterLane + delta));
-    if (next !== state.otterLane) {
+    if (state.otterJumpCount < 2) {
       KkachiSound.click();
-      state.otterLane = next;
-      updateLaneUI();
+      state.otterVy = -10.5;
+      state.otterJumpCount += 1;
+      for (let i = 0; i < 5; i++) {
+        state.dustParticles.push({
+          x: state.otterX - 10,
+          y: state.otterY,
+          vx: -2 - Math.random() * 3,
+          vy: -Math.random() * 2,
+          size: 4 + Math.random() * 4,
+          color: '#e0f2fe',
+          life: 1
+        });
+      }
     }
   }
 
@@ -2326,107 +2308,342 @@ html, body {
       btn.disabled = true;
       btn.textContent = '🛡️ 방패 장착됨';
     }
-    renderGameOtter();
     updateHudUI();
   }
 
-  function runLoop(now) {
+  // =========================================================================
+  // 60FPS MAIN GAME LOOP & SIDE-SCROLLING WORLD RENDERER
+  // =========================================================================
+  function gameLoop(now) {
     if (!state.running) return;
-    const dt = Math.min(100, now - state.lastFrameTime);
+    const dt = Math.min(50, now - state.lastFrameTime);
     state.lastFrameTime = now;
+    const dtSec = dt / 1000;
 
     if (!state.pausedForCrash) {
-      // Advance running distance
-      const speedMult = (state.combo >= 5 ? 1.8 : 1) * (state.isDashing ? 4.5 : 1);
-      state.distance += (dt / 1000) * 14 * speedMult;
-
-      // Spawn & move floating collectible clams on track
-      updateTrackCoins(now, dt, speedMult);
-
-      // Advance Gate Wall approach
-      if (state.isDashing) {
-        state.gateProgress += (dt / 180);
-      } else {
-        state.gateProgress += dt / state.gateDurationMs;
-      }
-
-      const pct = Math.min(1, Math.max(0, state.gateProgress));
-      const leftPct = 76 - pct * 58; // Moves from 76% to 18% (Otter collision point)
-      const gateCol = document.getElementById('gate-column');
-      if (gateCol) gateCol.style.left = `${leftPct}%`;
-
-      const bar = document.getElementById('q-approach-bar');
-      if (bar) bar.style.width = `${Math.round(pct * 100)}%`;
-
-      const remSec = Math.max(0, ((1 - pct) * state.gateDurationMs) / 1000);
-      const timeLbl = document.getElementById('q-time-label');
-      if (timeLbl) {
-        timeLbl.textContent = state.isDashing ? '🌊 부스터 돌진!!' : `충돌까지 ${remSec.toFixed(1)}초`;
-      }
-
-      if (pct >= 1) {
-        resolveGateCollision();
-      }
-
-      updateHudUI();
+      updatePhysics(now, dt, dtSec);
     }
 
-    state.rafId = requestAnimationFrame(runLoop);
+    renderCanvasWorld();
+    state.rafId = requestAnimationFrame(gameLoop);
   }
 
-  function updateTrackCoins(now, dt, speedMult) {
-    if (now - state.lastCoinSpawn > 950) {
-      state.lastCoinSpawn = now;
-      const lane = Math.floor(Math.random() * 3);
-      const icon = Math.random() < 0.7 ? '🐚' : '🐟';
-      state.coins.push({
-        id: 'c_' + now + '_' + Math.random().toString(36).slice(2, 5),
-        lane,
-        x: 72,
-        icon
+  function updatePhysics(now, dt, dtSec) {
+    const feverMult = state.combo >= 5 ? 1.5 : 1;
+    const dashMult = state.isDashing ? 4.2 : 1;
+    const worldSpeed = 240 * feverMult * dashMult;
+
+    // 1. Advance scrolling background & running distance
+    state.scrollX += worldSpeed * dtSec;
+    state.distance += 15 * feverMult * dashMult * dtSec;
+
+    // 2. Advance Otter's leg running cycle phase
+    state.otterPhase += dtSec * (state.isDashing ? 26 : 15) * feverMult;
+
+    // Spawn footstep dust/splash puffs while running on ground
+    const targetGroundY = FLOOR_Y[state.targetFloor];
+    const onGround = Math.abs(state.otterY - targetGroundY) < 4 && state.otterVy >= 0;
+    if (onGround && Math.random() < 0.35) {
+      state.dustParticles.push({
+        x: state.otterX - 18,
+        y: state.otterY - 2,
+        vx: -3 - Math.random() * 3,
+        vy: -0.5 - Math.random() * 1.5,
+        size: 3.5 + Math.random() * 4,
+        color: state.combo >= 5 ? '#fde68a' : 'rgba(255,255,255,0.65)',
+        life: 1
       });
     }
 
-    const layer = document.getElementById('coins-layer');
-    if (!layer) return;
+    // 3. Otter vertical jump & platform landing physics
+    state.otterY += state.otterVy;
+    state.otterVy += state.otterGravity;
 
-    const remaining = [];
+    if (state.otterVy > 0 && state.otterY >= targetGroundY) {
+      state.otterY = targetGroundY;
+      state.otterVy = 0;
+      state.otterJumpCount = 0;
+    }
+
+    // 4. Otter horizontal forward sprint!
+    // When dashing, the otter physically runs forward toward the middle of the bridge (x = 340),
+    // then smoothly cruises back to base position (x = 145) after breaking through!
+    if (state.isDashing) {
+      state.otterX += (350 - state.otterX) * 0.14;
+    } else {
+      state.otterX += (state.otterBaseX - state.otterX) * 0.08;
+    }
+
+    if (state.otterSpin > 0) {
+      state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
+    }
+
+    // 5. Move approaching 3-story Math Gate platforms
+    const gateSpeed = state.isDashing
+      ? 1450
+      : (760 - state.otterBaseX) / (state.gateDurationMs / 1000);
+    state.gateX -= gateSpeed * dtSec;
+
+    // Sync HTML formula overlay position with Canvas gateX
+    const overlay = document.getElementById('gates-overlay');
+    if (overlay) {
+      const leftPct = (state.gateX / 960) * 100;
+      overlay.style.left = `${Math.max(4, leftPct)}%`;
+    }
+
+    const remSec = Math.max(0, (state.gateX - state.otterX) / Math.max(1, gateSpeed));
+    const timeLbl = document.getElementById('q-time-label');
+    if (timeLbl) {
+      timeLbl.textContent = state.isDashing ? '🌊 점프 & 전력돌진!!' : `관문까지 ${remSec.toFixed(1)}초`;
+    }
+
+    // Check Gate collision when Otter reaches the Gate X!
+    if (state.gateX <= state.otterX + 35) {
+      resolveGateCollision();
+    }
+
+    // 6. Update floating collectible clams & fish
+    if (now - state.lastCoinSpawn > 850) {
+      state.lastCoinSpawn = now;
+      const fl = Math.floor(Math.random() * 3);
+      state.coins.push({
+        x: 940,
+        y: FLOOR_Y[fl] - 26,
+        type: Math.random() < 0.7 ? 'clam' : 'star'
+      });
+    }
+
+    const nextCoins = [];
     for (const c of state.coins) {
-      c.x -= (dt / 1000) * 28 * speedMult;
-      // Check collection by otter (around x = 12..18%)
-      if (c.x <= 18 && c.x >= 9 && c.lane === state.otterLane) {
-        state.score += 15;
+      c.x -= worldSpeed * dtSec;
+      const distToOtter = Math.hypot(c.x - state.otterX, c.y - (state.otterY - 24));
+      if (distToOtter < 44) {
+        state.score += 20;
+        // Sparkle particle
+        for (let i = 0; i < 5; i++) {
+          state.dustParticles.push({
+            x: c.x,
+            y: c.y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            size: 4,
+            color: '#fbbf24',
+            life: 1
+          });
+        }
         continue;
       }
-      if (c.x > 4) {
-        remaining.push(c);
-      }
+      if (c.x > -30) nextCoins.push(c);
     }
-    state.coins = remaining;
+    state.coins = nextCoins;
 
-    layer.innerHTML = state.coins
-      .map((c) => {
-        const topPx = c.lane === 0 ? 45 : c.lane === 1 ? 165 : 285;
-        return `<div class="track-coin" style="left:${c.x}%;top:${topPx}px;">${c.icon}</div>`;
-      })
-      .join('');
+    // 7. Update dust & celebration particles
+    const nextParticles = [];
+    for (const p of state.dustParticles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= dtSec * 1.9;
+      if (p.life > 0) nextParticles.push(p);
+    }
+    state.dustParticles = nextParticles;
+
+    updateHudUI();
   }
 
+  function renderCanvasWorld() {
+    const canvas = document.getElementById('runner-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // 1. Sky & River Gradient
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
+    skyGrad.addColorStop(0, '#082f49');
+    skyGrad.addColorStop(0.55, '#0284c7');
+    skyGrad.addColorStop(0.84, '#0369a1');
+    skyGrad.addColorStop(0.85, '#0d9488');
+    skyGrad.addColorStop(1, '#0f766e');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. Parallax Clouds
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+    const cloudOffset = (state.scrollX * 0.18) % 320;
+    for (let x = -cloudOffset; x < W + 100; x += 320) {
+      drawCloud(ctx, x + 50, 48, 36);
+      drawCloud(ctx, x + 210, 75, 26);
+    }
+
+    // 3. Parallax Distant Hills & Pine Trees
+    ctx.fillStyle = 'rgba(6, 78, 59, 0.45)';
+    const hillOffset = (state.scrollX * 0.35) % 400;
+    for (let x = -hillOffset; x < W + 400; x += 400) {
+      ctx.beginPath();
+      ctx.moveTo(x, 308);
+      ctx.quadraticCurveTo(x + 200, 195, x + 400, 308);
+      ctx.fill();
+    }
+
+    // 4. 3-Story Running Tracks / Stepping Bridges
+    // Floor 0 (3층 하늘 구름 다리 - y = 92)
+    drawTrackBridge(ctx, W, FLOOR_Y[0], state.scrollX * 0.85, 'rgba(56, 189, 248, 0.25)', '#38bdf8');
+    // Floor 1 (2층 나무 징검다리 - y = 200)
+    drawTrackBridge(ctx, W, FLOOR_Y[1], state.scrollX * 0.95, 'rgba(16, 185, 129, 0.25)', '#34d399');
+    // Floor 2 (1층 강변 메인 다리 - y = 308)
+    drawMainGroundBridge(ctx, W, FLOOR_Y[2], state.scrollX);
+
+    // 5. Collectible Floating Seashells & Stars
+    for (const c of state.coins) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fillStyle = c.type === 'clam' ? 'rgba(251, 191, 36, 0.25)' : 'rgba(56, 189, 248, 0.25)';
+      ctx.fill();
+      ctx.font = '18px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(c.type === 'clam' ? '🐚' : '⭐', 0, 1);
+      ctx.restore();
+    }
+
+    // 6. Footstep Dust & Celebration Particles
+    for (const p of state.dustParticles) {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 7. Speed lines during Dash or Fever
+    if (state.isDashing || state.combo >= 5) {
+      ctx.save();
+      ctx.strokeStyle = state.combo >= 5 ? 'rgba(251, 191, 36, 0.45)' : 'rgba(125, 211, 252, 0.45)';
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < 6; i++) {
+        const ly = 40 + ((i * 55 + state.scrollX) % 270);
+        const lx = ((state.scrollX * 2 + i * 170) % W);
+        ctx.beginPath();
+        ctx.moveTo(W - lx, ly);
+        ctx.lineTo(W - lx + 55, ly);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // 8. Draw the Articulated Running & Jumping Cute Otter!
+    const targetGroundY = FLOOR_Y[state.targetFloor];
+    const isAirborne = Math.abs(state.otterY - targetGroundY) > 5;
+
+    // Shadow under the otter on its target floor
+    ctx.save();
+    const shadowScale = Math.max(0.35, 1 - Math.abs(targetGroundY - state.otterY) / 180);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+    ctx.beginPath();
+    ctx.ellipse(state.otterX, targetGroundY + 2, 26 * shadowScale, 6 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    drawArticulatedOtter(ctx, state.otterX, state.otterY, state.otterPhase, {
+      skin: state.skin,
+      mood: state.otterMood,
+      airborne: isAirborne,
+      spin: state.otterSpin,
+      fever: state.combo >= 5,
+      shielded: state.hasShield,
+      scale: 1.08
+    });
+  }
+
+  function drawCloud(ctx, x, y, r) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.arc(x + r * 0.8, y + 4, r * 0.75, 0, Math.PI * 2);
+    ctx.arc(x - r * 0.8, y + 6, r * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawTrackBridge(ctx, W, y, scroll, fillCol, strokeCol) {
+    ctx.save();
+    ctx.fillStyle = fillCol;
+    ctx.fillRect(0, y, W, 8);
+    ctx.strokeStyle = strokeCol;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+
+    // Moving planks along the bridge
+    const offset = scroll % 60;
+    ctx.fillStyle = strokeCol;
+    for (let x = -offset; x < W; x += 60) {
+      ctx.fillRect(x, y + 1, 24, 4);
+    }
+    ctx.restore();
+  }
+
+  function drawMainGroundBridge(ctx, W, y, scroll) {
+    ctx.save();
+    // Grass / wooden riverbank deck
+    ctx.fillStyle = '#065f46';
+    ctx.fillRect(0, y, W, 16);
+    ctx.fillStyle = '#10b981';
+    ctx.fillRect(0, y, W, 5);
+
+    // Moving bridge planks & water ripples
+    const offset = scroll % 50;
+    ctx.fillStyle = '#34d399';
+    for (let x = -offset; x < W; x += 50) {
+      ctx.fillRect(x, y + 6, 26, 5);
+    }
+
+    // Sparkling river waves at bottom
+    const waveOffset = (scroll * 1.2) % 80;
+    ctx.strokeStyle = 'rgba(186, 230, 253, 0.35)';
+    ctx.lineWidth = 2;
+    for (let x = -waveOffset; x < W; x += 80) {
+      ctx.beginPath();
+      ctx.moveTo(x, y + 32);
+      ctx.quadraticCurveTo(x + 20, y + 26, x + 40, y + 32);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // =========================================================================
+  // GATE COLLISION & CELEBRATION / CRASH EXPLANATION
+  // =========================================================================
   function resolveGateCollision() {
     state.pausedForCrash = true;
-    const actor = document.getElementById('otter-actor');
-    if (actor) actor.classList.remove('dashing');
-
-    const pickedIdx = state.otterLane;
+    const pickedIdx = state.targetFloor;
     const pickedOpt = state.gateOptions[pickedIdx];
-    const platEl = document.getElementById(`gate-plat-${pickedIdx}`);
+    const cardEl = document.getElementById(`plat-card-${pickedIdx}`);
 
     if (pickedOpt && pickedOpt.isCorrect) {
-      // BREAKTHROUGH SUCCESS!
-      if (platEl) platEl.classList.add('gate-correct');
+      // SUCCESSFUL JUMP & BREAKTHROUGH!
+      if (cardEl) cardEl.classList.add('plat-correct');
       state.combo += 1;
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
       state.otterMood = 'happy';
+      state.otterSpin = Math.PI * 2; // 360° celebratory backflip!
+
+      // Burst of golden celebration particles
+      for (let i = 0; i < 20; i++) {
+        state.dustParticles.push({
+          x: state.otterX + 20,
+          y: state.otterY - 20,
+          vx: (Math.random() - 0.3) * 10,
+          vy: (Math.random() - 0.7) * 10,
+          size: 4 + Math.random() * 5,
+          color: i % 2 === 0 ? '#fbbf24' : '#34d399',
+          life: 1.2
+        });
+      }
 
       let pts = 150 + (state.combo - 1) * 30;
       if (state.combo >= 5) pts *= 2;
@@ -2448,21 +2665,18 @@ html, body {
         KkachiSound.correct(state.combo * 2);
       }
 
-      renderGameOtter();
       updateHudUI();
-
       setTimeout(() => {
         state.pausedForCrash = false;
         spawnNextGate();
-      }, 480);
+      }, 460);
     } else {
-      // WRONG GATE COLLISION!
-      if (platEl) platEl.classList.add('gate-wrong');
-      // Highlight the actual correct gate
+      // WRONG PLATFORM COLLISION!
+      if (cardEl) cardEl.classList.add('plat-wrong');
       state.gateOptions.forEach((o, i) => {
         if (o.isCorrect) {
-          const el = document.getElementById(`gate-plat-${i}`);
-          if (el) el.classList.add('gate-correct');
+          const el = document.getElementById(`plat-card-${i}`);
+          if (el) el.classList.add('plat-correct');
         }
       });
 
@@ -2474,15 +2688,13 @@ html, body {
       });
 
       if (state.hasShield) {
-        // Shield absorbs the crash!
         state.hasShield = false;
         KkachiSound.radar();
-        renderGameOtter();
         updateHudUI();
         setTimeout(() => {
           state.pausedForCrash = false;
           spawnNextGate();
-        }, 700);
+        }, 650);
         return;
       }
 
@@ -2490,14 +2702,8 @@ html, body {
       state.hearts -= 1;
       state.otterMood = 'hurt';
       KkachiSound.bomb();
-      if (actor) {
-        actor.classList.add('hurt');
-        setTimeout(() => actor.classList.remove('hurt'), 500);
-      }
-      renderGameOtter();
       updateHudUI();
 
-      // Show 1-line explanation overlay for 1.8s
       const overlay = document.getElementById('crash-tip-overlay');
       document.getElementById('crash-correct-text').innerHTML =
         `✔ 정답 발판: ${KkachiMathData.renderMathText(state.currentQ.ans)}`;
@@ -2513,7 +2719,7 @@ html, body {
           state.pausedForCrash = false;
           spawnNextGate();
         }
-      }, 1900);
+      }, 1850);
     }
   }
 
@@ -2522,14 +2728,8 @@ html, body {
     KkachiSound.victory();
 
     const modal = document.getElementById('modal-result');
-    document.getElementById('result-otter-box').innerHTML = buildOtterSVG(
-      state.skin,
-      cleared ? 'happy' : 'run',
-      cleared,
-      false
-    );
-
     const passedCount = state.history.filter((h) => h.passed).length;
+
     document.getElementById('result-title').textContent = cleared
       ? `🎉 10개 수학 관문 완주 성공!`
       : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 질주)`;
@@ -2565,24 +2765,28 @@ html, body {
     showIntro();
   }
 
-  function initKeyboardControls() {
+  function initControls() {
+    const canvas = document.getElementById('runner-canvas');
+    if (canvas) {
+      canvas.addEventListener('pointerdown', () => {
+        freeHop();
+      });
+    }
+
     window.addEventListener('keydown', (e) => {
       if (state.screen !== 'game' || !state.running || state.pausedForCrash) return;
       if (e.key === '1' || e.key === 'ArrowUp') {
         e.preventDefault();
-        jumpAndDash(0);
-      } else if (e.key === '2' || e.key === 'ArrowRight' || e.key === ' ') {
+        jumpToFloorAndDash(0);
+      } else if (e.key === '2' || e.key === 'ArrowRight') {
         e.preventDefault();
-        jumpAndDash(1);
+        jumpToFloorAndDash(1);
       } else if (e.key === '3' || e.key === 'ArrowDown') {
         e.preventDefault();
-        jumpAndDash(2);
-      } else if (e.key === 'w' || e.key === 'W') {
+        jumpToFloorAndDash(2);
+      } else if (e.key === ' ') {
         e.preventDefault();
-        changeLaneOnly(-1);
-      } else if (e.key === 's' || e.key === 'S') {
-        e.preventDefault();
-        changeLaneOnly(1);
+        freeHop();
       }
     });
   }
@@ -2638,7 +2842,7 @@ html, body {
     selectChapter,
     showIntro,
     startGame,
-    jumpAndDash,
+    jumpToFloorAndDash,
     activateFreeShield,
     closeResultAndRestart,
     closeResultAndIntro,
