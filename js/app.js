@@ -450,16 +450,27 @@
       state.introPhase += 0.22;
       state.introZ = (state.introZ + 14) % 80;
 
-      // Sky & 3D Bridge Preview
+      // Bright Blue Sky & Emerald Ocean 3D Bridge Preview
       const sky = ctx.createLinearGradient(0, 0, 0, H);
-      sky.addColorStop(0, '#090d16');
-      sky.addColorStop(0.38, '#1e1b4b');
-      sky.addColorStop(0.4, '#0c4a6e');
-      sky.addColorStop(1, '#042f2e');
+      sky.addColorStop(0, '#0284c7');
+      sky.addColorStop(0.36, '#7dd3fc');
+      sky.addColorStop(0.39, '#e0f2fe');
+      sky.addColorStop(0.41, '#06b6d4');
+      sky.addColorStop(1, '#10b981');
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, W, H);
 
-      // Draw Mini 3D Perspective Road
+      // Little Fluffy Clouds in Intro Preview
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.beginPath();
+      ctx.arc(36, 22, 11, 0, Math.PI * 2);
+      ctx.arc(48, 20, 14, 0, Math.PI * 2);
+      ctx.arc(60, 23, 10, 0, Math.PI * 2);
+      ctx.arc(140, 18, 10, 0, Math.PI * 2);
+      ctx.arc(152, 16, 13, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Mini 3D Perspective Sunny Boardwalk Bridge
       const horY = 46;
       for (let z = 640; z >= 20; z -= 80) {
         const z1 = z - state.introZ;
@@ -470,7 +481,8 @@
         const p2L = project3D(-220, 0, z2, W, H, 0, 110, 180, horY);
         const p2R = project3D(220, 0, z2, W, H, 0, 110, 180, horY);
 
-        ctx.fillStyle = Math.floor(z / 80) % 2 === 0 ? '#0f172a' : '#1e293b';
+        const isEv = Math.floor(z / 80) % 2 === 0;
+        ctx.fillStyle = isEv ? '#fffbeb' : '#fde68a';
         ctx.beginPath();
         ctx.moveTo(p1L.x, p1L.y);
         ctx.lineTo(p1R.x, p1R.y);
@@ -478,6 +490,15 @@
         ctx.lineTo(p2L.x, p2L.y);
         ctx.closePath();
         ctx.fill();
+
+        ctx.strokeStyle = isEv ? '#0284c7' : '#10b981';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(p1L.x, p1L.y);
+        ctx.lineTo(p2L.x, p2L.y);
+        ctx.moveTo(p1R.x, p1R.y);
+        ctx.lineTo(p2R.x, p2R.y);
+        ctx.stroke();
       }
 
       // Gently swaying 3D Otter in preview
@@ -748,18 +769,18 @@
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
     const laneMeta = [
-      { title: '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#c4b5fd' },
-      { title: '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#fda4af' },
-      { title: '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#6ee7b7' }
+      { title: '🦇 ①번 왼쪽 몬스터', key: '키 1 / ←', col: '#7e22ce' },
+      { title: '👹 ②번 중앙 몬스터', key: '키 2 / ↑', col: '#be123c' },
+      { title: '👾 ③번 오른쪽 몬스터', key: '키 3 / →', col: '#047857' }
     ];
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
       const meta = laneMeta[idx];
-      let bonusHtml = `<span style="color:var(--text-muted);font-size:0.72rem;">${meta.key}</span>`;
-      if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐ 점수 2배</span>`;
-      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️ 체력 +1</span>`;
-      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️ 방어막</span>`;
+      let bonusHtml = `<span style="color:var(--text-muted);font-size:0.75rem;">${meta.key}</span>`;
+      if (opt.bonus === 'star') bonusHtml = `<span style="color:#d97706;">⭐ 점수 2배</span>`;
+      else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#e11d48;">❤️ 체력 +1</span>`;
+      else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#0284c7;">🛡️ 방어막</span>`;
 
       if (cardEl) {
         cardEl.className = `answer-target-card lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
@@ -1056,27 +1077,59 @@
     const fov = state.fov;
     const horY = state.horizonY;
 
-    // 1. 3D Sky & Glowing Horizon Sun
+    // 1. Bright Sunny Blue Sky & Sparkling Emerald Ocean Lagoon Background
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-    skyGrad.addColorStop(0, '#050811');
-    skyGrad.addColorStop(0.28, '#1e1b4b');
-    skyGrad.addColorStop(0.31, '#0284c7');
-    skyGrad.addColorStop(0.34, '#082f49');
-    skyGrad.addColorStop(1, '#022c22');
+    skyGrad.addColorStop(0, '#0284c7');
+    skyGrad.addColorStop(0.26, '#38bdf8');
+    skyGrad.addColorStop(0.29, '#e0f2fe');
+    skyGrad.addColorStop(0.31, '#06b6d4');
+    skyGrad.addColorStop(0.62, '#0d9488');
+    skyGrad.addColorStop(1, '#10b981');
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // Glowing 3D Cyber-Sun at Horizon
-    const sunGrad = ctx.createRadialGradient(W * 0.5 - camX * 0.15, horY, 10, W * 0.5 - camX * 0.15, horY, 110);
-    sunGrad.addColorStop(0, 'rgba(253, 224, 71, 0.55)');
-    sunGrad.addColorStop(0.5, 'rgba(244, 63, 94, 0.22)');
+    // Bright Golden Sun & Sunbeams at Horizon
+    const sunX = W * 0.5 - camX * 0.15;
+    const sunGrad = ctx.createRadialGradient(sunX, horY - 12, 8, sunX, horY - 12, 110);
+    sunGrad.addColorStop(0, 'rgba(254, 240, 138, 0.95)');
+    sunGrad.addColorStop(0.35, 'rgba(253, 224, 71, 0.45)');
     sunGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = sunGrad;
     ctx.beginPath();
-    ctx.arc(W * 0.5 - camX * 0.15, horY, 110, 0, Math.PI * 2);
+    ctx.arc(sunX, horY - 12, 110, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. 3D Perspective Bridge Segments (from Z=1400 down to Z=10)
+    // Fluffy White 3D Clouds in the Blue Sky
+    const cloudPositions = [
+      { x: 140 - camX * 0.08, y: 38, s: 1.0 },
+      { x: 340 - camX * 0.05, y: 26, s: 0.85 },
+      { x: 640 - camX * 0.06, y: 32, s: 0.95 },
+      { x: 830 - camX * 0.09, y: 42, s: 1.05 }
+    ];
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    for (const cl of cloudPositions) {
+      ctx.beginPath();
+      ctx.arc(cl.x - 18 * cl.s, cl.y + 4, 14 * cl.s, 0, Math.PI * 2);
+      ctx.arc(cl.x, cl.y - 2, 19 * cl.s, 0, Math.PI * 2);
+      ctx.arc(cl.x + 18 * cl.s, cl.y + 4, 13 * cl.s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Sparkling White Ocean Waves on the Left & Right Emerald Sea
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 6; i++) {
+      const wy = horY + 26 + i * 38;
+      const waveShift = Math.sin(state.otterPhase * 0.25 + i) * 18;
+      ctx.beginPath();
+      ctx.moveTo(20 + waveShift, wy);
+      ctx.lineTo(90 + waveShift, wy);
+      ctx.moveTo(W - 100 - waveShift, wy + 10);
+      ctx.lineTo(W - 25 - waveShift, wy + 10);
+      ctx.stroke();
+    }
+
+    // 2. 3D Perspective Sunny Resort Bridge Segments (from Z=1400 down to Z=10)
     const segLen = 70;
     const zOffset = state.trackZ % segLen;
 
@@ -1092,8 +1145,8 @@
 
       const isEven = Math.floor((z + state.trackZ) / segLen) % 2 === 0;
 
-      // Main 3D Bridge Deck Quad
-      ctx.fillStyle = isEven ? '#0f172a' : '#172554';
+      // Main 3D Bridge Deck Quad (Bright Warm Cream & Golden Sand Planks)
+      ctx.fillStyle = isEven ? '#fffbeb' : '#fef3c7';
       ctx.beginPath();
       ctx.moveTo(pFarL.x, pFarL.y);
       ctx.lineTo(pFarR.x, pFarR.y);
@@ -1102,9 +1155,9 @@
       ctx.closePath();
       ctx.fill();
 
-      // 3D Glowing Side Curbs / Guardrails
-      ctx.strokeStyle = isEven ? '#38bdf8' : '#10b981';
-      ctx.lineWidth = Math.max(1.5, 6 * pNearL.scale);
+      // 3D Ocean Blue & Emerald Guardrails / Side Curbs
+      ctx.strokeStyle = isEven ? '#0284c7' : '#059669';
+      ctx.lineWidth = Math.max(2, 7 * pNearL.scale);
       ctx.beginPath();
       ctx.moveTo(pFarL.x, pFarL.y);
       ctx.lineTo(pNearL.x, pNearL.y);
@@ -1112,13 +1165,13 @@
       ctx.lineTo(pNearR.x, pNearR.y);
       ctx.stroke();
 
-      // 3D Neon Lane Dividers (between Left/Center and Center/Right)
+      // 3D Sky-Blue Lane Dividers (between Left/Center and Center/Right)
       if (isEven) {
         [-105, 105].forEach((divX) => {
           const dFar = project3D(divX, 0, zFar, W, H, camX, camY, fov, horY);
           const dNear = project3D(divX, 0, zNear, W, H, camX, camY, fov, horY);
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
-          ctx.lineWidth = Math.max(1, 3.5 * dNear.scale);
+          ctx.strokeStyle = 'rgba(2, 132, 199, 0.45)';
+          ctx.lineWidth = Math.max(1.2, 4 * dNear.scale);
           ctx.beginPath();
           ctx.moveTo(dFar.x, dFar.y);
           ctx.lineTo(dNear.x, dNear.y);
@@ -1126,18 +1179,18 @@
         });
       }
 
-      // 3D Roadside Crystal Lamp Pillars passing by
+      // 3D Roadside Aqua Bubble Pillars passing by
       if (Math.floor((z + state.trackZ) / segLen) % 3 === 0) {
         [-365, 365].forEach((pillarX) => {
           const pBase = project3D(pillarX, 0, zNear, W, H, camX, camY, fov, horY);
           const pTop = project3D(pillarX, 85, zNear, W, H, camX, camY, fov, horY);
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
           ctx.lineWidth = Math.max(1.5, 8 * pBase.scale);
           ctx.beginPath();
           ctx.moveTo(pBase.x, pBase.y);
           ctx.lineTo(pTop.x, pTop.y);
           ctx.stroke();
-          drawShadedSphere(ctx, pTop.x, pTop.y, Math.max(2, 10 * pTop.scale), '#38bdf8', '#ffffff', '#0284c7');
+          drawShadedSphere(ctx, pTop.x, pTop.y, Math.max(2.5, 11 * pTop.scale), '#38bdf8', '#ffffff', '#0369a1');
         });
       }
     }
@@ -1156,7 +1209,7 @@
 
     // 4. Draw Approaching 3D Monsters & 3D Laser Guide Lines connecting to the 3 Bottom Choice Cards!
     const dockCentersX = [W * 0.165, W * 0.5, W * 0.835];
-    const tetherColors = ['rgba(167, 139, 250, 0.38)', 'rgba(251, 113, 133, 0.38)', 'rgba(52, 211, 153, 0.38)'];
+    const tetherColors = ['rgba(126, 34, 206, 0.45)', 'rgba(225, 29, 72, 0.45)', 'rgba(5, 150, 105, 0.45)'];
 
     [0, 1, 2].forEach((ln) => {
       if (!state.monstersAlive[ln]) return;
@@ -1444,19 +1497,19 @@
       : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 질주)`;
 
     document.getElementById('result-desc').innerHTML =
-      `최종 점수 <strong style="color:#fbbf24;">${state.score.toLocaleString()}점</strong> · 토벌 성공 <strong style="color:#34d399;">${passedCount}/${state.history.length}마리</strong> · 최고 <strong>${state.maxCombo}연속 격파</strong>`;
+      `최종 점수 <strong style="color:#d97706;">${state.score.toLocaleString()}점</strong> · 토벌 성공 <strong style="color:#059669;">${passedCount}/${state.history.length}마리</strong> · 최고 <strong>${state.maxCombo}연속 격파</strong>`;
 
     const reviewEl = document.getElementById('result-review-box');
     reviewEl.innerHTML =
-      `<div style="font-weight:900;color:#38bdf8;margin-bottom:6px;">📘 이번 3D 출격에서 격파한 고1 수학 수식 복습</div>` +
+      `<div style="font-weight:900;color:#0284c7;margin-bottom:6px;">📘 이번 3D 출격에서 격파한 고1 수학 수식 복습</div>` +
       state.history
         .map((h, i) => `
-          <div style="border-bottom:1px solid rgba(255,255,255,0.08);padding:6px 0;">
-            <div style="font-weight:800;">
+          <div style="border-bottom:1px solid #bae6fd;padding:6px 0;">
+            <div style="font-weight:800;color:#0f172a;">
               ${h.passed ? '⚔️' : '🛡️'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
-              <span style="color:#34d399;margin-left:6px;">→ ${KkachiMathData.renderMathText(h.ans)}</span>
+              <span style="color:#059669;margin-left:6px;">→ ${KkachiMathData.renderMathText(h.ans)}</span>
             </div>
-            ${!h.passed ? `<div style="font-size:0.8rem;color:#93c5fd;margin-top:2px;">💡 ${KkachiMathData.renderMathText(h.tip)}</div>` : ''}
+            ${!h.passed ? `<div style="font-size:0.8rem;color:#0369a1;margin-top:2px;">💡 ${KkachiMathData.renderMathText(h.tip)}</div>` : ''}
           </div>
         `)
         .join('');

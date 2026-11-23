@@ -1,18 +1,25 @@
 /* ==========================================================================
-   수달런 3D (OTTER MATH RUN 3D) - 초직관적 첫 화면 & 통합 배틀 콘솔 UI (v5)
+   수달런 3D (OTTER MATH RUN 3D) - 밝고 청량한 '푸른 하늘 & 에메랄드 바다' 테마
+   + 쿠키런/듀오링고 스타일 통통한 3D 입체 캡슐 버튼 UI (v6)
    ========================================================================== */
 :root {
-  --bg-dark: #060b16;
-  --bg-panel: #0f1a2c;
-  --bg-card: #16243d;
-  --border-subtle: rgba(148, 163, 184, 0.22);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --accent-sky: #38bdf8;
+  --bg-sky-top: #c8eeff;
+  --bg-sky-mid: #e0f7ff;
+  --bg-ocean-bot: #a7f3d0;
+  --panel-bg: #ffffff;
+  --card-soft: #f0f9ff;
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --border-sky: #38bdf8;
+  --border-sky-dark: #0284c7;
   --accent-emerald: #10b981;
+  --accent-emerald-dark: #059669;
   --accent-amber: #f59e0b;
+  --accent-amber-dark: #d97706;
   --accent-rose: #f43f5e;
+  --accent-rose-dark: #e11d48;
   --accent-purple: #a855f7;
+  --accent-purple-dark: #7e22ce;
 }
 
 * {
@@ -25,10 +32,8 @@
 
 html, body {
   min-height: 100vh;
-  background-color: var(--bg-dark);
-  background-image:
-    radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.16), transparent 42%),
-    radial-gradient(circle at 85% 90%, rgba(168, 85, 247, 0.15), transparent 42%);
+  background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 48%, #99f6e4 100%);
+  background-attachment: fixed;
   color: var(--text-main);
   font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
@@ -37,25 +42,27 @@ html, body {
 .app-wrap {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 14px 16px 28px;
+  padding: 16px 16px 32px;
 }
 
 /* ==========================================================================
-   SCREEN 1: ULTRA-INTUITIVE FIRST PAGE (첫 화면 - 시각적 플로우 & 간편 설정)
+   SCREEN 1: BRIGHT & CHEERFUL FIRST PAGE (첫 화면)
    ========================================================================== */
 .intro-screen {
-  max-width: 840px;
+  max-width: 850px;
   margin: 4px auto;
-  background: var(--bg-panel);
-  border: 1.5px solid rgba(56, 189, 248, 0.38);
-  border-radius: 28px;
+  background: #ffffff;
+  border: 3px solid #38bdf8;
+  border-bottom-width: 8px;
+  border-bottom-color: #0284c7;
+  border-radius: 32px;
   padding: 26px 28px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 20px 45px -12px rgba(2, 132, 199, 0.25);
   animation: fadeIn 0.25s ease;
 }
 
 @media (max-width: 640px) {
-  .intro-screen { padding: 18px 14px; }
+  .intro-screen { padding: 18px 14px; border-radius: 24px; }
 }
 
 @keyframes fadeIn {
@@ -67,22 +74,24 @@ html, body {
   display: flex;
   align-items: center;
   gap: 22px;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.7));
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  border-radius: 22px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+  border: 2.5px solid #7dd3fc;
+  border-bottom-width: 5px;
+  border-bottom-color: #38bdf8;
+  border-radius: 24px;
   padding: 16px 20px;
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
 .intro-canvas-box {
-  width: 190px;
-  height: 122px;
-  border-radius: 16px;
+  width: 192px;
+  height: 124px;
+  border-radius: 18px;
   overflow: hidden;
-  border: 2px solid #38bdf8;
-  background: #050b14;
-  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+  border: 3px solid #0284c7;
+  background: #38bdf8;
+  box-shadow: 0 8px 18px rgba(2, 132, 199, 0.22);
   flex-shrink: 0;
 }
 
@@ -90,38 +99,38 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.18);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  color: #7dd3fc;
+  background: #ffffff;
+  border: 2px solid #0284c7;
+  border-bottom-width: 3.5px;
+  color: #0369a1;
   font-size: 0.8rem;
   font-weight: 900;
   margin-bottom: 6px;
 }
 
 .intro-title {
-  font-size: clamp(1.55rem, 3vw, 2.1rem);
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
   font-weight: 900;
   line-height: 1.2;
   margin-bottom: 6px;
-  background: linear-gradient(90deg, #38bdf8, #c084fc, #fbbf24);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0369a1;
+  text-shadow: 0 2px 0 #ffffff;
 }
 
 .intro-subtitle {
-  color: #e2e8f0;
+  color: #334155;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.45;
 }
 
-/* Visual 1-Second Flow Banner (글을 안 읽어도 한눈에 이해되는 시각적 진행도) */
+/* Visual 3-Step Flow Box */
 .visual-howto-box {
-  background: rgba(6, 11, 22, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 20px;
+  background: #f0f9ff;
+  border: 2.5px solid #bae6fd;
+  border-radius: 24px;
   padding: 16px 18px;
   margin-bottom: 18px;
 }
@@ -137,23 +146,24 @@ html, body {
 }
 
 .flow-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 14px;
+  background: #ffffff;
+  border: 2.5px solid #7dd3fc;
+  border-bottom-width: 5px;
+  border-radius: 18px;
+  padding: 13px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.flow-card.fc-1 { border-color: rgba(56, 189, 248, 0.45); }
-.flow-card.fc-2 { border-color: rgba(245, 158, 11, 0.45); }
-.flow-card.fc-3 { border-color: rgba(168, 85, 247, 0.45); }
+.flow-card.fc-1 { border-color: #38bdf8; border-bottom-color: #0284c7; }
+.flow-card.fc-2 { border-color: #fbbf24; border-bottom-color: #d97706; }
+.flow-card.fc-3 { border-color: #34d399; border-bottom-color: #059669; }
 
 .flow-num-badge {
   width: 44px;
   height: 44px;
-  border-radius: 13px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,48 +171,50 @@ html, body {
   flex-shrink: 0;
 }
 
-.fc-1 .flow-num-badge { background: rgba(56, 189, 248, 0.2); }
-.fc-2 .flow-num-badge { background: rgba(245, 158, 11, 0.2); }
-.fc-3 .flow-num-badge { background: rgba(168, 85, 247, 0.2); }
+.fc-1 .flow-num-badge { background: #e0f2fe; }
+.fc-2 .flow-num-badge { background: #fef3c7; }
+.fc-3 .flow-num-badge { background: #d1fae5; }
 
 .flow-text-title {
   font-size: 0.96rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin-bottom: 2px;
 }
 
 .flow-text-desc {
   font-size: 0.8rem;
-  color: #cbd5e1;
+  color: #475569;
+  font-weight: 600;
   line-height: 1.38;
 }
 
 .keycap {
   display: inline-block;
   padding: 1px 7px;
-  border-radius: 6px;
-  background: #060b16;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  border-bottom-width: 2.5px;
+  border-radius: 7px;
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  border-bottom-width: 3px;
+  border-bottom-color: #d97706;
   font-size: 0.74rem;
   font-weight: 900;
-  color: #fde68a;
+  color: #b45309;
 }
 
 /* Pre-game Config Box */
 .intro-config-box {
-  background: rgba(6, 11, 22, 0.55);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
+  background: #f8fafc;
+  border: 2.5px solid #e2e8f0;
+  border-radius: 24px;
   padding: 16px 18px;
   margin-bottom: 18px;
 }
 
 .config-label {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   font-weight: 900;
-  color: #7dd3fc;
+  color: #0369a1;
   margin-bottom: 8px;
   display: block;
 }
@@ -210,7 +222,7 @@ html, body {
 .skin-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
+  gap: 10px;
   margin-bottom: 14px;
 }
 
@@ -218,106 +230,167 @@ html, body {
   .skin-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Chunky 3D Skin Select Buttons */
 .skin-btn {
-  padding: 10px 8px;
-  border-radius: 14px;
-  background: var(--bg-panel);
-  border: 2px solid var(--border-subtle);
+  padding: 11px 8px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 2.5px solid #cbd5e1;
+  border-bottom-width: 5px;
+  border-bottom-color: #94a3b8;
   color: var(--text-main);
   cursor: pointer;
   text-align: center;
-  transition: all 0.15s;
+  transition: all 0.12s ease;
 }
 
-.skin-btn:hover { border-color: rgba(56, 189, 248, 0.5); }
+.skin-btn:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8;
+  border-bottom-color: #0284c7;
+}
+
+.skin-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2.5px;
+}
 
 .skin-btn.active {
-  border-color: #38bdf8;
-  background: rgba(56, 189, 248, 0.18);
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+  background: #e0f2fe;
+  border-color: #0284c7;
+  border-bottom-color: #0369a1;
+  box-shadow: 0 6px 14px rgba(2, 132, 199, 0.18);
 }
 
+/* Chunky 3D Pill Tabs */
 .chapter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
 }
 
 .tab-btn {
-  padding: 7px 13px;
+  padding: 8px 15px;
   border-radius: 999px;
-  font-size: 0.83rem;
+  font-size: 0.84rem;
   font-weight: 800;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-bottom-width: 4px;
+  border-bottom-color: #94a3b8;
+  color: #475569;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.12s ease;
 }
 
-.tab-btn.active {
-  background: rgba(56, 189, 248, 0.22);
-  color: #38bdf8;
+.tab-btn:hover {
+  transform: translateY(-1px);
   border-color: #38bdf8;
 }
 
-.btn-start-huge {
-  width: 100%;
-  padding: 16px 26px;
-  font-size: 1.22rem;
-  font-weight: 900;
-  border-radius: 18px;
-  border: none;
-  color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4);
-  box-shadow: 0 12px 30px -6px rgba(124, 58, 237, 0.65);
-  cursor: pointer;
-  transition: transform 0.18s;
+.tab-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
 }
 
-.btn-start-huge:hover { transform: translateY(-2px); }
+.tab-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0369a1;
+  border-bottom-color: #075985;
+}
+
+/* Giant Chunky 3D Capsule Start Button */
+.btn-start-huge {
+  width: 100%;
+  padding: 16px 28px;
+  font-size: 1.26rem;
+  font-weight: 900;
+  border-radius: 999px;
+  border: 3px solid #047857;
+  border-bottom-width: 7px;
+  border-bottom-color: #064e3b;
+  color: #ffffff;
+  background: linear-gradient(180deg, #34d399 0%, #10b981 50%, #059669 100%);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
+  box-shadow: 0 12px 24px -6px rgba(16, 185, 129, 0.55);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.btn-start-huge:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.btn-start-huge:active {
+  transform: translateY(4px);
+  border-bottom-width: 3px;
+}
 
 /* ==========================================================================
-   SCREEN 2: UNIFIED 3D VIEWPORT + INTEGRATED BATTLE QUIZ CONSOLE (플레이 화면)
+   SCREEN 2: BRIGHT OCEAN 3D STAGE + CHUNKY 3D CAPSULE CONSOLE (플레이 화면)
    ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 7px 12px;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 0.82rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(15, 23, 42, 0.78);
-  backdrop-filter: blur(8px);
-  color: var(--text-main);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.83rem;
+  border: 2px solid #cbd5e1;
+  border-bottom-width: 4px;
+  border-bottom-color: #94a3b8;
+  background: #ffffff;
+  color: #0f172a;
   cursor: pointer;
-  transition: all 0.14s;
+  transition: all 0.12s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-.btn:hover { background: rgba(30, 41, 59, 0.92); }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { background: linear-gradient(135deg, #2563eb, #06b6d4); border-color: transparent; }
-.btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
-.btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #050b14; border-color: transparent; }
+.btn:hover { transform: translateY(-1.5px); background: #f8fafc; }
+.btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-/* 1. 3D Stage with Floating Glassmorphism Corner HUD */
+.btn-primary {
+  background: linear-gradient(180deg, #38bdf8, #0284c7);
+  color: #ffffff;
+  border-color: #0369a1;
+  border-bottom-color: #075985;
+}
+
+.btn-emerald {
+  background: linear-gradient(180deg, #34d399, #10b981);
+  color: #ffffff;
+  border-color: #059669;
+  border-bottom-color: #047857;
+}
+
+.btn-amber {
+  background: linear-gradient(180deg, #fde047, #f59e0b);
+  color: #78350f;
+  border-color: #d97706;
+  border-bottom-color: #b45309;
+}
+
+/* 1. Sunny 3D Stage Viewport */
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 340px;
-  border-radius: 24px 24px 0 0;
+  height: 345px;
+  border-radius: 30px 30px 0 0;
   overflow: hidden;
-  border: 2px solid rgba(56, 189, 248, 0.45);
+  border: 3.5px solid #0284c7;
   border-bottom: none;
-  background: #050b14;
+  background: #38bdf8;
+  box-shadow: 0 12px 30px rgba(2, 132, 199, 0.2);
 }
 
 .canvas-stage-wrap.fever-glow {
   border-color: #f59e0b;
-  box-shadow: 0 0 36px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 36px rgba(245, 158, 11, 0.65);
 }
 
 .canvas-stage-wrap.shake-hit {
@@ -340,7 +413,7 @@ html, body {
   cursor: pointer;
 }
 
-/* Floating HUD overlaid inside top of 3D Stage */
+/* Floating Bright Capsule HUD overlaid inside top of 3D Stage */
 .floating-hud-bar {
   position: absolute;
   top: 12px;
@@ -366,14 +439,17 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 12px;
-  border-radius: 11px;
-  background: rgba(9, 15, 28, 0.78);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #7dd3fc;
+  border-bottom-width: 4px;
+  border-bottom-color: #38bdf8;
+  color: #0f172a;
   font-weight: 900;
   font-size: 0.88rem;
   font-variant-numeric: tabular-nums;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15);
 }
 
 .ult-meter-btn {
@@ -382,15 +458,17 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: 11px;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(168, 85, 247, 0.55);
-  color: #e9d5ff;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 2px solid #c084fc;
+  border-bottom-width: 4px;
+  border-bottom-color: #9333ea;
+  color: #6b21a8;
   font-weight: 900;
   font-size: 0.84rem;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(147, 51, 234, 0.18);
 }
 
 .ult-meter-fill {
@@ -399,17 +477,22 @@ html, body {
   top: 0;
   bottom: 0;
   width: 35%;
-  background: linear-gradient(90deg, rgba(124, 58, 237, 0.55), rgba(236, 72, 153, 0.55));
+  background: linear-gradient(90deg, #e9d5ff, #f5d0fe);
   transition: width 0.25s ease;
   pointer-events: none;
 }
 
 .ult-meter-btn.ready {
-  background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6);
-  border-color: #fde68a;
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+  border-color: #fef08a;
+  border-bottom-color: #be185d;
   color: #ffffff;
-  box-shadow: 0 0 22px rgba(236, 72, 153, 0.85);
+  box-shadow: 0 0 22px rgba(236, 72, 153, 0.75);
   animation: pulseUlt 0.55s infinite alternate;
+}
+
+.ult-meter-btn.ready .ult-meter-fill {
+  display: none;
 }
 
 @keyframes pulseUlt {
@@ -417,22 +500,26 @@ html, body {
   to { transform: scale(1.06); }
 }
 
-/* 2. Integrated Battle Quiz Console (Question + 1·2·3 Choices together right below 3D Stage!) */
+/* 2. Integrated Bright Battle Quiz Console */
 .battle-quiz-console {
-  background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.45);
-  border-radius: 0 0 24px 24px;
-  padding: 16px 18px 18px;
-  box-shadow: 0 22px 50px -12px rgba(0, 0, 0, 0.85);
+  background: #ffffff;
+  border: 3.5px solid #0284c7;
+  border-bottom-width: 8px;
+  border-bottom-color: #0369a1;
+  border-radius: 0 0 30px 30px;
+  padding: 16px 18px 20px;
+  box-shadow: 0 20px 45px -12px rgba(2, 132, 199, 0.28);
 }
 
-/* Question Row inside Console */
+/* Bright Textbook-Clear Question Box */
 .console-question-box {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #172554, #091020);
-  border: 1.5px solid rgba(56, 189, 248, 0.5);
-  border-radius: 16px;
+  background: #f0f9ff;
+  border: 2.5px solid #38bdf8;
+  border-bottom-width: 5px;
+  border-bottom-color: #0284c7;
+  border-radius: 20px;
   padding: 13px 18px 17px;
   margin-bottom: 14px;
   display: flex;
@@ -442,29 +529,32 @@ html, body {
 }
 
 .q-wave-tag {
-  padding: 4px 11px;
-  border-radius: 9px;
-  background: rgba(56, 189, 248, 0.22);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  color: #7dd3fc;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: #0284c7;
+  color: #ffffff;
   font-size: 0.78rem;
   font-weight: 900;
   white-space: nowrap;
 }
 
 .q-main-text {
-  font-size: clamp(1.1rem, 2.1vw, 1.38rem);
+  font-size: clamp(1.12rem, 2.1vw, 1.4rem);
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   text-align: center;
   flex: 1;
   line-height: 1.35;
 }
 
 .q-timer-chip {
-  font-size: 0.86rem;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: #fef3c7;
+  border: 1.5px solid #f59e0b;
+  font-size: 0.84rem;
   font-weight: 900;
-  color: #fde68a;
+  color: #b45309;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -474,18 +564,18 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 6px;
+  background: #e0f2fe;
 }
 
 .q-progress-fill {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #10b981, #fbbf24, #f43f5e);
+  background: linear-gradient(90deg, #10b981, #f59e0b, #f43f5e);
   transition: width 0.08s linear;
 }
 
-/* 3 Large Choice Buttons directly below Question */
+/* 3 Chunky 3D Capsule Choice Cards right under the Question */
 .answer-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -501,17 +591,17 @@ html, body {
 
 .answer-target-card {
   position: relative;
-  min-height: 88px;
-  border-radius: 16px;
-  background: var(--bg-card);
-  border: 2.5px solid rgba(148, 163, 184, 0.3);
-  padding: 11px 15px;
+  min-height: 92px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 3px solid #cbd5e1;
+  border-bottom-width: 7px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.55);
-  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
 .answer-target-card:hover {
@@ -519,50 +609,60 @@ html, body {
 }
 
 .answer-target-card:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(3px);
+  border-bottom-width: 3px;
 }
 
+/* Lane 0: Purple Bat 3D Card */
 .answer-target-card.lane-0 {
-  border-color: rgba(167, 139, 250, 0.75);
-  background: linear-gradient(160deg, rgba(88, 28, 135, 0.42), rgba(15, 26, 44, 0.96));
+  background: #faf5ff;
+  border-color: #a855f7;
+  border-bottom-color: #7e22ce;
 }
 .answer-target-card.lane-0:hover {
-  border-color: #fbbf24;
-  box-shadow: 0 10px 24px -6px rgba(167, 139, 250, 0.5);
+  background: #f3e8ff;
+  box-shadow: 0 10px 22px -6px rgba(168, 85, 247, 0.35);
 }
 
+/* Lane 1: Rose Goblin 3D Card */
 .answer-target-card.lane-1 {
-  border-color: rgba(251, 113, 133, 0.75);
-  background: linear-gradient(160deg, rgba(136, 19, 55, 0.42), rgba(15, 26, 44, 0.96));
+  background: #fff1f2;
+  border-color: #f43f5e;
+  border-bottom-color: #be123c;
 }
 .answer-target-card.lane-1:hover {
-  border-color: #fbbf24;
-  box-shadow: 0 10px 24px -6px rgba(251, 113, 133, 0.5);
+  background: #ffe4e6;
+  box-shadow: 0 10px 22px -6px rgba(244, 63, 94, 0.35);
 }
 
+/* Lane 2: Emerald Slime 3D Card */
 .answer-target-card.lane-2 {
-  border-color: rgba(52, 211, 153, 0.75);
-  background: linear-gradient(160deg, rgba(6, 78, 59, 0.45), rgba(15, 26, 44, 0.96));
+  background: #ecfdf5;
+  border-color: #10b981;
+  border-bottom-color: #047857;
 }
 .answer-target-card.lane-2:hover {
-  border-color: #fbbf24;
-  box-shadow: 0 10px 24px -6px rgba(52, 211, 153, 0.5);
+  background: #d1fae5;
+  box-shadow: 0 10px 22px -6px rgba(16, 185, 129, 0.35);
 }
 
 .answer-target-card.selected-lane {
-  border-color: #fbbf24 !important;
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.55);
+  border-color: #f59e0b !important;
+  border-bottom-color: #b45309 !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
 }
 
 .answer-target-card.shield-correct {
-  border-color: #10b981 !important;
-  background: rgba(6, 95, 70, 0.96) !important;
+  background: #d1fae5 !important;
+  border-color: #059669 !important;
+  border-bottom-color: #064e3b !important;
   transform: scale(1.03);
 }
 
 .answer-target-card.shield-wrong {
-  border-color: #f43f5e !important;
-  background: rgba(136, 19, 55, 0.96) !important;
+  background: #ffe4e6 !important;
+  border-color: #e11d48 !important;
+  border-bottom-color: #881337 !important;
 }
 
 .card-header-row {
@@ -575,9 +675,9 @@ html, body {
 }
 
 .card-formula-body {
-  font-size: 1.24rem;
+  font-size: 1.26rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   text-align: center;
   margin: auto 0;
   line-height: 1.35;
@@ -587,7 +687,7 @@ html, body {
 .crash-tip-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 11, 20, 0.92);
+  background: rgba(15, 23, 42, 0.88);
   backdrop-filter: blur(6px);
   z-index: 40;
   display: none;
@@ -596,18 +696,19 @@ html, body {
   justify-content: center;
   padding: 20px;
   text-align: center;
+  color: #ffffff;
 }
 
 .crash-tip-overlay.active { display: flex; }
 
-/* Math Typography */
+/* Math Typography (Adapts automatically to bright cards & dark overlays) */
 .math-inline {
   font-family: 'Cambria Math', 'Times New Roman', serif;
-  font-weight: 800;
-  color: #ffffff;
+  font-weight: 900;
+  color: inherit;
   padding: 0 2px;
 }
-.m-fn { font-style: normal; font-weight: 800; }
+.m-fn { font-style: normal; font-weight: 900; }
 .m-frac {
   display: inline-flex;
   flex-direction: column;
@@ -617,16 +718,16 @@ html, body {
   margin: 0 3px;
   line-height: 1.05;
 }
-.m-num { border-bottom: 1.5px solid currentColor; padding: 0 3px 1px; }
+.m-num { border-bottom: 1.8px solid currentColor; padding: 0 3px 1px; }
 .m-den { padding: 1px 3px 0; }
 .m-sqrt { display: inline-flex; align-items: center; }
-.m-rad { border-top: 1.5px solid currentColor; padding: 0 2px; }
+.m-rad { border-top: 1.8px solid currentColor; padding: 0 2px; }
 
 /* Modals */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(5, 11, 20, 0.85);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(6px);
   display: none;
   align-items: center;
@@ -636,14 +737,17 @@ html, body {
 }
 .modal-backdrop.active { display: flex; }
 .modal-box {
-  background: var(--bg-panel);
-  border: 2px solid rgba(56, 189, 248, 0.45);
-  border-radius: 24px;
+  background: #ffffff;
+  border: 3.5px solid #38bdf8;
+  border-bottom-width: 8px;
+  border-bottom-color: #0284c7;
+  border-radius: 28px;
   max-width: 620px;
   width: 100%;
   padding: 26px;
   text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  color: #0f172a;
+  box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.4);
   max-height: 90vh;
   overflow-y: auto;
 }

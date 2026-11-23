@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#060b16" />
+  <meta name="theme-color" content="#0284c7" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="수달런 3D" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
@@ -13,7 +13,7 @@
   <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/style.css?v=5" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
 </head>
 <body>
   <div class="app-wrap">
@@ -38,7 +38,7 @@
 
       <!-- Visual 3-Step Flow (아이콘 + 짧은 핵심 문장) -->
       <div class="visual-howto-box">
-        <div style="font-size:0.86rem;font-weight:900;color:#7dd3fc;margin-bottom:10px;">
+        <div style="font-size:0.9rem;font-weight:900;color:#0284c7;margin-bottom:10px;">
           🎮 3초 만에 배우는 게임 방법
         </div>
         <div class="visual-flow-steps">
@@ -57,7 +57,7 @@
             <div>
               <div class="flow-text-title">② 정답 번호 클릭!</div>
               <div class="flow-text-desc">
-                <strong>①·②·③번 카드 클릭</strong> 또는 키보드 <span class="keycap">1</span> <span class="keycap">2</span> <span class="keycap">3</span> (<span class="keycap">←</span> <span class="keycap">↑</span> <span class="keycap">→</span>)
+                <strong>①·②·③번 입체 카드 클릭</strong> 또는 키보드 <span class="keycap">1</span> <span class="keycap">2</span> <span class="keycap">3</span> (<span class="keycap">←</span> <span class="keycap">↑</span> <span class="keycap">→</span>)
               </div>
             </div>
           </div>
@@ -79,20 +79,20 @@
         <label class="config-label">🦦 1. 내 3D 수달 캐릭터 선택</label>
         <div class="skin-grid">
           <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.92rem;color:#38bdf8;">🦦 아기 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">황금 조개 부메랑</div>
+            <div style="font-weight:900;font-size:0.94rem;color:#0284c7;">🦦 아기 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개 부메랑</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.92rem;color:#34d399;">🎓 우등생 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">플라즈마 워터 레이저</div>
+            <div style="font-weight:900;font-size:0.94rem;color:#059669;">🎓 우등생 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">플라즈마 워터 레이저</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.92rem;color:#fbbf24;">🏄 호버보드 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">네온 서핑 웨이브</div>
+            <div style="font-weight:900;font-size:0.94rem;color:#d97706;">🏄 호버보드 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">네온 서핑 웨이브</div>
           </button>
           <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.92rem;color:#f472b6;">👑 황금왕관 수달</div>
-            <div style="font-size:0.74rem;color:var(--text-muted);">썬더 메테오 캐논</div>
+            <div style="font-weight:900;font-size:0.94rem;color:#db2777;">👑 황금왕관 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">썬더 메테오 캐논</div>
           </button>
         </div>
 
@@ -140,8 +140,8 @@
               <div class="ult-meter-fill" id="ult-meter-fill"></div>
               <span style="position:relative;z-index:2;" id="ult-btn-label">⚡ 필살기 35%</span>
             </button>
-            <div class="hud-glass-pill" style="color:#f472b6;" id="hud-combo">🔥 0 COMBO</div>
-            <div class="hud-glass-pill" style="color:#fbbf24;" id="hud-score">🐚 0점</div>
+            <div class="hud-glass-pill" style="color:#db2777;" id="hud-combo">🔥 0 COMBO</div>
+            <div class="hud-glass-pill" style="color:#d97706;" id="hud-score">🐚 0점</div>
             <button class="btn btn-primary" onclick="OtterRun.startGame()" title="다시 시작">🔄</button>
             <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()" title="소리">🔊</button>
           </div>
@@ -151,10 +151,10 @@
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:2rem;margin-bottom:4px;">💢 쾅! 오답 몬스터 방패에 부딪혔어요!</div>
-          <div style="font-size:1.15rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
-          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.96rem;color:#e0f2fe;margin-bottom:10px;" id="crash-tip-text"></div>
-          <div style="font-size:0.8rem;color:#7dd3fc;font-weight:800;">잠시 후 다음 몬스터 웨이브로 돌격합니다...</div>
+          <div style="font-size:1.85rem;font-weight:900;color:#e11d48;margin-bottom:4px;">💢 쾅! 오답 몬스터 방패에 부딪혔어요!</div>
+          <div style="font-size:1.18rem;font-weight:900;color:#059669;margin-bottom:8px;" id="crash-correct-text"></div>
+          <div style="background:#f0f9ff;border:2px solid #38bdf8;border-radius:16px;padding:12px 18px;max-width:540px;font-size:0.98rem;color:#0f172a;font-weight:700;margin-bottom:10px;" id="crash-tip-text"></div>
+          <div style="font-size:0.82rem;color:#0284c7;font-weight:900;">잠시 후 다음 몬스터 웨이브로 돌격합니다...</div>
         </div>
       </main>
 
@@ -187,7 +187,7 @@
       <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">3D 토벌 완료!</h2>
       <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 
-      <div id="result-review-box" style="text-align:left;background:rgba(5,11,20,0.8);border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
+      <div id="result-review-box" style="text-align:left;background:#f0f9ff;border:2px solid #bae6fd;border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.9rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
 
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="OtterRun.closeResultAndRestart()">
@@ -210,8 +210,8 @@
       <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">
         스마트폰 카메라로 아래 QR코드를 스캔하면 모바일 3D 웹앱 화면으로 바로 실행됩니다.
       </p>
-      <div id="webapp-qr-box" style="display:inline-flex;padding:14px;background:#ffffff;border-radius:16px;margin-bottom:12px;"></div>
-      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(5,11,20,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
+      <div id="webapp-qr-box" style="display:inline-flex;padding:14px;background:#ffffff;border:2px solid #bae6fd;border-radius:16px;margin-bottom:12px;"></div>
+      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#0284c7;background:#f0f9ff;border:2px solid #bae6fd;padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
       <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
         <button class="btn btn-emerald" onclick="OtterRun.installPWA()">📲 이 기기에 웹앱(PWA) 바로 설치</button>
         <button class="btn btn-primary" onclick="OtterRun.copyWebAppUrl()">🔗 웹앱 주소 복사</button>
@@ -219,9 +219,9 @@
     </div>
   </div>
 
-  <script src="js/qrcode.js?v=5"></script>
-  <script src="js/sound.js?v=5"></script>
-  <script src="js/math-data.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/qrcode.js?v=6"></script>
+  <script src="js/sound.js?v=6"></script>
+  <script src="js/math-data.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 </body>
 </html>
