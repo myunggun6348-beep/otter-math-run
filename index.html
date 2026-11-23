@@ -158,14 +158,16 @@
         <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">3D 접근 중</span>
       </section>
 
-      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + 3D Perspective Hologram Shields -->
+      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + Non-Overlapping 3-Column Hologram Shields -->
       <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <canvas id="runner-canvas" width="960" height="380"></canvas>
+        <canvas id="runner-canvas" width="960" height="410"></canvas>
 
-        <!-- 3D Hologram Formula Shields positioned dynamically via 3D perspective projection! -->
-        <div class="holo-shield" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
-        <div class="holo-shield" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
-        <div class="holo-shield" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
+        <!-- Non-overlapping 3-Column Hologram Formula Shields docked cleanly above the 3D lanes! -->
+        <div class="holo-shields-dock">
+          <div class="holo-shield lane-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
+          <div class="holo-shield lane-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
+          <div class="holo-shield lane-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
+        </div>
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">

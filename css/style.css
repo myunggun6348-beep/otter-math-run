@@ -1,5 +1,6 @@
 /* ==========================================================================
    수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 3D 러너 & 몬스터 격파 액션 스타일
+   (1·2·3번 보기 겹침 완벽 해결: 3열 고정 홀로그램 방패 + 3D 몬스터 번호 연동)
    ========================================================================== */
 :root {
   --bg-dark: #050b14;
@@ -347,7 +348,7 @@ html, body {
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 380px;
+  height: 410px;
   border-radius: 22px;
   overflow: hidden;
   border: 2px solid rgba(56, 189, 248, 0.45);
@@ -381,43 +382,74 @@ html, body {
   cursor: pointer;
 }
 
-/* 3D Hologram Math Formula Shields floating above the 3D Monsters in perspective! */
-.holo-shield {
+/* Non-Overlapping 3-Column Hologram Formula Shields docked cleanly at top of 3D Stage! */
+.holo-shields-dock {
   position: absolute;
-  width: 210px;
-  min-height: 70px;
-  border-radius: 14px;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .holo-shields-dock {
+    gap: 6px;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+  }
+}
+
+.holo-shield {
+  pointer-events: auto;
+  min-height: 78px;
+  border-radius: 15px;
   background: rgba(15, 23, 42, 0.92);
-  border: 2.5px solid #38bdf8;
-  padding: 7px 11px;
+  backdrop-filter: blur(6px);
+  border: 2.5px solid rgba(56, 189, 248, 0.75);
+  padding: 9px 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.25);
-  transform-origin: center bottom;
-  z-index: 15;
-  transition: border-color 0.15s, background 0.15s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.75);
+  transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.25s ease;
 }
 
 .holo-shield:hover {
+  transform: translateY(-3px) scale(1.02);
   border-color: #fbbf24;
   background: rgba(30, 41, 59, 0.96);
 }
 
+.holo-shield.lane-0 { border-color: #a78bfa; }
+.holo-shield.lane-1 { border-color: #fb7185; }
+.holo-shield.lane-2 { border-color: #34d399; }
+
 .holo-shield.selected-lane {
-  border-color: #fbbf24;
+  border-color: #fbbf24 !important;
   box-shadow: 0 0 24px rgba(245, 158, 11, 0.65);
 }
 
 .holo-shield.shield-correct {
   border-color: #10b981 !important;
-  background: rgba(6, 95, 70, 0.95) !important;
+  background: rgba(6, 95, 70, 0.96) !important;
+  transform: scale(1.06);
 }
 
 .holo-shield.shield-wrong {
   border-color: #f43f5e !important;
-  background: rgba(136, 19, 55, 0.95) !important;
+  background: rgba(136, 19, 55, 0.96) !important;
+}
+
+.holo-shield.shield-ko {
+  opacity: 0.15;
+  transform: scale(0.9);
+  pointer-events: none;
 }
 
 /* Crash Explanation Overlay */

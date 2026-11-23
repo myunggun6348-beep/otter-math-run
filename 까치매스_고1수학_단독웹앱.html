@@ -15,6 +15,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <style>/* ==========================================================================
    수달런 3D (OTTER MATH RUN 3D) - 3인칭 입체 3D 러너 & 몬스터 격파 액션 스타일
+   (1·2·3번 보기 겹침 완벽 해결: 3열 고정 홀로그램 방패 + 3D 몬스터 번호 연동)
    ========================================================================== */
 :root {
   --bg-dark: #050b14;
@@ -362,7 +363,7 @@ html, body {
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 380px;
+  height: 410px;
   border-radius: 22px;
   overflow: hidden;
   border: 2px solid rgba(56, 189, 248, 0.45);
@@ -396,43 +397,74 @@ html, body {
   cursor: pointer;
 }
 
-/* 3D Hologram Math Formula Shields floating above the 3D Monsters in perspective! */
-.holo-shield {
+/* Non-Overlapping 3-Column Hologram Formula Shields docked cleanly at top of 3D Stage! */
+.holo-shields-dock {
   position: absolute;
-  width: 210px;
-  min-height: 70px;
-  border-radius: 14px;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .holo-shields-dock {
+    gap: 6px;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+  }
+}
+
+.holo-shield {
+  pointer-events: auto;
+  min-height: 78px;
+  border-radius: 15px;
   background: rgba(15, 23, 42, 0.92);
-  border: 2.5px solid #38bdf8;
-  padding: 7px 11px;
+  backdrop-filter: blur(6px);
+  border: 2.5px solid rgba(56, 189, 248, 0.75);
+  padding: 9px 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.25);
-  transform-origin: center bottom;
-  z-index: 15;
-  transition: border-color 0.15s, background 0.15s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.75);
+  transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.25s ease;
 }
 
 .holo-shield:hover {
+  transform: translateY(-3px) scale(1.02);
   border-color: #fbbf24;
   background: rgba(30, 41, 59, 0.96);
 }
 
+.holo-shield.lane-0 { border-color: #a78bfa; }
+.holo-shield.lane-1 { border-color: #fb7185; }
+.holo-shield.lane-2 { border-color: #34d399; }
+
 .holo-shield.selected-lane {
-  border-color: #fbbf24;
+  border-color: #fbbf24 !important;
   box-shadow: 0 0 24px rgba(245, 158, 11, 0.65);
 }
 
 .holo-shield.shield-correct {
   border-color: #10b981 !important;
-  background: rgba(6, 95, 70, 0.95) !important;
+  background: rgba(6, 95, 70, 0.96) !important;
+  transform: scale(1.06);
 }
 
 .holo-shield.shield-wrong {
   border-color: #f43f5e !important;
-  background: rgba(136, 19, 55, 0.95) !important;
+  background: rgba(136, 19, 55, 0.96) !important;
+}
+
+.holo-shield.shield-ko {
+  opacity: 0.15;
+  transform: scale(0.9);
+  pointer-events: none;
 }
 
 /* Crash Explanation Overlay */
@@ -692,14 +724,16 @@ html, body {
         <span style="font-size:0.82rem;font-weight:900;color:#fde68a;white-space:nowrap;" id="q-time-label">3D 접근 중</span>
       </section>
 
-      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + 3D Perspective Hologram Shields -->
+      <!-- 60FPS 3D Third-Person Perspective Canvas Viewport + Non-Overlapping 3-Column Hologram Shields -->
       <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <canvas id="runner-canvas" width="960" height="380"></canvas>
+        <canvas id="runner-canvas" width="960" height="410"></canvas>
 
-        <!-- 3D Hologram Formula Shields positioned dynamically via 3D perspective projection! -->
-        <div class="holo-shield" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
-        <div class="holo-shield" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
-        <div class="holo-shield" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
+        <!-- Non-overlapping 3-Column Hologram Formula Shields docked cleanly above the 3D lanes! -->
+        <div class="holo-shields-dock">
+          <div class="holo-shield lane-0" id="plat-card-0" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(0)"></div>
+          <div class="holo-shield lane-1" id="plat-card-1" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(1)"></div>
+          <div class="holo-shield lane-2" id="plat-card-2" onclick="event.stopPropagation(); OtterRun.jumpToFloorAndDash(2)"></div>
+        </div>
 
         <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
         <div class="crash-tip-overlay" id="crash-tip-overlay">
@@ -1619,7 +1653,7 @@ html, body {
   };
 
   // 3D World X coordinates for the 3 Lanes (Left, Center, Right)
-  const LANE_X = [-210, 0, 210];
+  const LANE_X = [-240, 0, 240];
 
   const state = {
     screen: 'intro', // 'intro' | 'game'
@@ -1652,10 +1686,10 @@ html, body {
 
     // 3D Camera state
     camX: 0,
-    camY: 155,
+    camY: 162,
     camRoll: 0,
     fov: 410,
-    horizonY: 112,
+    horizonY: 132,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -2029,6 +2063,15 @@ html, body {
       ctx.moveTo(-11, 10); ctx.lineTo(-7, 18); ctx.lineTo(-3, 10);
       ctx.moveTo(3, 10); ctx.lineTo(7, 18); ctx.lineTo(11, 10);
       ctx.fill();
+
+      // 3D Floating Number Badge (1, 2, 3) above Monster Head
+      const badgeCol = laneType === 0 ? '#8b5cf6' : laneType === 1 ? '#f43f5e' : '#10b981';
+      drawShadedSphere(ctx, 0, -48, 15, badgeCol, '#ffffff', '#0f172a');
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 17px Pretendard, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(laneType + 1), 0, -47);
     }
 
     ctx.restore();
@@ -2345,21 +2388,20 @@ html, body {
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
-      const monName = idx === 0 ? '⬅️ 1번 다크배트' : idx === 1 ? '⬆️ 2번 고블린' : '➡️ 3번 킹슬라임';
+      const monName = idx === 0 ? '⬅️ ①번 다크배트 (왼쪽)' : idx === 1 ? '⬆️ ②번 고블린 (중앙)' : '➡️ ③번 킹슬라임 (오른쪽)';
       let bonusHtml = '';
       if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
       else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
       else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️방패</span>`;
 
       if (cardEl) {
-        cardEl.style.display = 'flex';
-        cardEl.className = `holo-shield ${idx === state.targetLane ? 'selected-lane' : ''}`;
+        cardEl.className = `holo-shield lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
         cardEl.innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:900;color:#7dd3fc;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:900;color:#7dd3fc;">
             <span>${monName}</span>
             ${bonusHtml}
           </div>
-          <div style="font-size:1.02rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
+          <div style="font-size:1.1rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
             ${KkachiMathData.renderMathText(opt.text)}
           </div>
         `;
@@ -2406,7 +2448,7 @@ html, body {
     [0, 1, 2].forEach((ln) => {
       state.monstersAlive[ln] = false;
       const cardEl = document.getElementById(`plat-card-${ln}`);
-      if (cardEl) cardEl.style.display = 'none';
+      if (cardEl) cardEl.classList.add('shield-ko');
 
       state.flyingMonsters3D.push({
         x: LANE_X[ln],
@@ -2742,28 +2784,28 @@ html, body {
       ctx.restore();
     }
 
-    // 4. Draw Approaching 3D Monsters & Update their 3D Hologram Math Formula Shields!
+    // 4. Draw Approaching 3D Monsters & 3D Laser Pointer Tethers from the Top 3 Formula Shields!
+    const dockCentersX = [W * 0.175, W * 0.5, W * 0.825];
+    const tetherColors = ['rgba(167, 139, 250, 0.45)', 'rgba(251, 113, 133, 0.45)', 'rgba(52, 211, 153, 0.45)'];
+
     [0, 1, 2].forEach((ln) => {
-      const cardEl = document.getElementById(`plat-card-${ln}`);
-      if (!state.monstersAlive[ln]) {
-        if (cardEl) cardEl.style.display = 'none';
-        return;
-      }
+      if (!state.monstersAlive[ln]) return;
 
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      draw3DMonster(ctx, pMon.x, pMon.y, pMon.scale * 1.45, ln, state.otterPhase * 0.5, false, 0);
 
-      // Position & Scale the 3D Hologram Formula Shield right above the monster in 3D perspective!
-      if (cardEl) {
-        const pShield = project3D(wx, 118, state.monsterZ, W, H, camX, camY, fov, horY);
-        const uiScale = Math.max(0.46, Math.min(1.08, pShield.scale * 1.65));
-        const pctX = (pShield.x / W) * 100;
-        const pctY = (pShield.y / H) * 100;
-        cardEl.style.left = `${pctX}%`;
-        cardEl.style.top = `${pctY}%`;
-        cardEl.style.transform = `translate(-50%, -100%) scale(${uiScale.toFixed(3)})`;
-      }
+      // Dashed 3D Laser Tether connecting Top Formula Card to Approaching 3D Monster
+      ctx.save();
+      ctx.strokeStyle = tetherColors[ln];
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(dockCentersX[ln], 90);
+      ctx.lineTo(pMon.x, pMon.y - 65 * pMon.scale);
+      ctx.stroke();
+      ctx.restore();
+
+      draw3DMonster(ctx, pMon.x, pMon.y, pMon.scale * 1.45, ln, state.otterPhase * 0.5, false, 0);
     });
 
     // 5. Draw Ragdoll 3D Monsters blasted into the sky!
@@ -2878,7 +2920,7 @@ html, body {
     if (pickedOpt && pickedOpt.isCorrect) {
       // 3D MONSTER SMASHED!
       state.monstersAlive[pickedIdx] = false;
-      if (cardEl) cardEl.style.display = 'none';
+      if (cardEl) cardEl.classList.add('shield-correct', 'shield-ko');
 
       const hitX3D = LANE_X[pickedIdx];
       state.flyingMonsters3D.push({

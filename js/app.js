@@ -10,7 +10,7 @@
   };
 
   // 3D World X coordinates for the 3 Lanes (Left, Center, Right)
-  const LANE_X = [-210, 0, 210];
+  const LANE_X = [-240, 0, 240];
 
   const state = {
     screen: 'intro', // 'intro' | 'game'
@@ -43,10 +43,10 @@
 
     // 3D Camera state
     camX: 0,
-    camY: 155,
+    camY: 162,
     camRoll: 0,
     fov: 410,
-    horizonY: 112,
+    horizonY: 132,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -420,6 +420,15 @@
       ctx.moveTo(-11, 10); ctx.lineTo(-7, 18); ctx.lineTo(-3, 10);
       ctx.moveTo(3, 10); ctx.lineTo(7, 18); ctx.lineTo(11, 10);
       ctx.fill();
+
+      // 3D Floating Number Badge (1, 2, 3) above Monster Head
+      const badgeCol = laneType === 0 ? '#8b5cf6' : laneType === 1 ? '#f43f5e' : '#10b981';
+      drawShadedSphere(ctx, 0, -48, 15, badgeCol, '#ffffff', '#0f172a');
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 17px Pretendard, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(laneType + 1), 0, -47);
     }
 
     ctx.restore();
@@ -736,21 +745,20 @@
 
     state.gateOptions.forEach((opt, idx) => {
       const cardEl = document.getElementById(`plat-card-${idx}`);
-      const monName = idx === 0 ? '⬅️ 1번 다크배트' : idx === 1 ? '⬆️ 2번 고블린' : '➡️ 3번 킹슬라임';
+      const monName = idx === 0 ? '⬅️ ①번 다크배트 (왼쪽)' : idx === 1 ? '⬆️ ②번 고블린 (중앙)' : '➡️ ③번 킹슬라임 (오른쪽)';
       let bonusHtml = '';
       if (opt.bonus === 'star') bonusHtml = `<span style="color:#fde68a;">⭐2배</span>`;
       else if (opt.bonus === 'heart') bonusHtml = `<span style="color:#fecdd3;">❤️+1</span>`;
       else if (opt.bonus === 'shield') bonusHtml = `<span style="color:#a5f3fc;">🛡️방패</span>`;
 
       if (cardEl) {
-        cardEl.style.display = 'flex';
-        cardEl.className = `holo-shield ${idx === state.targetLane ? 'selected-lane' : ''}`;
+        cardEl.className = `holo-shield lane-${idx} ${idx === state.targetLane ? 'selected-lane' : ''}`;
         cardEl.innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:900;color:#7dd3fc;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:900;color:#7dd3fc;">
             <span>${monName}</span>
             ${bonusHtml}
           </div>
-          <div style="font-size:1.02rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
+          <div style="font-size:1.1rem;font-weight:900;color:#fff;text-align:center;margin:auto 0;">
             ${KkachiMathData.renderMathText(opt.text)}
           </div>
         `;
@@ -797,7 +805,7 @@
     [0, 1, 2].forEach((ln) => {
       state.monstersAlive[ln] = false;
       const cardEl = document.getElementById(`plat-card-${ln}`);
-      if (cardEl) cardEl.style.display = 'none';
+      if (cardEl) cardEl.classList.add('shield-ko');
 
       state.flyingMonsters3D.push({
         x: LANE_X[ln],
@@ -1133,28 +1141,28 @@
       ctx.restore();
     }
 
-    // 4. Draw Approaching 3D Monsters & Update their 3D Hologram Math Formula Shields!
+    // 4. Draw Approaching 3D Monsters & 3D Laser Pointer Tethers from the Top 3 Formula Shields!
+    const dockCentersX = [W * 0.175, W * 0.5, W * 0.825];
+    const tetherColors = ['rgba(167, 139, 250, 0.45)', 'rgba(251, 113, 133, 0.45)', 'rgba(52, 211, 153, 0.45)'];
+
     [0, 1, 2].forEach((ln) => {
-      const cardEl = document.getElementById(`plat-card-${ln}`);
-      if (!state.monstersAlive[ln]) {
-        if (cardEl) cardEl.style.display = 'none';
-        return;
-      }
+      if (!state.monstersAlive[ln]) return;
 
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      draw3DMonster(ctx, pMon.x, pMon.y, pMon.scale * 1.45, ln, state.otterPhase * 0.5, false, 0);
 
-      // Position & Scale the 3D Hologram Formula Shield right above the monster in 3D perspective!
-      if (cardEl) {
-        const pShield = project3D(wx, 118, state.monsterZ, W, H, camX, camY, fov, horY);
-        const uiScale = Math.max(0.46, Math.min(1.08, pShield.scale * 1.65));
-        const pctX = (pShield.x / W) * 100;
-        const pctY = (pShield.y / H) * 100;
-        cardEl.style.left = `${pctX}%`;
-        cardEl.style.top = `${pctY}%`;
-        cardEl.style.transform = `translate(-50%, -100%) scale(${uiScale.toFixed(3)})`;
-      }
+      // Dashed 3D Laser Tether connecting Top Formula Card to Approaching 3D Monster
+      ctx.save();
+      ctx.strokeStyle = tetherColors[ln];
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(dockCentersX[ln], 90);
+      ctx.lineTo(pMon.x, pMon.y - 65 * pMon.scale);
+      ctx.stroke();
+      ctx.restore();
+
+      draw3DMonster(ctx, pMon.x, pMon.y, pMon.scale * 1.45, ln, state.otterPhase * 0.5, false, 0);
     });
 
     // 5. Draw Ragdoll 3D Monsters blasted into the sky!
@@ -1269,7 +1277,7 @@
     if (pickedOpt && pickedOpt.isCorrect) {
       // 3D MONSTER SMASHED!
       state.monstersAlive[pickedIdx] = false;
-      if (cardEl) cardEl.style.display = 'none';
+      if (cardEl) cardEl.classList.add('shield-correct', 'shield-ko');
 
       const hitX3D = LANE_X[pickedIdx];
       state.flyingMonsters3D.push({
