@@ -3,27 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1120" />
+  <meta name="theme-color" content="#07111e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="까치매스 고1" />
+  <meta name="apple-mobile-web-app-title" content="수달런 고1수학" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>까치매스 - 고1 수학 공식 12장 복불복 짝맞추기 웹앱</title>
+  <title>수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 런게임</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <style>/* ==========================================================================
-   까치매스 (KKACHI MATH) - 고1 수학 공식 12장 짝맞추기 & 복불복 특수 기믹 스타일
+   수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 & 부스터 런게임 스타일
    ========================================================================== */
 :root {
-  --bg-dark: #0b1120;
-  --bg-panel: #151f32;
-  --border-subtle: rgba(148, 163, 184, 0.2);
+  --bg-dark: #07111e;
+  --bg-panel: #101e33;
+  --border-subtle: rgba(148, 163, 184, 0.22);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
+  --accent-sky: #38bdf8;
   --accent-emerald: #10b981;
   --accent-amber: #f59e0b;
   --accent-rose: #f43f5e;
@@ -41,36 +40,31 @@ html, body {
   min-height: 100vh;
   background-color: var(--bg-dark);
   background-image:
-    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.16), transparent 38%),
-    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.14), transparent 40%);
+    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.16), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.15), transparent 40%);
   color: var(--text-main);
   font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
 }
 
 .app-wrap {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 18px 20px 40px;
+  padding: 16px 18px 36px;
 }
 
 /* ==========================================================================
-   FIRST SCREEN: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 및 복불복 안내)
+   SCREEN 1: INTRO & HOW TO PLAY (첫 화면 - 게임 설명 & 수달 스킨 선택)
    ========================================================================== */
 .intro-screen {
-  max-width: 890px;
-  margin: 12px auto;
+  max-width: 900px;
+  margin: 8px auto;
   background: var(--bg-panel);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.38);
   border-radius: 26px;
-  padding: 32px 30px;
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7);
+  padding: 28px 28px;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.75);
   animation: fadeIn 0.28s ease;
-}
-
-@media (max-width: 640px) {
-  .intro-screen {
-    padding: 22px 16px;
-  }
 }
 
 @keyframes fadeIn {
@@ -78,30 +72,59 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.intro-header {
-  text-align: center;
+.intro-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
   margin-bottom: 22px;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .intro-screen { padding: 20px 16px; }
+  .intro-hero { text-align: center; }
+}
+
+.intro-otter-showcase {
+  width: 135px;
+  height: 135px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(16, 185, 129, 0.08));
+  border: 3px solid #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
+  animation: otterBob 1.6s ease-in-out infinite alternate;
+  flex-shrink: 0;
+}
+
+@keyframes otterBob {
+  from { transform: translateY(-4px) rotate(-2deg); }
+  to { transform: translateY(5px) rotate(3deg); }
 }
 
 .intro-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 16px;
+  padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.16);
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  color: #fbbf24;
-  font-size: 0.86rem;
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  font-size: 0.84rem;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .intro-title {
-  font-size: clamp(1.75rem, 3.8vw, 2.45rem);
+  font-size: clamp(1.7rem, 3.6vw, 2.35rem);
   font-weight: 900;
-  line-height: 1.25;
-  margin-bottom: 8px;
+  line-height: 1.2;
+  margin-bottom: 6px;
   background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -109,125 +132,122 @@ html, body {
 
 .intro-subtitle {
   color: var(--text-muted);
-  font-size: 0.98rem;
+  font-size: 0.96rem;
   font-weight: 600;
 }
 
-/* Example Visual Pair Preview in Intro */
-.intro-example-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background: rgba(11, 17, 32, 0.65);
+.guide-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 720px) {
+  .guide-steps-grid { grid-template-columns: 1fr; }
+}
+
+.guide-step-card {
+  background: rgba(7, 17, 30, 0.72);
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 14px 18px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
+  border-radius: 16px;
+  padding: 14px 16px;
 }
 
-.mini-demo-card {
-  flex: 1;
-  min-width: 200px;
-  max-width: 265px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  text-align: center;
+.guide-step-num {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  margin-bottom: 6px;
 }
 
-.mini-demo-card.demo-q {
-  background: linear-gradient(160deg, #1e3a8a, #172554);
-  border: 2px solid #60a5fa;
+.guide-step-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  margin-bottom: 4px;
 }
 
-.mini-demo-card.demo-a {
-  background: linear-gradient(160deg, #065f46, #064e3b);
-  border: 2px solid #34d399;
+.guide-step-desc {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.45;
 }
 
-/* Mystery Gimmick Cards Showcase in Intro */
-.gimmick-showcase-box {
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.55));
-  border: 1px solid rgba(245, 158, 11, 0.4);
+/* Skin & Config Box */
+.intro-config-box {
+  background: rgba(7, 17, 30, 0.6);
+  border: 1px solid var(--border-subtle);
   border-radius: 18px;
   padding: 16px 18px;
-  margin-bottom: 20px;
-}
-
-.gimmick-showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.gimmick-info-item {
-  background: rgba(11, 17, 32, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 10px 12px;
-}
-
-.gimmick-info-title {
-  font-size: 0.88rem;
-  font-weight: 900;
-  margin-bottom: 3px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.gimmick-info-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  line-height: 1.38;
-}
-
-.intro-config-box {
-  background: rgba(11, 17, 32, 0.55);
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 18px 20px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .config-label {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 800;
   color: #cbd5e1;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: block;
 }
 
-.mode-select-grid {
+.skin-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-@media (max-width: 560px) {
-  .mode-select-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 600px) {
+  .skin-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.mode-option-btn {
-  padding: 13px 16px;
+.skin-btn {
+  padding: 10px;
   border-radius: 14px;
   background: var(--bg-panel);
   border: 2px solid var(--border-subtle);
   color: var(--text-main);
-  text-align: left;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.16s;
+}
+
+.skin-btn:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.skin-btn.active {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.16);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
+}
+
+.chapter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-btn {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.16s;
 }
 
-.mode-option-btn.active {
+.tab-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
   border-color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
 }
 
 .btn-start-huge {
@@ -238,68 +258,31 @@ html, body {
   border-radius: 18px;
   border: none;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #06b6d4, #10b981);
-  box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.55);
+  background: linear-gradient(135deg, #0284c7, #06b6d4, #10b981);
+  box-shadow: 0 12px 30px -6px rgba(6, 182, 212, 0.6);
   cursor: pointer;
   transition: transform 0.18s, box-shadow 0.18s;
 }
 
 .btn-start-huge:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 36px -6px rgba(6, 182, 212, 0.75);
-}
-
-.btn-start-huge:active {
-  transform: translateY(0) scale(0.99);
+  box-shadow: 0 16px 36px -6px rgba(6, 182, 212, 0.8);
 }
 
 /* ==========================================================================
-   GAME SCREEN: TOP BAR, TABS, GIMMICK BANNER, STATUS & 12 CARDS
+   SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문 트랙)
    ========================================================================== */
 .top-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 14px 20px;
+  padding: 12px 18px;
   margin-bottom: 12px;
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
-}
-
-.brand-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-
-.brand-icon {
-  font-size: 2rem;
-}
-
-.brand-title {
-  font-size: 1.32rem;
-  font-weight: 900;
-  background: linear-gradient(90deg, #38bdf8, #34d399);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.brand-sub {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.action-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
 }
 
 .btn {
@@ -307,440 +290,421 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 14px;
-  border-radius: 11px;
+  padding: 8px 13px;
+  border-radius: 10px;
   font-weight: 800;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   border: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.16s ease;
+  transition: all 0.15s;
 }
 
-.btn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  transform: translateY(-2px);
-}
+.btn:hover { background: rgba(255, 255, 255, 0.14); }
+.btn-primary { background: linear-gradient(135deg, #2563eb, #06b6d4); border-color: transparent; }
+.btn-emerald { background: linear-gradient(135deg, #059669, #10b981); border-color: transparent; }
+.btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #07111e; border-color: transparent; }
 
-.btn:active {
-  transform: translateY(0) scale(0.97);
-}
-
-.btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #2563eb, #06b6d4);
-  border-color: transparent;
-  box-shadow: 0 6px 18px -4px rgba(6, 182, 212, 0.5);
-}
-
-.btn-amber {
-  background: linear-gradient(135deg, #d97706, #f59e0b);
-  color: #0b1120;
-  border-color: transparent;
-}
-
-.btn-purple {
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  color: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 6px 18px -4px rgba(236, 72, 153, 0.45);
-}
-
-.btn-emerald {
-  background: linear-gradient(135deg, #059669, #10b981);
-  border-color: transparent;
-}
-
-/* Chapter Tabs */
-.chapter-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+/* HUD Stats Bar */
+.hud-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
   margin-bottom: 12px;
 }
 
-.tab-btn {
-  padding: 8px 15px;
+.hud-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hud-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+.hud-val { font-size: 1.3rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+
+/* Giant Question Prompt Banner above Track */
+.question-board {
+  background: linear-gradient(135deg, #172554, #0f172a);
+  border: 2px solid #38bdf8;
+  border-radius: 18px;
+  padding: 14px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 10px 30px -8px rgba(56, 189, 248, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.q-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
   border-radius: 999px;
-  font-size: 0.88rem;
-  font-weight: 800;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.16s;
-}
-
-.tab-btn:hover {
-  color: var(--text-main);
-  border-color: rgba(56, 189, 248, 0.5);
-}
-
-.tab-btn.active {
-  background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
-  border-color: #38bdf8;
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25);
-}
-
-/* Live Mystery Gimmick Event Banner */
-.gimmick-event-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 18px;
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  margin-bottom: 12px;
-  font-size: 0.94rem;
-  font-weight: 800;
-  transition: all 0.25s ease;
-}
-
-.gimmick-event-banner.event-star {
-  background: rgba(245, 158, 11, 0.18);
-  border-color: #f59e0b;
-  color: #fde68a;
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.3);
-}
-
-.gimmick-event-banner.event-steal {
-  background: rgba(168, 85, 247, 0.22);
-  border-color: #c084fc;
-  color: #f3e8ff;
-  box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
-}
-
-.gimmick-event-banner.event-bomb {
-  background: rgba(244, 63, 94, 0.22);
-  border-color: #f43f5e;
-  color: #fecdd3;
-  box-shadow: 0 0 25px rgba(244, 63, 94, 0.45);
-  animation: bombFlash 0.45s ease;
-}
-
-.gimmick-event-banner.event-radar {
-  background: rgba(6, 182, 212, 0.2);
-  border-color: #22d3ee;
-  color: #cffafe;
-  box-shadow: 0 0 22px rgba(6, 182, 212, 0.35);
-}
-
-@keyframes bombFlash {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-}
-
-/* Status / Score Bar */
-.status-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.status-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.status-card.active-turn {
-  border-color: #f59e0b;
-  background: rgba(245, 158, 11, 0.15);
-  box-shadow: 0 0 22px rgba(245, 158, 11, 0.28);
-}
-
-.status-label {
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.status-val {
-  font-size: 1.4rem;
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  font-size: 0.78rem;
   font-weight: 900;
-  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-/* 12 Cards Grid (4 x 3) */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  perspective: 1200px;
+.q-main-text {
+  font-size: clamp(1.1rem, 2.2vw, 1.42rem);
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  flex: 1;
+  line-height: 1.4;
 }
 
-@media (max-width: 820px) {
-  .cards-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
+/* Approach Distance Gauge */
+.approach-meter {
+  width: 130px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
-@media (max-width: 520px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
+.approach-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 4px;
 }
 
-.card-slot {
-  height: 188px;
+.approach-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #f43f5e);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ==========================================================================
+   3-LANE PARALLAX RUNNING TRACK STAGE
+   ========================================================================== */
+.runner-track-stage {
   position: relative;
+  width: 100%;
+  height: 360px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  background: linear-gradient(180deg, #0c4a6e 0%, #0369a1 34%, #0284c7 66%, #0f766e 100%);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.75);
+  margin-bottom: 14px;
+}
+
+.runner-track-stage.fever-mode {
+  border-color: #f59e0b;
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.55);
+}
+
+/* Scrolling Track Lanes (3 Horizontal Lanes) */
+.track-lane {
+  position: relative;
+  width: 100%;
+  height: 33.333%;
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  transition: background 0.18s;
   cursor: pointer;
 }
 
-.card-inner {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.42s cubic-bezier(0.2, 0.85, 0.35, 1.15);
+.track-lane:last-child {
+  border-bottom: none;
 }
 
-.card-slot.flipped .card-inner,
-.card-slot.matched .card-inner {
-  transform: rotateY(180deg);
+.track-lane:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.card-slot.radar-peek .card-front {
-  border-color: #22d3ee !important;
-  box-shadow: 0 0 32px rgba(34, 211, 238, 0.8) !important;
+.track-lane.active-lane {
+  background: rgba(56, 189, 248, 0.12);
 }
 
-.card-face {
+.lane-water-lines {
   position: absolute;
   inset: 0;
-  border-radius: 18px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 70px,
+    rgba(255, 255, 255, 0.08) 70px,
+    rgba(255, 255, 255, 0.08) 110px
+  );
+  animation: scrollTrack 0.7s linear infinite;
+  pointer-events: none;
+}
+
+.runner-track-stage.fever-mode .lane-water-lines {
+  animation-duration: 0.35s;
+}
+
+@keyframes scrollTrack {
+  from { background-position-x: 0px; }
+  to { background-position-x: -110px; }
+}
+
+.lane-label-tag {
+  position: relative;
+  z-index: 2;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(7, 17, 30, 0.55);
+  color: rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   THE CUTE OTTER CHARACTER (달리고 점프하는 수달)
+   ========================================================================== */
+.otter-character {
+  position: absolute;
+  left: 11%;
+  width: 104px;
+  height: 98px;
+  z-index: 20;
+  transition: top 0.22s cubic-bezier(0.2, 0.9, 0.32, 1.25), left 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
+}
+
+.otter-character.lane-0 { top: 11px; }
+.otter-character.lane-1 { top: 131px; }
+.otter-character.lane-2 { top: 251px; }
+
+.otter-character.jumping {
+  transform: scale(1.14) rotate(-8deg);
+}
+
+.otter-character.dashing {
+  transform: scale(1.18) translateX(24px);
+}
+
+.otter-character.hurt {
+  animation: otterHurtShake 0.45s ease;
+}
+
+@keyframes otterHurtShake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-14px) rotate(-15deg); }
+  75% { transform: translateX(10px) rotate(12deg); }
+}
+
+.otter-svg-wrap {
+  width: 100%;
+  height: 100%;
+  animation: otterRunCycle 0.28s ease-in-out infinite alternate;
+}
+
+@keyframes otterRunCycle {
+  from { transform: translateY(-3px) rotate(-2deg); }
+  to { transform: translateY(3px) rotate(3deg); }
+}
+
+/* Water Jet Booster Flame behind Otter */
+.otter-booster-jet {
+  position: absolute;
+  left: -38px;
+  top: 36px;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #e0f2fe);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.otter-character.dashing .otter-booster-jet,
+.runner-track-stage.fever-mode .otter-booster-jet {
+  opacity: 1;
+  animation: jetFlicker 0.12s infinite alternate;
+}
+
+@keyframes jetFlicker {
+  from { transform: scaleX(0.9); }
+  to { transform: scaleX(1.35); }
+}
+
+/* Collectible Floating Clams on Track */
+.track-coin {
+  position: absolute;
+  font-size: 1.5rem;
+  z-index: 8;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+/* ==========================================================================
+   APPROACHING 3-LANE MATH GATE PLATFORMS (다가오는 정답/오답 발판 관문)
+   ========================================================================== */
+.gate-column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 270px;
+  z-index: 15;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  box-shadow: 0 14px 28px -8px rgba(0, 0, 0, 0.55);
+  justify-content: space-around;
+  padding: 8px 0;
+  pointer-events: auto;
 }
 
-/* Card Back (Number 1~12) */
-.card-back {
-  background: linear-gradient(145deg, #1e293b, #0f172a);
-  border: 2px solid rgba(56, 189, 248, 0.35);
-  transition: border-color 0.18s, transform 0.18s;
+@media (max-width: 680px) {
+  .gate-column { width: 205px; }
 }
 
-.card-back.has-mystery {
-  border-color: rgba(245, 158, 11, 0.55);
-  box-shadow: inset 0 0 18px rgba(245, 158, 11, 0.12);
-}
-
-.card-slot:hover .card-back {
-  border-color: #38bdf8;
-  transform: translateY(-3px);
-}
-
-.mystery-back-tag {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 0.72rem;
-  font-weight: 900;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.45);
-}
-
-.card-num-circle {
-  width: 62px;
-  height: 62px;
-  border-radius: 999px;
-  background: rgba(56, 189, 248, 0.14);
-  border: 2px solid rgba(56, 189, 248, 0.45);
+.gate-platform {
+  height: 102px;
+  margin: 0 8px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.92);
+  border: 3px solid #38bdf8;
+  padding: 10px 14px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.85rem;
-  font-weight: 900;
-  color: #38bdf8;
-  margin-bottom: 8px;
-}
-
-.card-back-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 700;
-}
-
-/* Card Front (Question or Answer) */
-.card-front {
-  transform: rotateY(180deg);
-  text-align: center;
+  flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+  transition: transform 0.14s, border-color 0.14s, background 0.14s;
+  position: relative;
 }
 
-.card-front.type-q {
-  background: linear-gradient(160deg, #1e3a8a, #172554);
-  border: 2px solid #60a5fa;
-}
-
-.card-front.type-a {
-  background: linear-gradient(160deg, #065f46, #064e3b);
-  border: 2px solid #34d399;
-}
-
-.card-slot.matched .card-front {
+.gate-platform:hover {
+  transform: scale(1.04);
   border-color: #fbbf24;
-  box-shadow: 0 0 28px rgba(245, 158, 11, 0.45);
-  animation: matchPop 0.45s ease;
+  background: rgba(30, 41, 59, 0.98);
 }
 
-.card-slot.mismatch .card-inner {
-  animation: mismatchShake 0.4s ease;
+.gate-platform.lane-selected {
+  border-color: #fbbf24;
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.55);
 }
 
-@keyframes matchPop {
-  0% { transform: rotateY(180deg) scale(1); }
-  50% { transform: rotateY(180deg) scale(1.08); }
-  100% { transform: rotateY(180deg) scale(1); }
+.gate-platform.gate-correct {
+  border-color: #10b981 !important;
+  background: rgba(6, 95, 70, 0.95) !important;
+  transform: scale(1.08);
 }
 
-@keyframes mismatchShake {
-  0%, 100% { transform: rotateY(180deg) translateX(0); }
-  25% { transform: rotateY(180deg) translateX(-9px); }
-  75% { transform: rotateY(180deg) translateX(9px); }
+.gate-platform.gate-wrong {
+  border-color: #f43f5e !important;
+  background: rgba(136, 19, 55, 0.95) !important;
 }
 
-.card-top-row {
-  width: 100%;
+.gate-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 0.74rem;
-  font-weight: 800;
-  gap: 4px;
-}
-
-.card-type-badge {
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.type-q .card-type-badge {
-  background: rgba(96, 165, 250, 0.25);
-  color: #bfdbfe;
-}
-
-.type-a .card-type-badge {
-  background: rgba(52, 211, 153, 0.25);
-  color: #a7f3d0;
-}
-
-/* Gimmick Pill on Card Front */
-.gimmick-pill {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.72rem;
   font-weight: 900;
-  white-space: nowrap;
+  color: #93c5fd;
 }
 
-.gimmick-star {
-  background: rgba(245, 158, 11, 0.28);
-  color: #fde68a;
-  border: 1px solid #f59e0b;
+.gate-bonus-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 900;
 }
 
-.gimmick-steal {
-  background: rgba(168, 85, 247, 0.3);
-  color: #f3e8ff;
-  border: 1px solid #c084fc;
-}
+.bonus-star { background: rgba(245, 158, 11, 0.25); color: #fde68a; border: 1px solid #f59e0b; }
+.bonus-heart { background: rgba(244, 63, 94, 0.25); color: #fecdd3; border: 1px solid #f43f5e; }
+.bonus-shield { background: rgba(6, 182, 212, 0.25); color: #cffafe; border: 1px solid #22d3ee; }
 
-.gimmick-bomb {
-  background: rgba(244, 63, 94, 0.32);
-  color: #fecdd3;
-  border: 1px solid #f43f5e;
-  animation: pulseBomb 0.8s infinite alternate;
-}
-
-.gimmick-radar {
-  background: rgba(6, 182, 212, 0.28);
-  color: #cffafe;
-  border: 1px solid #22d3ee;
-}
-
-.gimmick-jackpot {
-  background: linear-gradient(90deg, #f59e0b, #ec4899);
+.gate-formula-box {
+  font-size: 1.08rem;
+  font-weight: 900;
   color: #ffffff;
-}
-
-@keyframes pulseBomb {
-  from { transform: scale(1); }
-  to { transform: scale(1.07); }
-}
-
-.card-math-content {
-  font-size: 1.15rem;
-  font-weight: 800;
-  line-height: 1.45;
-  word-break: keep-all;
+  text-align: center;
   margin: auto 0;
+  line-height: 1.3;
 }
 
-.card-match-stamp {
-  font-size: 0.76rem;
+/* Quick Jump & Dash Control Buttons below Track */
+.controls-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .controls-bar { grid-template-columns: 1fr; gap: 8px; }
+}
+
+.jump-ctrl-btn {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--bg-panel);
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.jump-ctrl-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.jump-ctrl-btn:active {
+  transform: scale(0.98);
+}
+
+.ctrl-lane-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-size: 0.82rem;
   font-weight: 900;
-  color: #fbbf24;
-  visibility: hidden;
-}
-
-.card-slot.matched .card-match-stamp {
-  visibility: visible;
-}
-
-/* Floating Gimmick Popup Effect */
-.floating-gimmick-toast {
-  position: fixed;
-  top: 22%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 14px 26px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.94);
-  border: 2px solid #fbbf24;
-  font-size: 1.35rem;
-  font-weight: 900;
-  color: #ffffff;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
-  pointer-events: none;
-  z-index: 300;
-  animation: toastFloat 1.35s ease forwards;
   white-space: nowrap;
 }
 
-@keyframes toastFloat {
-  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
-  20% { opacity: 1; transform: translate(-50%, -10px) scale(1.06); }
-  75% { opacity: 1; transform: translate(-50%, -18px) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -38px) scale(0.95); }
+.ctrl-formula-text {
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: right;
+  flex: 1;
+}
+
+/* Explanation Overlay inside Track on Wrong Gate Collision */
+.crash-tip-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 17, 30, 0.88);
+  backdrop-filter: blur(6px);
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.crash-tip-overlay.active {
+  display: flex;
 }
 
 /* Math Typography */
@@ -751,39 +715,22 @@ html, body {
   padding: 0 2px;
 }
 
-.m-fn {
-  font-style: normal;
-  font-weight: 800;
-}
+.m-fn { font-style: normal; font-weight: 800; }
 
 .m-frac {
   display: inline-flex;
   flex-direction: column;
   vertical-align: middle;
   text-align: center;
-  font-size: 0.9em;
+  font-size: 0.88em;
   margin: 0 3px;
   line-height: 1.05;
 }
 
-.m-num {
-  border-bottom: 1.5px solid currentColor;
-  padding: 0 3px 2px;
-}
-
-.m-den {
-  padding: 2px 3px 0;
-}
-
-.m-sqrt {
-  display: inline-flex;
-  align-items: center;
-}
-
-.m-rad {
-  border-top: 1.5px solid currentColor;
-  padding: 0 2px;
-}
+.m-num { border-bottom: 1.5px solid currentColor; padding: 0 3px 1px; }
+.m-den { padding: 1px 3px 0; }
+.m-sqrt { display: inline-flex; align-items: center; }
+.m-rad { border-top: 1.5px solid currentColor; padding: 0 2px; }
 
 /* Modals */
 .modal-backdrop {
@@ -798,269 +745,265 @@ html, body {
   z-index: 200;
 }
 
-.modal-backdrop.active {
-  display: flex;
-}
+.modal-backdrop.active { display: flex; }
 
 .modal-box {
   background: var(--bg-panel);
   border: 2px solid rgba(56, 189, 248, 0.45);
   border-radius: 24px;
-  max-width: 640px;
+  max-width: 620px;
   width: 100%;
-  padding: 28px;
+  padding: 26px;
   text-align: center;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
   max-height: 90vh;
   overflow-y: auto;
-}
-
-.pair-edit-row {
-  display: grid;
-  grid-template-columns: 32px 1fr 1fr;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.pair-input {
-  width: 100%;
-  padding: 9px 12px;
-  border-radius: 10px;
-  background: rgba(11, 17, 32, 0.85);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
-  font-size: 0.92rem;
 }
 </style>
 </head>
 <body>
   <div class="app-wrap">
     <!-- ====================================================================
-         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 복불복 안내)
+         SCREEN 1: INTRO & GAME EXPLANATION (첫 화면 - 게임 설명 및 수달 선택)
          ==================================================================== -->
     <section id="screen-intro" class="intro-screen">
-      <div class="intro-header">
-        <div class="intro-badge">🎲 복불복 특수 기믹(폭탄·스틸·2배·레이더) 탑재!</div>
-        <h1 class="intro-title">까치매스 : 고1 수학 공식 복불복 짝맞추기</h1>
-        <p class="intro-subtitle">
-          12장 카드를 뒤집어 <strong>[파란 카드: 개념·질문]</strong>과 <strong>[초록 카드: 정답·공식]</strong>의 짝을 맞추고 특수 기믹을 터뜨리세요!
-        </p>
-      </div>
-
-      <!-- Visual Pair Example -->
-      <div class="intro-example-box">
-        <div class="mini-demo-card demo-q">
-          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#93c5fd;margin-bottom:4px;">
-            <span>📘 개념 · 질문 카드</span>
-            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
-          </div>
-          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-q"></div>
-        </div>
-        <div style="font-size:1.35rem;font-weight:900;color:#fbbf24;">↔ 짝 성공! ↔</div>
-        <div class="mini-demo-card demo-a">
-          <div style="display:flex;justify-content:space-between;font-size:0.74rem;font-weight:800;color:#6ee7b7;margin-bottom:4px;">
-            <span>💡 정답 · 공식 카드</span>
-            <span class="gimmick-pill gimmick-steal">😈 스틸 +100</span>
-          </div>
-          <div style="font-size:1.05rem;font-weight:800;" id="demo-card-a"></div>
+      <div class="intro-hero">
+        <div class="intro-otter-showcase" id="intro-otter-preview"></div>
+        <div style="flex:1;min-width:260px;">
+          <div class="intro-badge">🦦 쿠키런 스타일 고1 수학 점프 & 부스터 런게임</div>
+          <h1 class="intro-title">수달런 : 고1 수학 질주!</h1>
+          <p class="intro-subtitle">
+            귀여운 수달과 함께 강물을 가르며 달리세요!<br />
+            다가오는 <strong>3개의 수학 관문(1번·2번·3번 발판)</strong> 중 <strong>정답 발판으로 점프 & 부스터 돌진</strong>해 장애물을 돌파하는 액션 런게임입니다.
+          </p>
         </div>
       </div>
 
-      <!-- 5 Mystery Gimmicks Showcase -->
-      <div class="gimmick-showcase-box">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-          <div style="font-size:0.96rem;font-weight:900;color:#fbbf24;">
-            🎰 카드마다 랜덤으로 숨어 있는 5가지 복불복 특수 기믹!
-          </div>
-          <span style="font-size:0.78rem;color:#cbd5e1;">일발 역전의 기회를 노려보세요!</span>
+      <!-- 3-Step How to Play Guide -->
+      <div class="guide-steps-grid">
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 1 · 관문 등장</span>
+          <div class="guide-step-title">다가오는 3개의 발판 확인</div>
+          <p class="guide-step-desc">
+            수달이 조개(🐚)를 먹으며 달리는 동안 상단에 <strong>고1 수학 문제</strong>가 뜨고 오른쪽에서 <strong>1번(위)·2번(중간)·3번(아래) 발판</strong>이 다가옵니다.
+          </p>
         </div>
 
-        <div class="gimmick-showcase-grid">
-          <div class="gimmick-info-item">
-            <div class="gimmick-info-title" style="color:#fde68a;">⭐ 더블 스타</div>
-            <p class="gimmick-info-desc">이 공식 짝을 맞추면 기본 점수의 <strong>2배(+200점)</strong> 획득!</p>
-          </div>
-          <div class="gimmick-info-item">
-            <div class="gimmick-info-title" style="color:#e9d5ff;">😈 상대 점수 뺏기</div>
-            <p class="gimmick-info-desc">팀전에서 <strong>상대 팀 점수 100점을 강탈!</strong> (개인전은 +250점)</p>
-          </div>
-          <div class="gimmick-info-item" style="border-color:rgba(244,63,94,0.45);">
-            <div class="gimmick-info-title" style="color:#fda4af;">💣 시한폭탄 (주의!)</div>
-            <p class="gimmick-info-desc">열고 <strong>틀리면 💥-50점 폭발!</strong> 짝을 <strong>맞추면 🛠️해체 보너스 +250점!</strong></p>
-          </div>
-          <div class="gimmick-info-item">
-            <div class="gimmick-info-title" style="color:#a5f3fc;">⚡ 천리안 레이더</div>
-            <p class="gimmick-info-desc">맞추는 즉시 <strong>아직 안 맞춘 다른 1쌍을 2초간 자동 투시!</strong></p>
-          </div>
-          <div class="gimmick-info-item">
-            <div class="gimmick-info-title" style="color:#f472b6;">👑 황금 까치 잭팟</div>
-            <p class="gimmick-info-desc">맞추는 순간 터지는 <strong>+300점 대박 잭팟</strong> 카드!</p>
-          </div>
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 2 · 점프 & 부스터</span>
+          <div class="guide-step-title">정답 발판 클릭 (또는 1·2·3 키)</div>
+          <p class="guide-step-desc">
+            정답이 적힌 발판을 클릭(또는 키보드 <strong>1·2·3 / ↑·→·↓</strong>)하면 수달이 그 발판으로 점프해 <strong>🌊 워터 부스터</strong>로 관문을 와장창 돌파합니다!
+          </p>
+        </div>
+
+        <div class="guide-step-card">
+          <span class="guide-step-num">STEP 3 · 피버 & 아이템</span>
+          <div class="guide-step-title">5콤보 서핑 피버 & 복불복 발판</div>
+          <p class="guide-step-desc">
+            5연속 돌파 시 <strong>🏄 서핑 피버(점수 2배)</strong> 변신! 발판에 붙은 <strong>⭐2배·❤️하트회복·🛡️물방울방패</strong> 아이템을 챙겨 최장 거리를 달리세요!
+          </p>
         </div>
       </div>
 
-      <!-- Pre-game Settings (Chapter & Mode Selection) -->
+      <!-- Pre-game Settings (Otter Skin, Chapter & Speed) -->
       <div class="intro-config-box">
-        <label class="config-label">📚 1. 도전할 고1 수학 단원을 선택하세요</label>
-        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:0;"></div>
+        <label class="config-label">🦦 1. 함께 달릴 귀여운 수달 캐릭터를 골라주세요</label>
+        <div class="skin-grid">
+          <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
+            <div style="font-weight:900;font-size:0.95rem;color:#38bdf8;">🦦 아기 조개 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개를 든 귀염둥이</div>
+          </button>
+          <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
+            <div style="font-weight:900;font-size:0.95rem;color:#34d399;">🎓 고1 우등생 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">안경 + 학사모 장착</div>
+          </button>
+          <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
+            <div style="font-weight:900;font-size:0.95rem;color:#fbbf24;">🏄 파도 서퍼 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">선글라스 + 서핑보드</div>
+          </button>
+          <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
+            <div style="font-weight:900;font-size:0.95rem;color:#f472b6;">👑 황금 왕관 수달</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">전설의 수학 마법사</div>
+          </button>
+        </div>
 
-        <label class="config-label" style="margin-top:16px;">🎮 2. 플레이 모드를 선택하세요</label>
-        <div class="mode-select-grid">
-          <button type="button" class="mode-option-btn active" id="intro-mode-solo" onclick="MatchGame.setIntroMode(false)">
-            <div style="font-weight:900;font-size:1rem;color:#38bdf8;margin-bottom:2px;">⏱️ 1인 / 반 전체 타임어택</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">폭탄을 해체하고 최고 점수와 최단 시간 기록에 도전!</div>
-          </button>
-          <button type="button" class="mode-option-btn" id="intro-mode-team" onclick="MatchGame.setIntroMode(true)">
-            <div style="font-weight:900;font-size:1rem;color:#f472b6;margin-bottom:2px;">🆚 A팀 vs B팀 (복불복 대결)</div>
-            <div style="font-size:0.82rem;color:var(--text-muted);">맞추면 연속 찬스! 점수 뺏기(😈)와 폭탄(💣)으로 일발 역전!</div>
-          </button>
+        <label class="config-label">📚 2. 달릴 고1 수학 월드(단원) 선택</label>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:14px;"></div>
+
+        <label class="config-label">⚡ 3. 관문 접근 속도 (난이도)</label>
+        <div class="chapter-tabs">
+          <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 질주 (9초)</button>
+          <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 표준 질주 (6.5초)</button>
+          <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 광속 질주 (4.5초)</button>
         </div>
       </div>
 
-      <!-- Start Game Button & Utility Links -->
-      <button class="btn-start-huge" onclick="MatchGame.enterGameScreen()">
-        🚀 복불복 게임 시작하기! (12장 카드판 열기)
+      <!-- Start Game Button -->
+      <button class="btn-start-huge" onclick="OtterRun.startGame()">
+        🚀 수달런 출발하기! (점프 & 부스터 질주 시작)
       </button>
 
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;">
-        <button class="btn" onclick="MatchGame.openCustomModal()">✏️ 내 문제 직접 넣기</button>
-        <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">📲 스마트폰 QR · 앱 설치</button>
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 스마트폰 QR · 앱 설치</button>
       </div>
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: MAIN 12-CARD MATCHING BOARD (게임 진행 화면)
+         SCREEN 2: RUNNER GAME STAGE (달리는 수달 & 3레인 수학 관문)
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
-      <!-- Top Header & Controls -->
       <header class="top-bar">
-        <div class="brand-box" onclick="MatchGame.showIntroScreen()" title="첫 화면(게임 설명)으로 이동">
-          <span class="brand-icon">🦅</span>
+        <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="OtterRun.showIntro()">
+          <span style="font-size:1.75rem;">🦦</span>
           <div>
-            <div class="brand-title">고1 수학 공식 복불복 짝맞추기</div>
-            <div class="brand-sub">파란 카드(개념)와 초록 카드(공식) 짝을 맞추고 💣폭탄과 😈점수뺏기를 노리세요!</div>
+            <div style="font-size:1.2rem;font-weight:900;color:#38bdf8;">수달런 : 고1 수학 질주!</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);">정답 발판(1·2·3번)을 클릭하거나 키보드(1·2·3 / ↑·→·↓)를 눌러 돌파하세요!</div>
           </div>
         </div>
 
-        <div class="action-group">
-          <button class="btn" onclick="MatchGame.showIntroScreen()">
-            📖 설명
-          </button>
-          <button class="btn btn-purple" id="btn-roulette" onclick="MatchGame.spinMysteryRoulette()">
-            🎰 복불복 찬스 뽑기 (1회)
-          </button>
-          <button class="btn btn-amber" id="btn-peek" onclick="MatchGame.peekAllCards()">
-            👀 3초 전체 힌트
-          </button>
-          <button class="btn" id="btn-mode-toggle" onclick="MatchGame.toggleTeamMode()">
-            🆚 2팀 대결 켜기
-          </button>
-          <button class="btn" onclick="MatchGame.openCustomModal()">
-            ✏️ 내 문제
-          </button>
-          <button class="btn btn-emerald" onclick="MatchGame.openWebAppModal()">
-            📲 QR·앱
-          </button>
-          <button class="btn btn-primary" onclick="MatchGame.startNewGame()">
-            🔄 새 카드 섞기
-          </button>
-          <button class="btn" id="btn-sound" onclick="MatchGame.toggleSound()">
-            🔊
-          </button>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <button class="btn" onclick="OtterRun.showIntro()">📖 첫 화면(설명)</button>
+          <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 물방울 방패(1회)</button>
+          <button class="btn btn-emerald" onclick="OtterRun.openWebAppModal()">📲 QR·앱</button>
+          <button class="btn btn-primary" onclick="OtterRun.startGame()">🔄 처음부터 다시 달리기</button>
+          <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()">🔊</button>
         </div>
       </header>
 
-      <!-- Grade 1 Math Chapter Filter Tabs -->
-      <nav class="chapter-tabs" id="chapter-tabs"></nav>
+      <!-- Chapter Filter Tabs in Game -->
+      <nav class="chapter-tabs" id="game-chapter-tabs" style="margin-bottom:10px;"></nav>
 
-      <!-- Live Mystery Gimmick Event Banner -->
-      <div class="gimmick-event-banner" id="gimmick-event-banner">
-        <span id="gimmick-banner-text">🎲 카드에 숨겨진 복불복 기믹(⭐2배 · 😈점수뺏기 · 💣폭탄 · ⚡레이더 · 👑잭팟)을 찾아보세요!</span>
-        <button class="btn" style="padding:4px 10px;font-size:0.76rem;" id="btn-gimmick-toggle" onclick="MatchGame.toggleGimmicksEnabled()">
-          🎲 복불복 ON
+      <!-- HUD Bar (Hearts, Distance, Score, Combo) -->
+      <section class="hud-bar">
+        <div class="hud-card">
+          <span class="hud-label">❤️ 수달 체력 & 방패</span>
+          <span class="hud-val" id="hud-hearts" style="font-size:1.15rem;">❤️❤️❤️❤️❤️</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">🏃 달린 거리</span>
+          <span class="hud-val" id="hud-distance" style="color:#38bdf8;">0 m</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">🐚 조개 점수</span>
+          <span class="hud-val" id="hud-score" style="color:#fbbf24;">0점</span>
+        </div>
+        <div class="hud-card">
+          <span class="hud-label">🔥 연속 돌파</span>
+          <span class="hud-val" id="hud-combo" style="color:#f472b6;">0 COMBO</span>
+        </div>
+      </section>
+
+      <!-- Giant Math Question Prompt Board -->
+      <section class="question-board">
+        <span class="q-badge-pill" id="q-gate-num">GATE #1</span>
+        <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
+        <div class="approach-meter">
+          <div style="font-size:0.75rem;font-weight:800;color:#93c5fd;" id="q-time-label">관문 접근 중</div>
+          <div class="approach-track">
+            <div class="approach-fill" id="q-approach-bar"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3-Lane Parallax Running Track Stage -->
+      <main class="runner-track-stage" id="runner-stage">
+        <!-- Lane 0 (Top Sky Lane) -->
+        <div class="track-lane" id="track-lane-0" onclick="OtterRun.jumpAndDash(0)">
+          <div class="lane-water-lines"></div>
+          <span class="lane-label-tag">🔼 1번 하늘 발판 (키보드 1 / ↑)</span>
+        </div>
+
+        <!-- Lane 1 (Middle Bridge Lane) -->
+        <div class="track-lane active-lane" id="track-lane-1" onclick="OtterRun.jumpAndDash(1)">
+          <div class="lane-water-lines"></div>
+          <span class="lane-label-tag">➡️ 2번 중앙 발판 (키보드 2 / →)</span>
+        </div>
+
+        <!-- Lane 2 (Bottom Water Lane) -->
+        <div class="track-lane" id="track-lane-2" onclick="OtterRun.jumpAndDash(2)">
+          <div class="lane-water-lines"></div>
+          <span class="lane-label-tag">🔽 3번 물길 발판 (키보드 3 / ↓)</span>
+        </div>
+
+        <!-- Floating Collectible Clams Container -->
+        <div id="coins-layer"></div>
+
+        <!-- Cute Otter Character -->
+        <div class="otter-character lane-1" id="otter-actor">
+          <div class="otter-booster-jet"></div>
+          <div class="otter-svg-wrap" id="otter-svg-box"></div>
+        </div>
+
+        <!-- Approaching 3-Lane Math Gate Wall -->
+        <div class="gate-column" id="gate-column" style="left: 72%;">
+          <div class="gate-platform" id="gate-plat-0" onclick="event.stopPropagation(); OtterRun.jumpAndDash(0)"></div>
+          <div class="gate-platform" id="gate-plat-1" onclick="event.stopPropagation(); OtterRun.jumpAndDash(1)"></div>
+          <div class="gate-platform" id="gate-plat-2" onclick="event.stopPropagation(); OtterRun.jumpAndDash(2)"></div>
+        </div>
+
+        <!-- Wrong Gate Crash & 1-Line Explanation Overlay -->
+        <div class="crash-tip-overlay" id="crash-tip-overlay">
+          <div style="font-size:2.4rem;margin-bottom:4px;">💢 쿵! 오답 관문 충돌!</div>
+          <div style="font-size:1.1rem;font-weight:900;color:#34d399;margin-bottom:8px;" id="crash-correct-text"></div>
+          <div style="background:rgba(15,23,42,0.95);border:1px solid #38bdf8;border-radius:14px;padding:12px 18px;max-width:540px;font-size:0.96rem;color:#e0f2fe;margin-bottom:12px;" id="crash-tip-text"></div>
+          <div style="font-size:0.82rem;color:#7dd3fc;font-weight:800;">잠시 후 수달이 다시 힘을 내어 달립니다...</div>
+        </div>
+      </main>
+
+      <!-- Bottom Quick Jump & Booster Dash Buttons -->
+      <section class="controls-bar">
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(0)">
+          <span class="ctrl-lane-badge">🔼 1번 점프 돌진</span>
+          <span class="ctrl-formula-text" id="ctrl-text-0"></span>
         </button>
-      </div>
-
-      <!-- Live Status / Score Bar -->
-      <section class="status-bar" id="status-bar"></section>
-
-      <!-- 12 Cards Grid (4 x 3) -->
-      <main class="cards-grid" id="cards-grid"></main>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(1)">
+          <span class="ctrl-lane-badge">➡️ 2번 중앙 돌진</span>
+          <span class="ctrl-formula-text" id="ctrl-text-1"></span>
+        </button>
+        <button class="jump-ctrl-btn" onclick="OtterRun.jumpAndDash(2)">
+          <span class="ctrl-lane-badge">🔽 3번 물길 돌진</span>
+          <span class="ctrl-formula-text" id="ctrl-text-2"></span>
+        </button>
+      </section>
     </section>
   </div>
 
-  <!-- Game Clear Modal -->
-  <div class="modal-backdrop" id="modal-clear">
+  <!-- Game Over / Stage Clear Result Modal -->
+  <div class="modal-backdrop" id="modal-result">
     <div class="modal-box">
-      <div style="font-size:3.4rem;margin-bottom:8px;" id="clear-icon">🎉</div>
-      <h2 style="font-size:1.85rem;font-weight:900;margin-bottom:8px;" id="clear-title">
-        6쌍 모두 짝맞추기 성공!
-      </h2>
-      <p style="color:var(--text-muted);font-size:1.05rem;margin-bottom:20px;" id="clear-desc"></p>
+      <div style="width:110px;height:110px;margin:0 auto 10px;" id="result-otter-box"></div>
+      <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">질주 완료!</h2>
+      <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 
-      <div id="clear-pairs-review" style="text-align:left;background:rgba(11,17,32,0.75);border-radius:16px;padding:14px 18px;margin-bottom:22px;font-size:0.92rem;line-height:1.7;"></div>
+      <div id="result-review-box" style="text-align:left;background:rgba(7,17,30,0.8);border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.88rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
 
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-        <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="MatchGame.closeClearAndRestart()">
-          🔄 새로운 카드로 한 판 더!
+        <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="OtterRun.closeResultAndRestart()">
+          🚀 한 번 더 달리기!
         </button>
-        <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="MatchGame.closeClearAndGoIntro()">
-          📖 첫 화면으로
+        <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="OtterRun.closeResultAndIntro()">
+          📖 첫 화면(수달 바꾸기)
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Super Simple 6-Pair Custom Editor Modal -->
-  <div class="modal-backdrop" id="modal-custom" onclick="if(event.target===this) MatchGame.closeCustomModal()">
-    <div class="modal-box" style="text-align:left;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <h3 style="font-size:1.3rem;font-weight:900;">✏️ 나만의 6쌍 카드 직접 입력</h3>
-        <button class="btn" onclick="MatchGame.closeCustomModal()">✕ 닫기</button>
-      </div>
-      <p style="font-size:0.86rem;color:var(--text-muted);margin-bottom:14px;">
-        오늘 수업할 개념 6쌍(왼쪽: 질문/개념, 오른쪽: 정답/공식)을 입력하고 적용하면 바로 12장 카드로 만들어집니다. (수식은 <code>$x^2$</code> 처럼 입력)
-      </p>
-
-      <div id="custom-pairs-rows"></div>
-
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
-        <button class="btn" onclick="MatchGame.closeCustomModal()">취소</button>
-        <button class="btn btn-emerald" onclick="MatchGame.applyCustomPairs()">✔ 이 6쌍으로 카드판 만들기</button>
       </div>
     </div>
   </div>
 
   <!-- Web App (PWA Install & Smartphone QR Share) Modal -->
-  <div class="modal-backdrop" id="modal-webapp" onclick="if(event.target===this) MatchGame.closeWebAppModal()">
+  <div class="modal-backdrop" id="modal-webapp" onclick="if(event.target===this) OtterRun.closeWebAppModal()">
     <div class="modal-box">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <h3 style="font-size:1.3rem;font-weight:900;">📲 스마트폰 웹앱 접속 & 앱 설치</h3>
-        <button class="btn" onclick="MatchGame.closeWebAppModal()">✕ 닫기</button>
+        <button class="btn" onclick="OtterRun.closeWebAppModal()">✕ 닫기</button>
       </div>
-
       <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:14px;">
         스마트폰 카메라로 아래 QR코드를 스캔하면 모바일 웹앱 화면으로 바로 실행됩니다.
       </p>
-
       <div id="webapp-qr-box" style="display:inline-flex;padding:14px;background:#ffffff;border-radius:16px;margin-bottom:12px;"></div>
-
-      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(11,17,32,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
-
-      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;background:rgba(11,17,32,0.65);padding:16px;border-radius:14px;margin-bottom:16px;font-size:0.88rem;line-height:1.55;">
-        <div style="font-weight:800;color:#34d399;">📱 스마트폰/태블릿에 진짜 ‘앱’처럼 설치하는 법 (PWA)</div>
-        <div>• <strong>갤럭시(Android) / 크롬</strong>: 아래 <strong>[📲 홈 화면에 앱 설치하기]</strong> 버튼 클릭 또는 브라우저 메뉴(⋮) → <strong>[앱 설치 / 홈 화면에 추가]</strong></div>
-        <div>• <strong>아이폰/아이패드(Safari)</strong>: 하단 <strong>공유 버튼(□↑)</strong> → <strong>[홈 화면에 추가]</strong> 클릭 시 주소창 없는 전체화면 앱으로 실행됩니다!</div>
-      </div>
-
+      <div id="webapp-url-label" style="font-size:0.92rem;font-weight:800;color:#38bdf8;background:rgba(7,17,30,0.8);padding:10px;border-radius:10px;margin-bottom:16px;word-break:break-all;"></div>
       <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
-        <button class="btn btn-emerald" id="btn-pwa-install" onclick="MatchGame.installPWA()">
-          📲 이 기기에 웹앱(PWA) 바로 설치
-        </button>
-        <button class="btn btn-primary" onclick="MatchGame.copyWebAppUrl()">
-          🔗 웹앱 주소 복사
-        </button>
+        <button class="btn btn-emerald" onclick="OtterRun.installPWA()">📲 이 기기에 웹앱(PWA) 바로 설치</button>
+        <button class="btn btn-primary" onclick="OtterRun.copyWebAppUrl()">🔗 웹앱 주소 복사</button>
       </div>
     </div>
   </div>
@@ -1467,77 +1410,359 @@ html, body {
 })(window);
 </script>
   <script>/**
- * 까치매스 (KKACHI MATH) - 고등학교 1학년 수학 공식 & 개념 짝맞추기 데이터
+ * 수달런 (OTTER MATH RUN) - 고등학교 1학년 수학 질주 & 점프 런게임 문제 데이터
+ * 각 관문(Gate)마다 [1번 하늘 발판 / 2번 중앙 발판 / 3번 물길 발판]에 정답(ans)과 함정 보기(w1, w2)가 랜덤 배치됩니다.
  */
 (function (global) {
   const CHAPTERS = [
     {
       id: 'ch1',
       title: '① 다항식 · 인수분해',
-      pairs: [
-        { id: 'c1_1', q: '$a^3 + b^3$ 의 곱셈공식 변형', a: '$(a+b)^3 - 3ab(a+b)$' },
-        { id: 'c1_2', q: '$a^3 - b^3$ 의 인수분해', a: '$(a-b)(a^2 + ab + b^2)$' },
-        { id: 'c1_3', q: '$(a+b+c)^2$ 의 전개식', a: '$a^2+b^2+c^2 + 2(ab+bc+ca)$' },
-        { id: 'c1_4', q: '$P(x)$를 $(x - 2)$로 나눈 나머지', a: '$P(2)$ (나머지정리)' },
-        { id: 'c1_5', q: '$P(x)$가 $(x - 1)$로 나누어떨어질 조건', a: '$P(1) = 0$ (인수정리)' },
-        { id: 'c1_6', q: '$a^2 + b^2$ 의 곱셈공식 변형', a: '$(a+b)^2 - 2ab$' },
-        { id: 'c1_7', q: '$(x - y)^2$ 을 $(x + y)^2$ 으로 나타내면?', a: '$(x+y)^2 - 4xy$' },
-        { id: 'c1_8', q: '$x^3 - 1$ 의 인수분해', a: '$(x - 1)(x^2 + x + 1)$' }
+      questions: [
+        {
+          id: 'c1_1',
+          q: '$a^3 + b^3$ 의 곱셈공식 변형으로 옳은 것은?',
+          ans: '$(a+b)^3 - 3ab(a+b)$',
+          w1: '$(a+b)^3 + 3ab(a+b)$',
+          w2: '$(a-b)^3 + 3ab(a-b)$',
+          tip: '$a^3 + b^3 = (a+b)^3 - 3ab(a+b)$ 입니다! 부호에 주의하세요.'
+        },
+        {
+          id: 'c1_2',
+          q: '$a^3 - b^3$ 을 바르게 인수분해한 것은?',
+          ans: '$(a-b)(a^2 + ab + b^2)$',
+          w1: '$(a-b)(a^2 - ab + b^2)$',
+          w2: '$(a+b)(a^2 - ab + b^2)$',
+          tip: '앞괄호가 $(a-b)$이면 뒷괄호 가운데 항은 $+ab$ 입니다!'
+        },
+        {
+          id: 'c1_3',
+          q: '다항식 $P(x)$를 일차식 $(x - 3)$으로 나눈 나머지는?',
+          ans: '$P(3)$',
+          w1: '$P(-3)$',
+          w2: '$P(0)$',
+          tip: '나머지정리: $x - 3 = 0$이 되는 $x = 3$을 대입한 $P(3)$이 나머지입니다.'
+        },
+        {
+          id: 'c1_4',
+          q: '다항식 $P(x)$가 $(x + 2)$로 나누어떨어지기 위한 조건은?',
+          ans: '$P(-2) = 0$',
+          w1: '$P(2) = 0$',
+          w2: '$P(-2) = 2$',
+          tip: '인수정리: $(x+2)$를 인수로 가지므로 $P(-2) = 0$이어야 합니다.'
+        },
+        {
+          id: 'c1_5',
+          q: '$a + b = 4$, $ab = 3$ 일 때, $a^2 + b^2$ 의 값은?',
+          ans: '$10$',
+          w1: '$16$',
+          w2: '$22$',
+          tip: '$a^2 + b^2 = (a+b)^2 - 2ab = 16 - 6 = 10$ 입니다.'
+        },
+        {
+          id: 'c1_6',
+          q: '$x^3 - 1$ 을 인수분해한 식은?',
+          ans: '$(x - 1)(x^2 + x + 1)$',
+          w1: '$(x - 1)(x^2 - x + 1)$',
+          w2: '$(x + 1)(x^2 - x + 1)$',
+          tip: '$x^3 - 1^3 = (x-1)(x^2+x+1)$ 입니다.'
+        },
+        {
+          id: 'c1_7',
+          q: '$(a + b + c)^2$ 을 전개했을 때 나오는 항은?',
+          ans: '$a^2+b^2+c^2 + 2(ab+bc+ca)$',
+          w1: '$a^2+b^2+c^2 - 2(ab+bc+ca)$',
+          w2: '$a^2+b^2+c^2 + ab+bc+ca$',
+          tip: '각 항의 제곱의 합에 $+ 2(ab + bc + ca)$를 더합니다.'
+        },
+        {
+          id: 'c1_8',
+          q: '$(x - y)^2$ 을 $(x + y)^2$ 을 이용해 바르게 나타낸 것은?',
+          ans: '$(x + y)^2 - 4xy$',
+          w1: '$(x + y)^2 - 2xy$',
+          w2: '$(x + y)^2 + 4xy$',
+          tip: '$(x-y)^2 = (x+y)^2 - 4xy$ 입니다.'
+        }
       ]
     },
     {
       id: 'ch2',
       title: '② 복소수 · 이차방정식',
-      pairs: [
-        { id: 'c2_1', q: '허수단위 $i$의 제곱 ($i^2$)', a: '$-1$' },
-        { id: 'c2_2', q: '$i + i^2 + i^3 + i^4$ 의 값', a: '$0$ (4개씩 합이 0)' },
-        { id: 'c2_3', q: '복소수 $3 - 4i$ 의 켤레복소수', a: '$3 + 4i$' },
-        { id: 'c2_4', q: '$ax^2+bx+c=0$ 의 두 근의 합 ($\alpha + \beta$)', a: '$-\frac{b}{a}$' },
-        { id: 'c2_5', q: '$ax^2+bx+c=0$ 의 두 근의 곱 ($\alpha\beta$)', a: '$\frac{c}{a}$' },
-        { id: 'c2_6', q: '이차방정식이 서로 다른 두 실근을 가질 조건', a: '판별식 $D = b^2 - 4ac > 0$' },
-        { id: 'c2_7', q: '이차방정식이 중근(완전제곱식)을 가질 조건', a: '판별식 $D = b^2 - 4ac = 0$' },
-        { id: 'c2_8', q: '이차함수의 그래프가 $x$축과 만나지 않을 조건', a: '판별식 $D < 0$ (허근)' }
+      questions: [
+        {
+          id: 'c2_1',
+          q: '허수단위 $i$에 대하여 $i^2$ 의 값은?',
+          ans: '$-1$',
+          w1: '$1$',
+          w2: '$-i$',
+          tip: '제곱하여 $-1$이 되는 수를 허수단위 $i$라 하므로 $i^2 = -1$입니다.'
+        },
+        {
+          id: 'c2_2',
+          q: '허수단위 $i$의 거듭제곱 합 $i + i^2 + i^3 + i^4$ 의 값은?',
+          ans: '$0$',
+          w1: '$1$',
+          w2: '$-1$',
+          tip: '$i + (-1) + (-i) + 1 = 0$! 연속한 4개의 합은 항상 $0$입니다.'
+        },
+        {
+          id: 'c2_3',
+          q: '복소수 $3 - 4i$ 의 켤레복소수는?',
+          ans: '$3 + 4i$',
+          w1: '$-3 - 4i$',
+          w2: '$-3 + 4i$',
+          tip: '켤레복소수는 허수부분의 부호만 바꾸어 $3 + 4i$가 됩니다.'
+        },
+        {
+          id: 'c2_4',
+          q: '이차방정식 $x^2 - 6x + 5 = 0$ 의 두 근의 합 $\\alpha + \\beta$는?',
+          ans: '$6$',
+          w1: '$-6$',
+          w2: '$5$',
+          tip: '근과 계수의 관계에 의해 두 근의 합은 $-\\frac{b}{a} = 6$입니다.'
+        },
+        {
+          id: 'c2_5',
+          q: '이차방정식 $2x^2 + 5x - 8 = 0$ 의 두 근의 곱 $\\alpha\\beta$는?',
+          ans: '$-4$',
+          w1: '$4$',
+          w2: '$-\\frac{5}{2}$',
+          tip: '근과 계수의 관계에 의해 두 근의 곱은 $\\frac{c}{a} = \\frac{-8}{2} = -4$입니다.'
+        },
+        {
+          id: 'c2_6',
+          q: '이차방정식이 중근(완전제곱식)을 가질 판별식 $D$의 조건은?',
+          ans: '$D = b^2 - 4ac = 0$',
+          w1: '$D = b^2 - 4ac > 0$',
+          w2: '$D = b^2 - 4ac < 0$',
+          tip: '중근을 가지려면 판별식 $D = 0$이어야 합니다.'
+        },
+        {
+          id: 'c2_7',
+          q: '이차함수 $y = ax^2+bx+c$의 그래프가 $x$축과 만나지 않을 조건은?',
+          ans: '판별식 $D < 0$',
+          w1: '판별식 $D > 0$',
+          w2: '판별식 $D = 0$',
+          tip: '$x$축과 교점이 없으려면 실근이 없어야 하므로 $D < 0$입니다!'
+        },
+        {
+          id: 'c2_8',
+          q: '$a < 0$, $b < 0$ (둘 다 음수)일 때 $\\sqrt{a}\\sqrt{b}$ 를 간단히 하면?',
+          ans: '$-\\sqrt{ab}$',
+          w1: '$\\sqrt{ab}$',
+          w2: '$\\sqrt{-ab}$',
+          tip: '음수의 제곱근 두 개를 곱하면 앞에 마이너스($-$)가 튀어나옵니다!'
+        }
       ]
     },
     {
       id: 'ch3',
       title: '③ 도형의 방정식',
-      pairs: [
-        { id: 'c3_1', q: '기울기가 $m, m\'$인 두 직선이 수직일 조건', a: '$m \cdot m\' = -1$' },
-        { id: 'c3_2', q: '중심이 $(a, b)$, 반지름이 $r$인 원의 방정식', a: '$(x-a)^2 + (y-b)^2 = r^2$' },
-        { id: 'c3_3', q: '원 $(x-2)^2 + (y+3)^2 = 16$ 의 중심과 반지름', a: '중심 $(2, -3)$, 반지름 $r = 4$' },
-        { id: 'c3_4', q: '점 $(x, y)$를 $x$축에 대칭이동한 좌표', a: '$(x, -y)$ ($y$부호 반대)' },
-        { id: 'c3_5', q: '점 $(x, y)$를 직선 $y = x$에 대칭이동한 좌표', a: '$(y, x)$ ($x, y$ 자리 바꿈)' },
-        { id: 'c3_6', q: '함수 $y = f(x)$를 $x$축으로 $+3$만큼 평행이동', a: '$y = f(x - 3)$' },
-        { id: 'c3_7', q: '점 $(x, y)$를 원점에 대칭이동한 좌표', a: '$(-x, -y)$ (부호 모두 반대)' },
-        { id: 'c3_8', q: '두 점 $(x_1, y_1), (x_2, y_2)$의 중점 좌표', a: '$(\frac{x_1+x_2}{2}, \frac{y_1+y_2}{2})$' }
+      questions: [
+        {
+          id: 'c3_1',
+          q: '기울기가 $m, m\'$인 두 직선이 서로 수직일 조건은?',
+          ans: '$m \\cdot m\' = -1$',
+          w1: '$m \\cdot m\' = 1$',
+          w2: '$m + m\' = 0$',
+          tip: '수직인 두 직선의 기울기의 곱은 항상 $-1$입니다.'
+        },
+        {
+          id: 'c3_2',
+          q: '원 $(x - 2)^2 + (y + 3)^2 = 16$ 의 중심과 반지름 $r$은?',
+          ans: '중심 $(2, -3)$, $r = 4$',
+          w1: '중심 $(-2, 3)$, $r = 4$',
+          w2: '중심 $(2, -3)$, $r = 16$',
+          tip: '$(x-a)^2+(y-b)^2=r^2$에서 중심은 $(2,-3)$, 반지름은 $\\sqrt{16}=4$입니다.'
+        },
+        {
+          id: 'c3_3',
+          q: '점 $(4, -5)$를 $x$축에 대하여 대칭이동한 점의 좌표는?',
+          ans: '$(4, 5)$',
+          w1: '$(-4, -5)$',
+          w2: '$(-4, 5)$',
+          tip: '$x$축 대칭이동은 $y$좌표의 부호만 반대로 바뀝니다!'
+        },
+        {
+          id: 'c3_4',
+          q: '점 $(2, 7)$을 직선 $y = x$에 대하여 대칭이동한 좌표는?',
+          ans: '$(7, 2)$',
+          w1: '$(-2, -7)$',
+          w2: '$(-7, -2)$',
+          tip: '직선 $y = x$ 대칭이동은 $x$좌표와 $y$좌표의 자리를 서로 바꿉니다!'
+        },
+        {
+          id: 'c3_5',
+          q: '함수 $y = f(x)$의 그래프를 $x$축 방향으로 $+3$만큼 평행이동한 식은?',
+          ans: '$y = f(x - 3)$',
+          w1: '$y = f(x + 3)$',
+          w2: '$y = f(x) + 3$',
+          tip: '도형의 평행이동은 이동한 만큼 부호를 반대로 빼주어 $x$ 대신 $(x-3)$을 대입합니다!'
+        },
+        {
+          id: 'c3_6',
+          q: '점 $(-3, 5)$를 원점에 대하여 대칭이동한 점의 좌표는?',
+          ans: '$(3, -5)$',
+          w1: '$(-3, -5)$',
+          w2: '$(5, -3)$',
+          tip: '원점 대칭이동은 $x, y$ 두 좌표의 부호를 모두 반대로 바꿉니다.'
+        },
+        {
+          id: 'c3_7',
+          q: '두 점 $A(2, 4)$와 $B(6, 10)$의 중점 $M$의 좌표는?',
+          ans: '$(4, 7)$',
+          w1: '$(3, 6)$',
+          w2: '$(8, 14)$',
+          tip: '중점은 두 좌표의 평균: $(\\frac{2+6}{2}, \\frac{4+10}{2}) = (4, 7)$입니다.'
+        },
+        {
+          id: 'c3_8',
+          q: '원점 $(0, 0)$에서 점 $(3, 4)$까지의 거리는?',
+          ans: '$5$',
+          w1: '$7$',
+          w2: '$25$',
+          tip: '$\\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$ 입니다.'
+        }
       ]
     },
     {
       id: 'ch4',
       title: '④ 집합 · 명제 · 함수',
-      pairs: [
-        { id: 'c4_1', q: '드모르간의 법칙 $(A \cup B)^C$', a: '$A^C \cap B^C$' },
-        { id: 'c4_2', q: '합집합의 원소 개수 $n(A \cup B)$', a: '$n(A) + n(B) - n(A \cap B)$' },
-        { id: 'c4_3', q: '원소가 $n$개인 집합의 부분집합 개수', a: '$2^n$ 개' },
-        { id: 'c4_4', q: '명제 $p \to q$ 와 참·거짓이 항상 같은 명제', a: '대우 ($\sim q \to \sim p$)' },
-        { id: 'c4_5', q: '양수 $a, b > 0$ 산술·기하평균 절대부등식', a: '$a + b \ge 2\sqrt{ab}$' },
-        { id: 'c4_6', q: '역함수 $y = f^{-1}(x)$의 그래프와 대칭인 직선', a: '직선 $y = x$' },
-        { id: 'c4_7', q: '합성함수의 역함수 $(g \circ f)^{-1}$', a: '$f^{-1} \circ g^{-1}$ (순서 반대)' },
-        { id: 'c4_8', q: '역함수가 존재하기 위한 함수의 조건', a: '일대일대응' }
+      questions: [
+        {
+          id: 'c4_1',
+          q: '드모르간의 법칙에서 $(A \\cup B)^C$ 과 항상 같은 집합은?',
+          ans: '$A^C \\cap B^C$',
+          w1: '$A^C \\cup B^C$',
+          w2: '$A \\cap B$',
+          tip: '여집합 $C$가 안으로 분배되면서 합집합($\\cup$)이 교집합($\\cap$)으로 뒤집힙니다!'
+        },
+        {
+          id: 'c4_2',
+          q: '원소가 $4$개인 집합 $A = \\{1, 2, 3, 4\\}$의 부분집합의 총 개수는?',
+          ans: '$16$개 ($2^4$)',
+          w1: '$8$개 ($2^3$)',
+          w2: '$15$개',
+          tip: '원소가 $n$개인 집합의 부분집합 개수는 $2^n$개이므로 $2^4 = 16$개입니다.'
+        },
+        {
+          id: 'c4_3',
+          q: '명제 $p \\to q$ 와 참·거짓(진리값)이 항상 같은 명제는?',
+          ans: '대우 ($\\sim q \\to \\sim p$)',
+          w1: '역 ($q \\to p$)',
+          w2: '부정 ($p \\to \\sim q$)',
+          tip: '본명제와 그 대우 명제($\\sim q \\to \\sim p$)는 항상 참·거짓이 같습니다!'
+        },
+        {
+          id: 'c4_4',
+          q: '양수 $a > 0, b > 0$ 에 대한 산술·기하평균 절대부등식은?',
+          ans: '$a + b \\ge 2\\sqrt{ab}$',
+          w1: '$a + b \\ge \\sqrt{ab}$',
+          w2: '$a + b \\le 2\\sqrt{ab}$',
+          tip: '$\\frac{a+b}{2} \\ge \\sqrt{ab}$ 이므로 $a + b \\ge 2\\sqrt{ab}$ (등호는 $a=b$일 때)입니다.'
+        },
+        {
+          id: 'c4_5',
+          q: '함수 $y = f(x)$와 그 역함수 $y = f^{-1}(x)$의 그래프는 어디에 대칭인가?',
+          ans: '직선 $y = x$',
+          w1: '$x$축',
+          w2: '원점',
+          tip: '원래 함수와 역함수의 그래프는 항상 직선 $y = x$에 대하여 대칭입니다.'
+        },
+        {
+          id: 'c4_6',
+          q: '합성함수의 역함수 $(g \\circ f)^{-1}$ 를 바르게 풀면?',
+          ans: '$f^{-1} \\circ g^{-1}$',
+          w1: '$g^{-1} \\circ f^{-1}$',
+          w2: '$f \\circ g$',
+          tip: '합성함수의 역함수는 순서가 반대로 뒤집혀서 $f^{-1} \\circ g^{-1}$ 가 됩니다!'
+        },
+        {
+          id: 'c4_7',
+          q: '함수 $f$의 역함수 $f^{-1}$가 존재하기 위한 필요충분조건은?',
+          ans: '일대일대응',
+          w1: '항등함수',
+          w2: '상수함수',
+          tip: '역함수가 존재하려면 반드시 일대일대응이어야 합니다.'
+        },
+        {
+          id: 'c4_8',
+          q: '$n(A) = 5$, $n(B) = 4$, $n(A \\cap B) = 2$ 일 때 $n(A \\cup B)$는?',
+          ans: '$7$',
+          w1: '$9$',
+          w2: '$11$',
+          tip: '$n(A \\cup B) = n(A) + n(B) - n(A \\cap B) = 5 + 4 - 2 = 7$입니다.'
+        }
       ]
     },
     {
       id: 'ch5',
       title: '⑤ 경우의 수 · 순열 · 조합',
-      pairs: [
-        { id: 'c5_1', q: '$0!$ 과 $_n\text{C}_0$ 의 값', a: '$1$' },
-        { id: 'c5_2', q: '조합의 성질 $_n\text{C}_r$ 과 항상 같은 것', a: '$_n\text{C}_{n-r}$' },
-        { id: 'c5_3', q: '$_5\text{C}_2$ 의 계산 값', a: '$10$ ($\frac{5 \times 4}{2 \times 1}$)' },
-        { id: 'c5_4', q: '$_5\text{P}_2$ 의 계산 값', a: '$20$ ($5 \times 4$)' },
-        { id: 'c5_5', q: '서로 다른 $n$개에서 순서 있게 $r$개 나열', a: '순열 $_n\text{P}_r$' },
-        { id: 'c5_6', q: '서로 다른 $n$개에서 순서 없이 $r$개 선택', a: '조합 $_n\text{C}_r$' },
-        { id: 'c5_7', q: '$4!$ ($4 \times 3 \times 2 \times 1$) 의 값', a: '$24$' }
+      questions: [
+        {
+          id: 'c5_1',
+          q: '$0!$ (영 팩토리얼) 과 $_n\\text{C}_0$ 의 공통된 값은?',
+          ans: '$1$',
+          w1: '$0$',
+          w2: '$n$',
+          tip: '$0! = 1$ 이고 $_n\\text{C}_0 = 1$, $_n\\text{P}_0 = 1$ 입니다!'
+        },
+        {
+          id: 'c5_2',
+          q: '조합의 성질에 의해 $_n\\text{C}_r$ 과 항상 같은 값은?',
+          ans: '$_n\\text{C}_{n-r}$',
+          w1: '$_n\\text{P}_r$',
+          w2: '$_n\\text{C}_{r-1}$',
+          tip: '$n$명 중 $r$명을 뽑는 것은 남길 $(n-r)$명을 뽑는 것과 같으므로 $_n\\text{C}_r = _n\\text{C}_{n-r}$입니다.'
+        },
+        {
+          id: 'c5_3',
+          q: '조합 $_5\\text{C}_2$ 를 계산한 값은?',
+          ans: '$10$',
+          w1: '$20$',
+          w2: '$15$',
+          tip: '$_5\\text{C}_2 = \\frac{5 \\times 4}{2 \\times 1} = 10$ 입니다.'
+        },
+        {
+          id: 'c5_4',
+          q: '순열 $_5\\text{P}_2$ 를 계산한 값은?',
+          ans: '$20$',
+          w1: '$10$',
+          w2: '$25$',
+          tip: '$_5\\text{P}_2 = 5 \\times 4 = 20$ 입니다.'
+        },
+        {
+          id: 'c5_5',
+          q: '서로 다른 $n$개에서 순서를 생각하지 않고 $r$개를 택하는 것은?',
+          ans: '조합 $_n\\text{C}_r$',
+          w1: '순열 $_n\\text{P}_r$',
+          w2: '계승 $n!$',
+          tip: '순서 없이 뽑기만 하는 것은 조합(Combination, $_n\\text{C}_r$)입니다.'
+        },
+        {
+          id: 'c5_6',
+          q: '$4!$ ($4$ 팩토리얼)을 계산한 값은?',
+          ans: '$24$',
+          w1: '$12$',
+          w2: '$16$',
+          tip: '$4! = 4 \\times 3 \\times 2 \\times 1 = 24$ 입니다.'
+        },
+        {
+          id: 'c5_7',
+          q: '조합 $_7\\text{C}_5$ 를 가장 빠르게 계산하기 위해 바꾸는 식은?',
+          ans: '$_7\\text{C}_2$ ($= 21$)',
+          w1: '$_7\\text{C}_3$ ($= 35$)',
+          w2: '$_7\\text{P}_2$ ($= 42$)',
+          tip: '$_7\\text{C}_5 = _7\\text{C}_{7-5} = _7\\text{C}_2 = \\frac{7 \\times 6}{2} = 21$ 로 3초 만에 계산합니다!'
+        },
+        {
+          id: 'c5_8',
+          q: '$6$명의 학생 중 대표 $1$명, 부대표 $1$명을 순서 있게 뽑는 경우의 수는?',
+          ans: '$30$가지 ($_6\\text{P}_2$)',
+          w1: '$15$가지 ($_6\\text{C}_2$)',
+          w2: '$12$가지',
+          tip: '직책(순서)이 구분되므로 순열 $_6\\text{P}_2 = 6 \\times 5 = 30$가지입니다.'
+        }
       ]
     }
   ];
@@ -1560,6 +1785,7 @@ html, body {
     s = s.replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>');
     s = s.replace(/_\{([^{}]+)\}/g, '<sub>$1</sub>');
     s = s.replace(/_([0-9a-zA-Z+-])/g, '<sub>$1</sub>');
+    s = s.replace(/\\\{/g, '{').replace(/\\\}/g, '}');
 
     const symbols = [
       [/\\alpha\b/g, 'α'],
@@ -1612,172 +1838,192 @@ html, body {
 })(window);
 </script>
   <script>/**
- * 까치매스 (KKACHI MATH) - 고1 수학 공식 12장 복불복 짝맞추기 웹앱
- * 5대 복불복 특수 기믹 (⭐2배, 😈점수뺏기, 💣시한폭탄, ⚡레이더 투시, 👑황금잭팟) + 🎰복불복 찬스 룰렛
+ * 수달런 (OTTER MATH RUN) - 귀여운 수달의 고1 수학 점프 & 부스터 런게임 메인 로직
  */
 (function (global) {
-  const STORAGE_KEY_CUSTOM = 'kkachi_g1_custom_pairs_v1';
-  const STORAGE_KEY_BEST_SCORE = 'kkachi_g1_best_score_v1';
-
-  const GIMMICK_TYPES = {
-    star: {
-      id: 'star',
-      label: '⭐ 점수 2배',
-      pillClass: 'gimmick-star',
-      bannerClass: 'event-star'
-    },
-    steal: {
-      id: 'steal',
-      label: '😈 점수 뺏기',
-      pillClass: 'gimmick-steal',
-      bannerClass: 'event-steal'
-    },
-    bomb: {
-      id: 'bomb',
-      label: '💣 시한폭탄',
-      pillClass: 'gimmick-bomb',
-      bannerClass: 'event-bomb'
-    },
-    radar: {
-      id: 'radar',
-      label: '⚡ 레이더 투시',
-      pillClass: 'gimmick-radar',
-      bannerClass: 'event-radar'
-    },
-    jackpot: {
-      id: 'jackpot',
-      label: '👑 황금 잭팟',
-      pillClass: 'gimmick-jackpot',
-      bannerClass: 'event-star'
-    },
-    normal: {
-      id: 'normal',
-      label: '',
-      pillClass: '',
-      bannerClass: ''
-    }
+  const SPEED_MAP = {
+    slow: 9000,
+    normal: 6500,
+    fast: 4500
   };
 
   const state = {
-    currentScreen: 'intro', // 'intro' | 'game'
-    chapterId: 'all', // 'all' | 'ch1' | 'ch2' | 'ch3' | 'ch4' | 'ch5' | 'custom'
-    gimmicksEnabled: true,
-    customPairs: null,
-    selectedPairs: [],
-    cards: [], // 12 cards
-    firstCardIdx: null,
-    secondCardIdx: null,
-    lockBoard: false,
+    screen: 'intro', // 'intro' | 'game'
+    skin: 'basic',   // 'basic' | 'scholar' | 'surfer' | 'king'
+    chapterId: 'all',
+    speedKey: 'normal',
+    gateDurationMs: 6500,
 
-    matchedCount: 0,
-    moves: 0,
-    combo: 0,
+    // Active run state
+    running: false,
+    pausedForCrash: false,
+    isDashing: false,
+    otterLane: 1, // 0 (Top), 1 (Middle), 2 (Bottom)
+    otterMood: 'run', // 'run' | 'happy' | 'hurt'
+
+    hearts: 5,
+    maxHearts: 5,
+    hasShield: false,
+    freeShieldUsed: false,
+
+    distance: 0,
     score: 0,
-    nextMatchDoubleBuff: false,
-    rouletteUsed: false,
+    combo: 0,
+    maxCombo: 0,
+    gateCount: 0,
+    targetGates: 10,
 
-    startTime: 0,
-    elapsedSec: 0,
-    timerInterval: null,
-    bestScore: 0,
+    questionPool: [],
+    currentQ: null,
+    gateOptions: [], // [{ text, isCorrect, bonus }]
+    gateStartTime: 0,
+    gateProgress: 0, // 0..1
+    history: [], // [{ q, ans, tip, passed }]
 
-    // Team mode (A팀 vs B팀)
-    isTeamMode: false,
-    currentTeam: 'A', // 'A' | 'B'
-    scoreA: 0,
-    scoreB: 0,
-    pairsA: 0,
-    pairsB: 0,
+    // Floating coins on track
+    coins: [],
+    lastCoinSpawn: 0,
+    lastFrameTime: 0,
+    rafId: null,
 
-    // Web App / PWA state
+    // PWA / Share URL
     deferredPrompt: null,
     shareUrl: null
   };
 
+  // =========================================================================
+  // CUTE OTTER SVG GENERATOR (4 Skins + 3 Facial Expressions + Shield Bubble)
+  // =========================================================================
+  function buildOtterSVG(skin = 'basic', mood = 'run', fever = false, shielded = false) {
+    const useSurfboard = skin === 'surfer' || fever;
+
+    // Eyes based on mood
+    let eyesSvg = '';
+    if (mood === 'happy') {
+      eyesSvg = `
+        <path d="M 38 40 Q 43 34 48 40" stroke="#1e293b" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        <path d="M 64 40 Q 69 34 74 40" stroke="#1e293b" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+      `;
+    } else if (mood === 'hurt') {
+      eyesSvg = `
+        <path d="M 38 36 L 47 43 M 47 36 L 38 43" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 65 36 L 74 43 M 74 36 L 65 43" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+      `;
+    } else {
+      eyesSvg = `
+        <circle cx="43" cy="39" r="5" fill="#0f172a"/>
+        <circle cx="44.8" cy="37.2" r="1.8" fill="#ffffff"/>
+        <circle cx="69" cy="39" r="5" fill="#0f172a"/>
+        <circle cx="70.8" cy="37.2" r="1.8" fill="#ffffff"/>
+      `;
+    }
+
+    // Accessories based on skin
+    let hatSvg = '';
+    let glassesSvg = '';
+    let capeSvg = '';
+    let boardSvg = '';
+
+    if (useSurfboard) {
+      boardSvg = `
+        <ellipse cx="56" cy="92" rx="46" ry="9" fill="#06b6d4" stroke="#e0f2fe" stroke-width="2.5"/>
+        <path d="M 22 92 L 90 92" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+      `;
+    }
+    if (skin === 'surfer') {
+      glassesSvg = `
+        <rect x="35" y="34" width="17" height="10" rx="3" fill="#0284c7" stroke="#e0f2fe" stroke-width="1.5"/>
+        <rect x="60" y="34" width="17" height="10" rx="3" fill="#0284c7" stroke="#e0f2fe" stroke-width="1.5"/>
+        <line x1="52" y1="38" x2="60" y2="38" stroke="#e0f2fe" stroke-width="2"/>
+      `;
+    }
+    if (skin === 'scholar') {
+      glassesSvg = `
+        <circle cx="43" cy="39" r="7.5" fill="none" stroke="#ef4444" stroke-width="2.4"/>
+        <circle cx="69" cy="39" r="7.5" fill="none" stroke="#ef4444" stroke-width="2.4"/>
+        <line x1="50.5" y1="39" x2="61.5" y2="39" stroke="#ef4444" stroke-width="2.2"/>
+      `;
+      hatSvg = `
+        <polygon points="56,7 26,19 56,28 86,19" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+        <rect x="40" y="23" width="32" height="6" rx="2" fill="#334155"/>
+        <path d="M 78 21 L 82 33" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="82" cy="34" r="2.5" fill="#fbbf24"/>
+      `;
+    }
+    if (skin === 'king') {
+      capeSvg = `
+        <path d="M 32 55 Q 10 72 16 88 L 40 82 Z" fill="#e11d48" stroke="#fbbf24" stroke-width="2"/>
+      `;
+      hatSvg = `
+        <polygon points="37,24 41,9 50,18 56,6 62,18 71,9 75,24" fill="#fbbf24" stroke="#d97706" stroke-width="1.8"/>
+        <circle cx="56" cy="18" r="2.5" fill="#e11d48"/>
+      `;
+    }
+
+    const shieldSvg = shielded
+      ? `<circle cx="56" cy="54" r="49" fill="rgba(56, 189, 248, 0.18)" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6 4"/>`
+      : '';
+
+    return `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 106" width="100%" height="100%">
+        ${boardSvg}
+        ${capeSvg}
+        <!-- Wagging Otter Tail -->
+        <path d="M 30 76 Q 8 72 12 84 Q 18 92 34 85" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
+        <!-- Little Feet -->
+        <ellipse cx="42" cy="88" rx="9" ry="5.5" fill="#6b3e1a"/>
+        <ellipse cx="70" cy="88" rx="9" ry="5.5" fill="#6b3e1a"/>
+        <!-- Plump Otter Body -->
+        <ellipse cx="56" cy="68" rx="26" ry="23" fill="#9a6232" stroke="#5c3415" stroke-width="2"/>
+        <!-- Cream Belly -->
+        <ellipse cx="58" cy="70" rx="17" ry="16" fill="#fde6c4"/>
+        <!-- Cute Ears -->
+        <circle cx="32" cy="28" r="7.5" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
+        <circle cx="32" cy="28" r="4" fill="#f5cba7"/>
+        <circle cx="80" cy="28" r="7.5" fill="#7c4a21" stroke="#5c3415" stroke-width="2"/>
+        <circle cx="80" cy="28" r="4" fill="#f5cba7"/>
+        <!-- Round Otter Head -->
+        <ellipse cx="56" cy="40" rx="27" ry="22" fill="#9a6232" stroke="#5c3415" stroke-width="2"/>
+        <!-- Cream Muzzle Cheeks -->
+        <ellipse cx="50" cy="47" rx="10" ry="7.5" fill="#fef3c7"/>
+        <ellipse cx="62" cy="47" rx="10" ry="7.5" fill="#fef3c7"/>
+        <!-- Rosy Pink Blushes -->
+        <ellipse cx="34" cy="46" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.75"/>
+        <ellipse cx="78" cy="46" rx="4.5" ry="2.8" fill="#fb7185" opacity="0.75"/>
+        <!-- Eyes -->
+        ${eyesSvg}
+        ${glassesSvg}
+        <!-- Cute Triangle Nose & Smile -->
+        <polygon points="56,46 51,41 61,41" fill="#27272a"/>
+        <path d="M 56 46 Q 51 52 46 49 M 56 46 Q 61 52 66 49" stroke="#5c3415" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <!-- Whiskers -->
+        <line x1="25" y1="44" x2="36" y2="45" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="24" y1="49" x2="36" y2="48" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="76" y1="45" x2="87" y2="44" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="76" y1="48" x2="88" y2="49" stroke="#5c3415" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- Golden Seashell held on tummy -->
+        <path d="M 47 68 Q 58 56 69 68 L 64 77 L 52 77 Z" fill="#fbbf24" stroke="#d97706" stroke-width="1.8"/>
+        <line x1="58" y1="62" x2="58" y2="76" stroke="#d97706" stroke-width="1.4"/>
+        <line x1="53" y1="64" x2="55" y2="76" stroke="#d97706" stroke-width="1.4"/>
+        <line x1="63" y1="64" x2="61" y2="76" stroke="#d97706" stroke-width="1.4"/>
+        <!-- Little Paws holding the shell -->
+        <circle cx="45" cy="69" r="5.5" fill="#7c4a21"/>
+        <circle cx="71" cy="69" r="5.5" fill="#7c4a21"/>
+        ${hatSvg}
+        ${shieldSvg}
+      </svg>
+    `;
+  }
+
+  // =========================================================================
+  // INITIALIZATION & NAVIGATION
+  // =========================================================================
   async function init() {
-    loadSavedData();
     registerServiceWorker();
     await detectShareUrl();
-    renderIntroDemoCards();
+    renderIntroOtter();
     renderChapterTabs();
-    startNewGame();
-  }
-
-  function renderIntroDemoCards() {
-    const qEl = document.getElementById('demo-card-q');
-    const aEl = document.getElementById('demo-card-a');
-    if (qEl) qEl.innerHTML = KkachiMathData.renderMathText('$a^3 + b^3$ 의 곱셈공식 변형');
-    if (aEl) aEl.innerHTML = KkachiMathData.renderMathText('$(a+b)^3 - 3ab(a+b)$');
-  }
-
-  function showIntroScreen() {
-    KkachiSound.click();
-    if (state.timerInterval) {
-      clearInterval(state.timerInterval);
-      state.timerInterval = null;
-    }
-    state.currentScreen = 'intro';
-    document.getElementById('screen-intro').style.display = 'block';
-    document.getElementById('screen-game').style.display = 'none';
-    renderChapterTabs();
-    syncModeButtons();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function enterGameScreen() {
-    KkachiSound.fever(1);
-    state.currentScreen = 'game';
-    document.getElementById('screen-intro').style.display = 'none';
-    document.getElementById('screen-game').style.display = 'block';
-    syncModeButtons();
-    startNewGame();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function setIntroMode(teamMode) {
-    KkachiSound.click();
-    state.isTeamMode = Boolean(teamMode);
-    syncModeButtons();
-  }
-
-  function syncModeButtons() {
-    const soloBtn = document.getElementById('intro-mode-solo');
-    const teamBtn = document.getElementById('intro-mode-team');
-    if (soloBtn) soloBtn.classList.toggle('active', !state.isTeamMode);
-    if (teamBtn) teamBtn.classList.toggle('active', state.isTeamMode);
-
-    const gameToggleBtn = document.getElementById('btn-mode-toggle');
-    if (gameToggleBtn) {
-      gameToggleBtn.textContent = state.isTeamMode ? '⏱️ 1인 타임어택으로' : '🆚 2팀 대결 켜기';
-    }
-  }
-
-  function toggleGimmicksEnabled() {
-    KkachiSound.click();
-    state.gimmicksEnabled = !state.gimmicksEnabled;
-    const btn = document.getElementById('btn-gimmick-toggle');
-    if (btn) {
-      btn.textContent = state.gimmicksEnabled ? '🎲 복불복 ON' : '🎲 복불복 OFF';
-    }
-    startNewGame();
-  }
-
-  function loadSavedData() {
-    try {
-      const savedBest = localStorage.getItem(STORAGE_KEY_BEST_SCORE);
-      if (savedBest && !isNaN(Number(savedBest))) {
-        state.bestScore = Number(savedBest);
-      }
-      const savedCustom = localStorage.getItem(STORAGE_KEY_CUSTOM);
-      if (savedCustom) {
-        const parsed = JSON.parse(savedCustom);
-        if (Array.isArray(parsed) && parsed.length === 6) {
-          state.customPairs = parsed;
-        }
-      }
-    } catch (e) {
-      // ignore
-    }
+    initKeyboardControls();
   }
 
   function registerServiceWorker() {
@@ -1791,11 +2037,8 @@ html, body {
   }
 
   async function detectShareUrl() {
-    const isLocalhost =
-      location.hostname === 'localhost' ||
-      location.hostname === '127.0.0.1';
-
-    if (isLocalhost && location.protocol.startsWith('http')) {
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    if (isLocal && location.protocol.startsWith('http')) {
       try {
         const res = await fetch('/api/info');
         const data = await res.json();
@@ -1804,7 +2047,7 @@ html, body {
           return;
         }
       } catch (e) {
-        // fallback
+        // ignore
       }
     }
     state.shareUrl = location.origin && location.origin !== 'null'
@@ -1812,15 +2055,32 @@ html, body {
       : location.href;
   }
 
-  function shuffle(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = a[i];
-      a[i] = a[j];
-      a[j] = tmp;
+  function renderIntroOtter() {
+    const box = document.getElementById('intro-otter-preview');
+    if (box) {
+      box.innerHTML = `<div style="width:105px;height:105px;">${buildOtterSVG(state.skin, 'happy', false, false)}</div>`;
     }
-    return a;
+  }
+
+  function selectSkin(skinKey) {
+    KkachiSound.click();
+    state.skin = skinKey;
+    ['basic', 'scholar', 'surfer', 'king'].forEach((k) => {
+      const btn = document.getElementById(`skin-btn-${k}`);
+      if (btn) btn.classList.toggle('active', k === skinKey);
+    });
+    renderIntroOtter();
+    renderGameOtter();
+  }
+
+  function setSpeed(spdKey) {
+    KkachiSound.click();
+    state.speedKey = spdKey;
+    state.gateDurationMs = SPEED_MAP[spdKey] || 6500;
+    ['slow', 'normal', 'fast'].forEach((k) => {
+      const btn = document.getElementById(`spd-${k}`);
+      if (btn) btn.classList.toggle('active', k === spdKey);
+    });
   }
 
   function renderChapterTabs() {
@@ -1828,668 +2088,503 @@ html, body {
       { id: 'all', title: '🔥 고1 전체 랜덤' },
       ...KkachiMathData.CHAPTERS.map((c) => ({ id: c.id, title: c.title }))
     ];
-    if (state.customPairs && state.customPairs.length === 6) {
-      tabs.push({ id: 'custom', title: '⭐ 내 커스텀 문제' });
-    }
-
     const html = tabs
       .map((t) => `
-        <button type="button" class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="MatchGame.selectChapter('${t.id}')">
+        <button type="button" class="tab-btn ${state.chapterId === t.id ? 'active' : ''}" onclick="OtterRun.selectChapter('${t.id}')">
           ${t.title}
         </button>
       `)
       .join('');
 
-    const gameTabs = document.getElementById('chapter-tabs');
-    const introTabs = document.getElementById('intro-chapter-tabs');
-    if (gameTabs) gameTabs.innerHTML = html;
-    if (introTabs) introTabs.innerHTML = html;
+    const introEl = document.getElementById('intro-chapter-tabs');
+    const gameEl = document.getElementById('game-chapter-tabs');
+    if (introEl) introEl.innerHTML = html;
+    if (gameEl) gameEl.innerHTML = html;
   }
 
   function selectChapter(chId) {
     KkachiSound.click();
     state.chapterId = chId;
     renderChapterTabs();
-    if (state.currentScreen === 'game') {
-      startNewGame();
+    if (state.screen === 'game') {
+      startGame();
     }
   }
 
-  function pickSixPairs() {
-    if (state.chapterId === 'custom' && state.customPairs && state.customPairs.length === 6) {
-      return state.customPairs;
-    }
+  function showIntro() {
+    KkachiSound.click();
+    stopRunLoop();
+    state.screen = 'intro';
+    document.getElementById('screen-intro').style.display = 'block';
+    document.getElementById('screen-game').style.display = 'none';
+    renderIntroOtter();
+  }
 
+  // =========================================================================
+  // RUNNER GAMEPLAY ENGINE
+  // =========================================================================
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildQuestionPool() {
     let pool = [];
     if (state.chapterId === 'all') {
-      KkachiMathData.CHAPTERS.forEach((ch) => {
-        pool = pool.concat(ch.pairs);
+      KkachiMathData.CHAPTERS.forEach((c) => {
+        pool = pool.concat(c.questions);
       });
     } else {
-      const found = KkachiMathData.CHAPTERS.find((ch) => ch.id === state.chapterId);
-      pool = found ? found.pairs : KkachiMathData.CHAPTERS[0].pairs;
+      const found = KkachiMathData.CHAPTERS.find((c) => c.id === state.chapterId);
+      pool = found ? found.questions : KkachiMathData.CHAPTERS[0].questions;
     }
-
-    return shuffle(pool).slice(0, 6);
+    return shuffle(pool);
   }
 
-  function startNewGame() {
-    if (state.timerInterval) {
-      clearInterval(state.timerInterval);
-      state.timerInterval = null;
+  function startGame() {
+    stopRunLoop();
+    KkachiSound.fever(1);
+
+    state.screen = 'game';
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-game').style.display = 'block';
+    document.getElementById('crash-tip-overlay').classList.remove('active');
+    document.getElementById('modal-result').classList.remove('active');
+
+    state.running = true;
+    state.pausedForCrash = false;
+    state.isDashing = false;
+    state.otterLane = 1;
+    state.otterMood = 'run';
+
+    state.hearts = 5;
+    state.hasShield = false;
+    state.freeShieldUsed = false;
+    state.distance = 0;
+    state.score = 0;
+    state.combo = 0;
+    state.maxCombo = 0;
+    state.gateCount = 0;
+    state.history = [];
+    state.coins = [];
+
+    const shieldBtn = document.getElementById('btn-shield-chance');
+    if (shieldBtn) {
+      shieldBtn.disabled = false;
+      shieldBtn.textContent = '🛡️ 무료 물방울 방패(1회)';
     }
 
-    const sixPairs = pickSixPairs();
-    state.selectedPairs = sixPairs;
+    state.questionPool = buildQuestionPool();
+    updateLaneUI();
+    renderGameOtter();
+    updateHudUI();
+    spawnNextGate();
 
-    // Assign random gimmicks to the 6 pairs
-    const gimmickPool = state.gimmicksEnabled
-      ? shuffle(['star', 'steal', 'bomb', 'radar', 'jackpot', 'normal'])
-      : ['normal', 'normal', 'normal', 'normal', 'normal', 'normal'];
+    state.lastFrameTime = performance.now();
+    state.rafId = requestAnimationFrame(runLoop);
+  }
 
-    const rawCards = [];
-    sixPairs.forEach((pair, idx) => {
-      const gKey = gimmickPool[idx] || 'normal';
-      const gInfo = GIMMICK_TYPES[gKey] || GIMMICK_TYPES.normal;
+  function stopRunLoop() {
+    state.running = false;
+    if (state.rafId) {
+      cancelAnimationFrame(state.rafId);
+      state.rafId = null;
+    }
+  }
 
-      rawCards.push({
-        pairId: pair.id,
-        type: 'q',
-        badge: '📘 개념·질문',
-        content: pair.q,
-        gimmick: gInfo.id,
-        gimmickLabel: gInfo.label,
-        gimmickClass: gInfo.pillClass,
-        flipped: false,
-        matched: false
-      });
-      rawCards.push({
-        pairId: pair.id,
-        type: 'a',
-        badge: '💡 정답·공식',
-        content: pair.a,
-        gimmick: gInfo.id,
-        gimmickLabel: gInfo.label,
-        gimmickClass: gInfo.pillClass,
-        flipped: false,
-        matched: false
-      });
+  function renderGameOtter() {
+    const box = document.getElementById('otter-svg-box');
+    if (!box) return;
+    const isFever = state.combo >= 5;
+    box.innerHTML = buildOtterSVG(state.skin, state.otterMood, isFever, state.hasShield);
+
+    const stage = document.getElementById('runner-stage');
+    if (stage) stage.classList.toggle('fever-mode', isFever);
+  }
+
+  function updateLaneUI() {
+    const actor = document.getElementById('otter-actor');
+    if (actor) {
+      actor.classList.remove('lane-0', 'lane-1', 'lane-2');
+      actor.classList.add(`lane-${state.otterLane}`);
+    }
+    [0, 1, 2].forEach((i) => {
+      const tr = document.getElementById(`track-lane-${i}`);
+      const gp = document.getElementById(`gate-plat-${i}`);
+      if (tr) tr.classList.toggle('active-lane', i === state.otterLane);
+      if (gp) gp.classList.toggle('lane-selected', i === state.otterLane);
+    });
+  }
+
+  function updateHudUI() {
+    const heartStr = '❤️'.repeat(Math.max(0, state.hearts)) + '🖤'.repeat(Math.max(0, state.maxHearts - state.hearts));
+    const shieldStr = state.hasShield ? ' 🛡️' : '';
+    document.getElementById('hud-hearts').textContent = heartStr + shieldStr;
+    document.getElementById('hud-distance').textContent = `${Math.floor(state.distance)} m`;
+    document.getElementById('hud-score').textContent = `${state.score.toLocaleString()}점`;
+    document.getElementById('hud-combo').textContent =
+      state.combo >= 5 ? `🏄 ${state.combo} FEVER (x2)` : `${state.combo} COMBO`;
+  }
+
+  function spawnNextGate() {
+    if (state.gateCount >= state.targetGates) {
+      finishRun(true);
+      return;
+    }
+
+    if (state.questionPool.length === 0) {
+      state.questionPool = buildQuestionPool();
+    }
+
+    const q = state.questionPool.pop();
+    state.currentQ = q;
+    state.gateCount += 1;
+    state.isDashing = false;
+    state.otterMood = 'run';
+    renderGameOtter();
+
+    // Assign random bonus items to the 3 platforms
+    const bonusPool = shuffle(['star', 'heart', 'shield', 'none', 'none']);
+    const rawOptions = [
+      { text: q.ans, isCorrect: true, bonus: bonusPool[0] },
+      { text: q.w1, isCorrect: false, bonus: bonusPool[1] },
+      { text: q.w2, isCorrect: false, bonus: bonusPool[2] }
+    ];
+    state.gateOptions = shuffle(rawOptions);
+
+    document.getElementById('q-gate-num').textContent = `GATE #${state.gateCount} / ${state.targetGates}`;
+    document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
+
+    state.gateOptions.forEach((opt, idx) => {
+      const plat = document.getElementById(`gate-plat-${idx}`);
+      const laneName = idx === 0 ? '🔼 1번 발판' : idx === 1 ? '➡️ 2번 발판' : '🔽 3번 발판';
+      let bonusHtml = '';
+      if (opt.bonus === 'star') bonusHtml = `<span class="gate-bonus-tag bonus-star">⭐ 점수 2배</span>`;
+      else if (opt.bonus === 'heart') bonusHtml = `<span class="gate-bonus-tag bonus-heart">❤️ 체력+1</span>`;
+      else if (opt.bonus === 'shield') bonusHtml = `<span class="gate-bonus-tag bonus-shield">🛡️ 방패</span>`;
+
+      if (plat) {
+        plat.className = `gate-platform ${idx === state.otterLane ? 'lane-selected' : ''}`;
+        plat.innerHTML = `
+          <div class="gate-top-bar">
+            <span>${laneName}</span>
+            ${bonusHtml}
+          </div>
+          <div class="gate-formula-box">${KkachiMathData.renderMathText(opt.text)}</div>
+        `;
+      }
+
+      const ctrlTxt = document.getElementById(`ctrl-text-${idx}`);
+      if (ctrlTxt) {
+        ctrlTxt.innerHTML = KkachiMathData.renderMathText(opt.text);
+      }
     });
 
-    state.cards = shuffle(rawCards);
-    state.firstCardIdx = null;
-    state.secondCardIdx = null;
-    state.lockBoard = false;
-    state.matchedCount = 0;
-    state.moves = 0;
-    state.combo = 0;
-    state.score = 0;
-    state.nextMatchDoubleBuff = false;
-    state.rouletteUsed = false;
-    state.elapsedSec = 0;
-    state.startTime = 0;
-    state.currentTeam = 'A';
-    state.scoreA = 0;
-    state.scoreB = 0;
-    state.pairsA = 0;
-    state.pairsB = 0;
-
-    const rBtn = document.getElementById('btn-roulette');
-    if (rBtn) {
-      rBtn.disabled = false;
-      rBtn.textContent = '🎰 복불복 찬스 뽑기 (1회)';
-    }
-
-    setGimmickBanner(
-      state.gimmicksEnabled
-        ? '🎲 카드마다 복불복 특수 기믹(⭐2배 · 😈점수뺏기 · 💣시한폭탄 · ⚡레이더 · 👑잭팟)이 숨어 있습니다!'
-        : '📘 클래식 공식 짝맞추기 모드입니다. 6쌍의 개념과 공식을 연결하세요!',
-      ''
-    );
-
-    renderStatusBar();
-    renderCardsGrid();
+    state.gateStartTime = performance.now();
+    state.gateProgress = 0;
+    const gateCol = document.getElementById('gate-column');
+    if (gateCol) gateCol.style.left = '76%';
   }
 
-  function setGimmickBanner(text, eventClass = '') {
-    const banner = document.getElementById('gimmick-event-banner');
-    const txtEl = document.getElementById('gimmick-banner-text');
-    if (!banner || !txtEl) return;
-    banner.className = 'gimmick-event-banner ' + (eventClass || '');
-    txtEl.innerHTML = text;
-  }
+  // Player clicks a lane or presses 1/2/3 -> Otter jumps to that lane and booster-dashes through the gate!
+  function jumpAndDash(laneIdx) {
+    if (!state.running || state.pausedForCrash || state.isDashing) return;
 
-  function showFloatingToast(text, borderColor = '#fbbf24') {
-    const el = document.createElement('div');
-    el.className = 'floating-gimmick-toast';
-    el.style.borderColor = borderColor;
-    el.textContent = text;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1400);
-  }
+    KkachiSound.click();
+    state.otterLane = laneIdx;
+    state.isDashing = true;
+    updateLaneUI();
 
-  function ensureTimerStarted() {
-    if (state.timerInterval || state.isTeamMode) return;
-    state.startTime = performance.now();
-    state.timerInterval = setInterval(() => {
-      state.elapsedSec = (performance.now() - state.startTime) / 1000;
-      const el = document.getElementById('stat-timer');
-      if (el) el.textContent = `${state.elapsedSec.toFixed(1)}초`;
-    }, 100);
-  }
-
-  function renderStatusBar() {
-    const bar = document.getElementById('status-bar');
-    if (!bar) return;
-
-    if (!state.isTeamMode) {
-      bar.innerHTML = `
-        <div class="status-card">
-          <span class="status-label">🏆 현재 점수</span>
-          <span class="status-val" style="color:#fbbf24;">${state.score.toLocaleString()}점</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">🎯 찾은 공식 짝</span>
-          <span class="status-val" style="color:#10b981;">${state.matchedCount} / 6 쌍</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">🔥 연속 콤보</span>
-          <span class="status-val" style="color:#f472b6;">${state.combo} COMBO</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">⏱️ 시간 / 최고점</span>
-          <span class="status-val" id="stat-timer" style="color:#38bdf8;font-size:1.2rem;">${state.elapsedSec.toFixed(1)}초</span>
-        </div>
-      `;
-    } else {
-      bar.innerHTML = `
-        <div class="status-card ${state.currentTeam === 'A' ? 'active-turn' : ''}">
-          <div>
-            <div class="status-label" style="color:#60a5fa;">🔵 A팀 (1분단) · ${state.pairsA}쌍</div>
-            <div style="font-size:0.78rem;color:#fde68a;font-weight:800;">
-              ${state.currentTeam === 'A' ? '👉 A팀 차례! (맞추면 연속 찬스!)' : '대기 중'}
-            </div>
-          </div>
-          <span class="status-val" style="color:#60a5fa;">${state.scoreA.toLocaleString()}점</span>
-        </div>
-        <div class="status-card ${state.currentTeam === 'B' ? 'active-turn' : ''}">
-          <div>
-            <div class="status-label" style="color:#fb7185;">🔴 B팀 (2분단) · ${state.pairsB}쌍</div>
-            <div style="font-size:0.78rem;color:#fde68a;font-weight:800;">
-              ${state.currentTeam === 'B' ? '👉 B팀 차례! (맞추면 연속 찬스!)' : '대기 중'}
-            </div>
-          </div>
-          <span class="status-val" style="color:#fb7185;">${state.scoreB.toLocaleString()}점</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">🎯 남은 공식 짝</span>
-          <span class="status-val" style="color:#10b981;">${6 - state.matchedCount} 쌍</span>
-        </div>
-      `;
+    const actor = document.getElementById('otter-actor');
+    if (actor) {
+      actor.classList.add('jumping', 'dashing');
+      setTimeout(() => actor.classList.remove('jumping'), 220);
     }
   }
 
-  function renderCardsGrid() {
-    const grid = document.getElementById('cards-grid');
-    if (!grid) return;
+  function changeLaneOnly(delta) {
+    if (!state.running || state.pausedForCrash || state.isDashing) return;
+    const next = Math.max(0, Math.min(2, state.otterLane + delta));
+    if (next !== state.otterLane) {
+      KkachiSound.click();
+      state.otterLane = next;
+      updateLaneUI();
+    }
+  }
 
-    grid.innerHTML = state.cards
-      .map((card, idx) => {
-        const stateClasses = [
-          card.flipped ? 'flipped' : '',
-          card.matched ? 'matched' : ''
-        ].join(' ');
+  function activateFreeShield() {
+    if (state.freeShieldUsed || state.hasShield || !state.running) return;
+    KkachiSound.radar();
+    state.freeShieldUsed = true;
+    state.hasShield = true;
+    const btn = document.getElementById('btn-shield-chance');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '🛡️ 방패 장착됨';
+    }
+    renderGameOtter();
+    updateHudUI();
+  }
 
-        const hasMystery = state.gimmicksEnabled && card.gimmick !== 'normal';
+  function runLoop(now) {
+    if (!state.running) return;
+    const dt = Math.min(100, now - state.lastFrameTime);
+    state.lastFrameTime = now;
 
-        return `
-          <div class="card-slot ${stateClasses}" id="card-slot-${idx}" onclick="MatchGame.onCardClick(${idx})">
-            <div class="card-inner">
-              <!-- Card Back: Big Number 1~12 -->
-              <div class="card-face card-back ${hasMystery ? 'has-mystery' : ''}">
-                ${hasMystery ? '<span class="mystery-back-tag">❓ 복불복</span>' : ''}
-                <div class="card-num-circle">${idx + 1}</div>
-                <div class="card-back-sub">🦅 ${idx + 1}번 카드</div>
-              </div>
+    if (!state.pausedForCrash) {
+      // Advance running distance
+      const speedMult = (state.combo >= 5 ? 1.8 : 1) * (state.isDashing ? 4.5 : 1);
+      state.distance += (dt / 1000) * 14 * speedMult;
 
-              <!-- Card Front: Formula + Gimmick Pill -->
-              <div class="card-face card-front type-${card.type}">
-                <div class="card-top-row">
-                  <span class="card-type-badge">${card.badge}</span>
-                  ${card.gimmickLabel ? `<span class="gimmick-pill ${card.gimmickClass}">${card.gimmickLabel}</span>` : `<span style="opacity:0.7;">#${idx + 1}</span>`}
-                </div>
-                <div class="card-math-content">
-                  ${KkachiMathData.renderMathText(card.content)}
-                </div>
-                <div class="card-match-stamp">✔ 짝 맞추기 성공!</div>
-              </div>
-            </div>
-          </div>
-        `;
+      // Spawn & move floating collectible clams on track
+      updateTrackCoins(now, dt, speedMult);
+
+      // Advance Gate Wall approach
+      if (state.isDashing) {
+        state.gateProgress += (dt / 180);
+      } else {
+        state.gateProgress += dt / state.gateDurationMs;
+      }
+
+      const pct = Math.min(1, Math.max(0, state.gateProgress));
+      const leftPct = 76 - pct * 58; // Moves from 76% to 18% (Otter collision point)
+      const gateCol = document.getElementById('gate-column');
+      if (gateCol) gateCol.style.left = `${leftPct}%`;
+
+      const bar = document.getElementById('q-approach-bar');
+      if (bar) bar.style.width = `${Math.round(pct * 100)}%`;
+
+      const remSec = Math.max(0, ((1 - pct) * state.gateDurationMs) / 1000);
+      const timeLbl = document.getElementById('q-time-label');
+      if (timeLbl) {
+        timeLbl.textContent = state.isDashing ? '🌊 부스터 돌진!!' : `충돌까지 ${remSec.toFixed(1)}초`;
+      }
+
+      if (pct >= 1) {
+        resolveGateCollision();
+      }
+
+      updateHudUI();
+    }
+
+    state.rafId = requestAnimationFrame(runLoop);
+  }
+
+  function updateTrackCoins(now, dt, speedMult) {
+    if (now - state.lastCoinSpawn > 950) {
+      state.lastCoinSpawn = now;
+      const lane = Math.floor(Math.random() * 3);
+      const icon = Math.random() < 0.7 ? '🐚' : '🐟';
+      state.coins.push({
+        id: 'c_' + now + '_' + Math.random().toString(36).slice(2, 5),
+        lane,
+        x: 72,
+        icon
+      });
+    }
+
+    const layer = document.getElementById('coins-layer');
+    if (!layer) return;
+
+    const remaining = [];
+    for (const c of state.coins) {
+      c.x -= (dt / 1000) * 28 * speedMult;
+      // Check collection by otter (around x = 12..18%)
+      if (c.x <= 18 && c.x >= 9 && c.lane === state.otterLane) {
+        state.score += 15;
+        continue;
+      }
+      if (c.x > 4) {
+        remaining.push(c);
+      }
+    }
+    state.coins = remaining;
+
+    layer.innerHTML = state.coins
+      .map((c) => {
+        const topPx = c.lane === 0 ? 45 : c.lane === 1 ? 165 : 285;
+        return `<div class="track-coin" style="left:${c.x}%;top:${topPx}px;">${c.icon}</div>`;
       })
       .join('');
   }
 
-  function addPointsToCurrent(pts) {
-    if (!state.isTeamMode) {
-      state.score = Math.max(0, state.score + pts);
-    } else {
-      if (state.currentTeam === 'A') {
-        state.scoreA = Math.max(0, state.scoreA + pts);
-      } else {
-        state.scoreB = Math.max(0, state.scoreB + pts);
-      }
-    }
-  }
+  function resolveGateCollision() {
+    state.pausedForCrash = true;
+    const actor = document.getElementById('otter-actor');
+    if (actor) actor.classList.remove('dashing');
 
-  function onCardClick(idx) {
-    if (state.lockBoard) return;
-    const card = state.cards[idx];
-    if (!card || card.flipped || card.matched) return;
+    const pickedIdx = state.otterLane;
+    const pickedOpt = state.gateOptions[pickedIdx];
+    const platEl = document.getElementById(`gate-plat-${pickedIdx}`);
 
-    ensureTimerStarted();
-    KkachiSound.click();
-
-    card.flipped = true;
-    const slotEl = document.getElementById(`card-slot-${idx}`);
-    if (slotEl) slotEl.classList.add('flipped');
-
-    if (state.firstCardIdx === null) {
-      state.firstCardIdx = idx;
-      if (card.gimmick === 'bomb') {
-        setGimmickBanner(
-          '⚠️ 앗! [💣 시한폭탄] 카드를 열었습니다! 이번 턴에 짝을 맞추면 🛠️+250점 해체 대박, 틀리면 💥-50점 폭발!',
-          'event-bomb'
-        );
-      }
-      return;
-    }
-
-    state.secondCardIdx = idx;
-    state.moves += 1;
-    state.lockBoard = true;
-
-    const firstCard = state.cards[state.firstCardIdx];
-    const secondCard = state.cards[state.secondCardIdx];
-
-    if (firstCard.pairId === secondCard.pairId) {
-      // MATCH!
-      firstCard.matched = true;
-      secondCard.matched = true;
-      state.matchedCount += 1;
+    if (pickedOpt && pickedOpt.isCorrect) {
+      // BREAKTHROUGH SUCCESS!
+      if (platEl) platEl.classList.add('gate-correct');
       state.combo += 1;
+      if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+      state.otterMood = 'happy';
 
-      if (state.isTeamMode) {
-        if (state.currentTeam === 'A') state.pairsA += 1;
-        else state.pairsB += 1;
-      }
+      let pts = 150 + (state.combo - 1) * 30;
+      if (state.combo >= 5) pts *= 2;
+      if (pickedOpt.bonus === 'star') pts *= 2;
+      if (pickedOpt.bonus === 'heart' && state.hearts < state.maxHearts) state.hearts += 1;
+      if (pickedOpt.bonus === 'shield') state.hasShield = true;
 
-      const el1 = document.getElementById(`card-slot-${state.firstCardIdx}`);
-      const el2 = document.getElementById(`card-slot-${state.secondCardIdx}`);
-      if (el1) el1.classList.add('matched');
-      if (el2) el2.classList.add('matched');
-
-      applyMatchGimmickReward(firstCard.gimmick);
-
-      state.firstCardIdx = null;
-      state.secondCardIdx = null;
-      state.lockBoard = false;
-      renderStatusBar();
-
-      if (state.matchedCount === 6) {
-        handleGameClear();
-      }
-    } else {
-      // MISMATCH
-      state.combo = 0;
-      const idx1 = state.firstCardIdx;
-      const idx2 = state.secondCardIdx;
-      const el1 = document.getElementById(`card-slot-${idx1}`);
-      const el2 = document.getElementById(`card-slot-${idx2}`);
-      const hasBomb = firstCard.gimmick === 'bomb' || secondCard.gimmick === 'bomb';
-
-      setTimeout(() => {
-        if (hasBomb) {
-          KkachiSound.bomb();
-          addPointsToCurrent(-50);
-          const who = state.isTeamMode ? `${state.currentTeam}팀` : '내 점수';
-          setGimmickBanner(`💥 펑!! [💣 시한폭탄] 짝 맞추기에 실패해 폭탄이 터졌습니다! (${who} -50점)`, 'event-bomb');
-          showFloatingToast('💥 펑! 시한폭탄 폭발 (-50점)', '#f43f5e');
-          renderStatusBar();
-        } else {
-          KkachiSound.wrong();
-        }
-        if (el1) el1.classList.add('mismatch');
-        if (el2) el2.classList.add('mismatch');
-      }, 220);
-
-      setTimeout(() => {
-        firstCard.flipped = false;
-        secondCard.flipped = false;
-        if (el1) el1.classList.remove('flipped', 'mismatch');
-        if (el2) el2.classList.remove('flipped', 'mismatch');
-
-        if (state.isTeamMode) {
-          state.currentTeam = state.currentTeam === 'A' ? 'B' : 'A';
-        }
-        state.firstCardIdx = null;
-        state.secondCardIdx = null;
-        state.lockBoard = false;
-        renderStatusBar();
-      }, 1150);
-    }
-  }
-
-  function applyMatchGimmickReward(gimmick) {
-    let basePts = 100 + (state.combo > 1 ? (state.combo - 1) * 30 : 0);
-    if (state.nextMatchDoubleBuff) {
-      basePts *= 2;
-      state.nextMatchDoubleBuff = false;
-    }
-
-    const teamLabel = state.isTeamMode ? `${state.currentTeam}팀 ` : '';
-
-    if (gimmick === 'star') {
-      const pts = basePts * 2;
-      addPointsToCurrent(pts);
-      KkachiSound.fever(1);
-      setGimmickBanner(`⭐ [더블 스타] 발동! ${teamLabel}점수 2배 획득! (+${pts}점)`, 'event-star');
-      showFloatingToast(`⭐ 점수 2배! +${pts}점`, '#f59e0b');
-    } else if (gimmick === 'steal') {
-      KkachiSound.steal();
-      if (state.isTeamMode) {
-        const oppTeam = state.currentTeam === 'A' ? 'B' : 'A';
-        const oppScore = oppTeam === 'A' ? state.scoreA : state.scoreB;
-        const stolen = Math.min(100, oppScore);
-        if (oppTeam === 'A') state.scoreA -= stolen;
-        else state.scoreB -= stolen;
-        const totalGain = basePts + (stolen > 0 ? stolen : 100);
-        addPointsToCurrent(totalGain);
-        setGimmickBanner(
-          `😈 [스틸 조커] 발동! ${oppTeam}팀의 점수를 뺏어 ${state.currentTeam}팀이 +${totalGain}점 획득!!`,
-          'event-steal'
-        );
-        showFloatingToast(`😈 상대 점수 강탈! +${totalGain}점`, '#c084fc');
-      } else {
-        const pts = basePts + 150;
-        addPointsToCurrent(pts);
-        setGimmickBanner(`😈 [스틸 조커] 보너스 발동! 추가 보너스 +${pts}점 획득!`, 'event-steal');
-        showFloatingToast(`😈 조커 보너스! +${pts}점`, '#c084fc');
-      }
-    } else if (gimmick === 'bomb') {
-      const pts = basePts + 150;
-      addPointsToCurrent(pts);
-      KkachiSound.jackpot();
-      setGimmickBanner(`🛠️ [폭탄 해체 대성공!] 위험한 폭탄 짝을 정확히 맞춰 해체 보너스 +${pts}점 획득!`, 'event-star');
-      showFloatingToast(`🛠️ 폭탄 해체 성공! +${pts}점`, '#10b981');
-    } else if (gimmick === 'radar') {
-      const pts = basePts + 50;
-      addPointsToCurrent(pts);
-      KkachiSound.radar();
-      setGimmickBanner(`⚡ [천리안 레이더] 발동! 아직 안 맞춘 다른 공식 1쌍의 위치를 2초간 자동 투시합니다!`, 'event-radar');
-      showFloatingToast(`⚡ 레이더 발동! 1쌍 위치 투시!`, '#22d3ee');
-      triggerRadarPeek();
-    } else if (gimmick === 'jackpot') {
-      const pts = basePts + 200;
-      addPointsToCurrent(pts);
-      KkachiSound.jackpot();
-      setGimmickBanner(`👑 [황금 까치 잭팟!!] 전설의 잭팟 카드를 맞췄습니다! (+${pts}점)`, 'event-star');
-      showFloatingToast(`👑 황금 잭팟!! +${pts}점`, '#fbbf24');
-    } else {
-      addPointsToCurrent(basePts);
-      KkachiSound.correct(state.matchedCount * 2);
-      const comboTxt = state.combo >= 2 ? ` (${state.combo}연속 콤보!)` : '';
-      setGimmickBanner(`✔ 공식 짝 맞추기 성공! +${basePts}점 획득${comboTxt}`, '');
-    }
-  }
-
-  function triggerRadarPeek() {
-    // Find one unmatched pair and reveal both cards for 2 seconds
-    const unmatched = state.cards
-      .map((c, idx) => ({ c, idx }))
-      .filter((item) => !item.c.matched && !item.c.flipped);
-
-    if (unmatched.length < 2) return;
-    const targetPairId = unmatched[0].c.pairId;
-    const pairIndices = unmatched
-      .filter((item) => item.c.pairId === targetPairId)
-      .map((item) => item.idx);
-
-    pairIndices.forEach((i) => {
-      const el = document.getElementById(`card-slot-${i}`);
-      if (el) el.classList.add('flipped', 'radar-peek');
-    });
-
-    setTimeout(() => {
-      pairIndices.forEach((i) => {
-        if (!state.cards[i].matched && !state.cards[i].flipped) {
-          const el = document.getElementById(`card-slot-${i}`);
-          if (el) el.classList.remove('flipped', 'radar-peek');
-        }
+      state.score += pts;
+      state.history.push({
+        q: state.currentQ.q,
+        ans: state.currentQ.ans,
+        tip: state.currentQ.tip,
+        passed: true
       });
-    }, 2100);
-  }
 
-  // 1-Time Mystery Roulette Chance Button
-  function spinMysteryRoulette() {
-    if (state.lockBoard || state.rouletteUsed || state.matchedCount === 6) return;
-    state.rouletteUsed = true;
-    const rBtn = document.getElementById('btn-roulette');
-    if (rBtn) {
-      rBtn.disabled = true;
-      rBtn.textContent = '🎰 찬스 사용 완료';
-    }
-
-    ensureTimerStarted();
-    const outcomes = ['auto_match', 'super_radar', 'double_buff'];
-    const pick = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-    if (pick === 'auto_match') {
-      // Automatically match 1 unmatched pair!
-      const unmatched = state.cards
-        .map((c, idx) => ({ c, idx }))
-        .filter((item) => !item.c.matched && !item.c.flipped);
-
-      if (unmatched.length >= 2) {
-        const targetPairId = unmatched[0].c.pairId;
-        const pairItems = unmatched.filter((item) => item.c.pairId === targetPairId);
-        pairItems.forEach((item) => {
-          item.c.flipped = true;
-          item.c.matched = true;
-          const el = document.getElementById(`card-slot-${item.idx}`);
-          if (el) el.classList.add('flipped', 'matched');
-        });
-        state.matchedCount += 1;
-        if (state.isTeamMode) {
-          if (state.currentTeam === 'A') state.pairsA += 1;
-          else state.pairsB += 1;
-        }
-        addPointsToCurrent(150);
+      if (state.combo === 5) {
         KkachiSound.jackpot();
-        setGimmickBanner('🎰 [복불복 찬스 대박!] 까치가 날아와 숨겨진 공식 1쌍을 자동으로 맞춰주었습니다! (+150점)', 'event-star');
-        showFloatingToast('🎰 자동 1쌍 매칭 대박! (+150점)', '#fbbf24');
-        renderStatusBar();
-        if (state.matchedCount === 6) handleGameClear();
+      } else {
+        KkachiSound.correct(state.combo * 2);
+      }
+
+      renderGameOtter();
+      updateHudUI();
+
+      setTimeout(() => {
+        state.pausedForCrash = false;
+        spawnNextGate();
+      }, 480);
+    } else {
+      // WRONG GATE COLLISION!
+      if (platEl) platEl.classList.add('gate-wrong');
+      // Highlight the actual correct gate
+      state.gateOptions.forEach((o, i) => {
+        if (o.isCorrect) {
+          const el = document.getElementById(`gate-plat-${i}`);
+          if (el) el.classList.add('gate-correct');
+        }
+      });
+
+      state.history.push({
+        q: state.currentQ.q,
+        ans: state.currentQ.ans,
+        tip: state.currentQ.tip,
+        passed: false
+      });
+
+      if (state.hasShield) {
+        // Shield absorbs the crash!
+        state.hasShield = false;
+        KkachiSound.radar();
+        renderGameOtter();
+        updateHudUI();
+        setTimeout(() => {
+          state.pausedForCrash = false;
+          spawnNextGate();
+        }, 700);
         return;
       }
-    }
 
-    if (pick === 'super_radar') {
-      KkachiSound.radar();
-      setGimmickBanner('🎰 [복불복 찬스!] ⚡ 슈퍼 레이더 가동! 숨겨진 공식 2쌍(4장)을 2.5초간 투시합니다!', 'event-radar');
-      showFloatingToast('🎰 슈퍼 레이더! 4장 투시!', '#22d3ee');
-      const unmatched = state.cards
-        .map((c, idx) => ({ c, idx }))
-        .filter((item) => !item.c.matched && !item.c.flipped)
-        .slice(0, 4);
+      state.combo = 0;
+      state.hearts -= 1;
+      state.otterMood = 'hurt';
+      KkachiSound.bomb();
+      if (actor) {
+        actor.classList.add('hurt');
+        setTimeout(() => actor.classList.remove('hurt'), 500);
+      }
+      renderGameOtter();
+      updateHudUI();
 
-      unmatched.forEach((item) => {
-        const el = document.getElementById(`card-slot-${item.idx}`);
-        if (el) el.classList.add('flipped', 'radar-peek');
-      });
+      // Show 1-line explanation overlay for 1.8s
+      const overlay = document.getElementById('crash-tip-overlay');
+      document.getElementById('crash-correct-text').innerHTML =
+        `✔ 정답 발판: ${KkachiMathData.renderMathText(state.currentQ.ans)}`;
+      document.getElementById('crash-tip-text').innerHTML =
+        `💡 ${KkachiMathData.renderMathText(state.currentQ.tip)}`;
+      overlay.classList.add('active');
+
       setTimeout(() => {
-        unmatched.forEach((item) => {
-          if (!item.c.matched && !item.c.flipped) {
-            const el = document.getElementById(`card-slot-${item.idx}`);
-            if (el) el.classList.remove('flipped', 'radar-peek');
-          }
-        });
-      }, 2500);
-      return;
+        overlay.classList.remove('active');
+        if (state.hearts <= 0) {
+          finishRun(false);
+        } else {
+          state.pausedForCrash = false;
+          spawnNextGate();
+        }
+      }, 1900);
     }
-
-    // double_buff
-    state.nextMatchDoubleBuff = true;
-    KkachiSound.fever(2);
-    setGimmickBanner('🎰 [복불복 찬스!] 🔥 다음번 짝을 맞출 때 획득 점수가 무조건 2배가 됩니다! (⭐더블 스타와 중복 시 4배!)', 'event-steal');
-    showFloatingToast('🔥 다음 성공 점수 2배 버프!', '#ec4899');
   }
 
-  function peekAllCards() {
-    if (state.lockBoard || state.matchedCount === 6) return;
-    state.lockBoard = true;
-    KkachiSound.fever(1);
+  function finishRun(cleared) {
+    stopRunLoop();
+    KkachiSound.victory();
 
-    const btn = document.getElementById('btn-peek');
-    if (btn) btn.textContent = '👀 3초 동안 위치 기억하세요!';
+    const modal = document.getElementById('modal-result');
+    document.getElementById('result-otter-box').innerHTML = buildOtterSVG(
+      state.skin,
+      cleared ? 'happy' : 'run',
+      cleared,
+      false
+    );
 
-    state.cards.forEach((c, idx) => {
-      if (!c.matched) {
-        const el = document.getElementById(`card-slot-${idx}`);
-        if (el) el.classList.add('flipped');
+    const passedCount = state.history.filter((h) => h.passed).length;
+    document.getElementById('result-title').textContent = cleared
+      ? `🎉 10개 수학 관문 완주 성공!`
+      : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 질주)`;
+
+    document.getElementById('result-desc').innerHTML =
+      `최종 점수 <strong style="color:#fbbf24;">${state.score.toLocaleString()}점</strong> · 달린 거리 <strong style="color:#38bdf8;">${Math.floor(state.distance)}m</strong> · 관문 돌파 <strong style="color:#34d399;">${passedCount}/${state.history.length}</strong> · 최고 <strong>${state.maxCombo}콤보</strong>`;
+
+    const reviewEl = document.getElementById('result-review-box');
+    reviewEl.innerHTML =
+      `<div style="font-weight:900;color:#38bdf8;margin-bottom:6px;">📘 이번 질주에서 만난 고1 수학 관문 복습</div>` +
+      state.history
+        .map((h, i) => `
+          <div style="border-bottom:1px solid rgba(255,255,255,0.08);padding:6px 0;">
+            <div style="font-weight:800;">
+              ${h.passed ? '🟢' : '🔴'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
+              <span style="color:#34d399;margin-left:6px;">→ ${KkachiMathData.renderMathText(h.ans)}</span>
+            </div>
+            ${!h.passed ? `<div style="font-size:0.8rem;color:#93c5fd;margin-top:2px;">💡 ${KkachiMathData.renderMathText(h.tip)}</div>` : ''}
+          </div>
+        `)
+        .join('');
+
+    modal.classList.add('active');
+  }
+
+  function closeResultAndRestart() {
+    document.getElementById('modal-result').classList.remove('active');
+    startGame();
+  }
+
+  function closeResultAndIntro() {
+    document.getElementById('modal-result').classList.remove('active');
+    showIntro();
+  }
+
+  function initKeyboardControls() {
+    window.addEventListener('keydown', (e) => {
+      if (state.screen !== 'game' || !state.running || state.pausedForCrash) return;
+      if (e.key === '1' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        jumpAndDash(0);
+      } else if (e.key === '2' || e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        jumpAndDash(1);
+      } else if (e.key === '3' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        jumpAndDash(2);
+      } else if (e.key === 'w' || e.key === 'W') {
+        e.preventDefault();
+        changeLaneOnly(-1);
+      } else if (e.key === 's' || e.key === 'S') {
+        e.preventDefault();
+        changeLaneOnly(1);
       }
     });
-
-    setTimeout(() => {
-      state.cards.forEach((c, idx) => {
-        if (!c.matched && !c.flipped) {
-          const el = document.getElementById(`card-slot-${idx}`);
-          if (el) el.classList.remove('flipped');
-        }
-      });
-      if (btn) btn.textContent = '👀 3초 전체 힌트';
-      state.lockBoard = false;
-    }, 2800);
-  }
-
-  function toggleTeamMode() {
-    KkachiSound.click();
-    state.isTeamMode = !state.isTeamMode;
-    syncModeButtons();
-    startNewGame();
-  }
-
-  function handleGameClear() {
-    if (state.timerInterval) {
-      clearInterval(state.timerInterval);
-      state.timerInterval = null;
-    }
-
-    if (!state.isTeamMode) {
-      if (state.score > state.bestScore) {
-        state.bestScore = state.score;
-        try {
-          localStorage.setItem(STORAGE_KEY_BEST_SCORE, String(state.bestScore));
-        } catch (e) {
-          // ignore
-        }
-      }
-    }
-
-    setTimeout(() => {
-      KkachiSound.victory();
-      const modal = document.getElementById('modal-clear');
-      const titleEl = document.getElementById('clear-title');
-      const descEl = document.getElementById('clear-desc');
-      const reviewEl = document.getElementById('clear-pairs-review');
-
-      if (!state.isTeamMode) {
-        titleEl.textContent = `🎉 클리어! 최종 ${state.score.toLocaleString()}점!`;
-        descEl.innerHTML = `걸린 시간 <strong>${state.elapsedSec.toFixed(1)}초</strong> · 시도 <strong>${state.moves}회</strong> · 최고 기록 <strong>${state.bestScore.toLocaleString()}점</strong>`;
-      } else {
-        if (state.scoreA > state.scoreB) {
-          titleEl.textContent = '🏆 🔵 A팀 (1분단) 최종 승리!';
-        } else if (state.scoreB > state.scoreA) {
-          titleEl.textContent = '🏆 🔴 B팀 (2분단) 최종 승리!';
-        } else {
-          titleEl.textContent = '🤝 동점 무승부!';
-        }
-        descEl.innerHTML = `🔵 A팀 <strong>${state.scoreA.toLocaleString()}점 (${state.pairsA}쌍)</strong> vs 🔴 B팀 <strong>${state.scoreB.toLocaleString()}점 (${state.pairsB}쌍)</strong>`;
-      }
-
-      reviewEl.innerHTML =
-        `<div style="font-weight:800;color:#38bdf8;margin-bottom:6px;">📘 이번 라운드 고1 핵심 공식 6쌍 복습</div>` +
-        state.selectedPairs
-          .map((p, i) => `
-            <div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,0.07);padding:4px 0;">
-              <span>${i + 1}. ${KkachiMathData.renderMathText(p.q)}</span>
-              <span style="color:#34d399;font-weight:800;">= ${KkachiMathData.renderMathText(p.a)}</span>
-            </div>
-          `)
-          .join('');
-
-      modal.classList.add('active');
-      renderStatusBar();
-    }, 450);
-  }
-
-  function closeClearAndRestart() {
-    KkachiSound.click();
-    document.getElementById('modal-clear').classList.remove('active');
-    startNewGame();
-  }
-
-  function closeClearAndGoIntro() {
-    document.getElementById('modal-clear').classList.remove('active');
-    showIntroScreen();
-  }
-
-  // Custom 6-Pair Modal
-  function openCustomModal() {
-    KkachiSound.click();
-    const rowsEl = document.getElementById('custom-pairs-rows');
-    const basePairs = state.selectedPairs.length === 6
-      ? state.selectedPairs
-      : KkachiMathData.CHAPTERS[0].pairs.slice(0, 6);
-
-    rowsEl.innerHTML = basePairs
-      .map((p, i) => `
-        <div class="pair-edit-row">
-          <span style="font-weight:900;color:#38bdf8;">#${i + 1}</span>
-          <input type="text" class="pair-input" id="cp-q-${i}" value="${escapeAttr(p.q)}" placeholder="개념 또는 질문" />
-          <input type="text" class="pair-input" id="cp-a-${i}" value="${escapeAttr(p.a)}" placeholder="정답 또는 공식" />
-        </div>
-      `)
-      .join('');
-
-    document.getElementById('modal-custom').classList.add('active');
-  }
-
-  function closeCustomModal() {
-    document.getElementById('modal-custom').classList.remove('active');
-  }
-
-  function applyCustomPairs() {
-    const custom = [];
-    for (let i = 0; i < 6; i++) {
-      const q = (document.getElementById(`cp-q-${i}`).value || '').trim();
-      const a = (document.getElementById(`cp-a-${i}`).value || '').trim();
-      if (!q || !a) {
-        alert(`${i + 1}번째 줄의 질문과 정답을 모두 입력해주세요.`);
-        return;
-      }
-      custom.push({ id: `cust_${i}`, q, a });
-    }
-    state.customPairs = custom;
-    try {
-      localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(custom));
-    } catch (e) {
-      // ignore
-    }
-    state.chapterId = 'custom';
-    closeCustomModal();
-    renderChapterTabs();
-    enterGameScreen();
   }
 
   // Web App (PWA Install & QR) Modal
@@ -2497,12 +2592,10 @@ html, body {
     KkachiSound.click();
     const targetUrl = state.shareUrl || location.href;
     document.getElementById('webapp-url-label').textContent = targetUrl;
-
     const qrBox = document.getElementById('webapp-qr-box');
     if (qrBox && window.KkachiQR) {
       qrBox.innerHTML = KkachiQR.toSVG(targetUrl, 180);
     }
-
     document.getElementById('modal-webapp').classList.add('active');
   }
 
@@ -2538,27 +2631,17 @@ html, body {
     if (btn) btn.textContent = muted ? '🔇' : '🔊';
   }
 
-  function escapeAttr(str) {
-    return String(str || '').replace(/"/g, '&quot;');
-  }
-
-  global.MatchGame = {
+  global.OtterRun = {
     init,
-    showIntroScreen,
-    enterGameScreen,
-    setIntroMode,
-    toggleGimmicksEnabled,
+    selectSkin,
+    setSpeed,
     selectChapter,
-    startNewGame,
-    onCardClick,
-    spinMysteryRoulette,
-    peekAllCards,
-    toggleTeamMode,
-    closeClearAndRestart,
-    closeClearAndGoIntro,
-    openCustomModal,
-    closeCustomModal,
-    applyCustomPairs,
+    showIntro,
+    startGame,
+    jumpAndDash,
+    activateFreeShield,
+    closeResultAndRestart,
+    closeResultAndIntro,
     openWebAppModal,
     closeWebAppModal,
     installPWA,
