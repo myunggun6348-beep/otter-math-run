@@ -46,7 +46,7 @@
     camY: 146,
     camRoll: 0,
     fov: 410,
-    horizonY: 86,
+    horizonY: 96,
 
     // 3D World objects & FX
     trackZ: 0,
