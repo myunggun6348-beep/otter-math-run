@@ -1085,3 +1085,34 @@ html, body {
   max-height: 90vh;
   overflow-y: auto;
 }
+
+/* Readable answer controls stay in the HUD while the destination gates use perspective. */
+.run-status { margin: 10px 0 8px; font-size: 0.9rem; color: #075985; text-align: center; font-weight: 800; }
+.answer-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.answer-choice { min-height: 68px; padding: 8px; border: 2px solid #cbd5e1; border-bottom-width: 5px; border-radius: 14px; background: #fff; color: #0f172a; cursor: pointer; display: grid; gap: 4px; align-content: center; transition: background .15s, border-color .15s; }
+.answer-choice.lane-0 { border-color: #9333ea; }
+.answer-choice.lane-1 { border-color: #e11d48; }
+.answer-choice.lane-2 { border-color: #059669; }
+.answer-lane { font-size: 0.875rem; font-weight: 800; }
+.answer-formula { font-size: 1.05rem; overflow-x: auto; padding: 2px; }
+.answer-choice.is-aimed { background: #fffbeb; border-color: #d97706; }
+.answer-choice:focus-visible { outline: 3px solid #0284c7; outline-offset: 3px; }
+.answer-choice:disabled { cursor: default; }
+.canvas-stage-wrap { height: auto; aspect-ratio: 24 / 11; }
+.monster-body-shield { min-width: 0; max-width: none; min-height: 28px; padding: 4px 2px; border-width: 2px; border-bottom-width: 4px; border-radius: 8px; }
+.monster-body-shield .sign-formula { font-size: clamp(0.65rem, 1.25vw, 1rem); max-width: 100%; overflow: hidden; }
+.gate-arch-badge { font-size: 0.625rem; padding: 1px 4px; max-width: 100%; overflow: hidden; }
+@media (max-width: 680px) {
+  .canvas-stage-wrap { aspect-ratio: 4 / 3; }
+  .steer-btn { display: block; padding: 10px 6px; }
+  .steer-btn .keycap { display: none; }
+  .top-question-box { flex-wrap: wrap; gap: 6px; }
+  .top-question-box .q-main-text { order: 3; flex-basis: 100%; }
+  .top-question-box .q-timer-chip { margin-left: auto; }
+  .answer-choices { gap: 6px; }
+  .answer-choice { padding: 6px 3px; min-height: 72px; }
+  .answer-formula { font-size: 0.9rem; }
+  .run-status { font-size: 0.875rem; line-height: 1.5; }
+  .monster-body-shield .sign-formula { font-size: 0.6rem; }
+  .gate-arch-badge { display: none; }
+}

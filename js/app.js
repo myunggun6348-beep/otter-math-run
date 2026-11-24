@@ -42,11 +42,15 @@
     otterMood: 'run',
 
     // 3D Camera state — Full-height runway from top horizon (y≈64px) to bottom edge (y=440px)
+    cameraZ: 0,
+    dashSpeed: 0,
+    waveElapsed: 0,
+    crashTimeout: null,
     camX: 0,
-    camY: 515,
+    camY: 480,
     camRoll: 0,
-    fov: 380,
-    horizonY: -42,
+    fov: 560,
+    horizonY: -50,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -108,8 +112,8 @@
   function project3D(wx, wy, wz, W, H, camX, camY, fov, horizonY) {
     const safeZ = Math.max(10, wz);
     const scale = fov / (fov + safeZ);
-    // Wide-lane 3D perspective factor so the 3 Monster Characters & their Body Formula Shields never overlap!
-    const xScale = W >= 700 ? (0.68 + 0.28 * scale) : scale;
+    // Horizontal and vertical coordinates share the same perspective scale.
+    const xScale = scale;
     const sx = W * 0.5 + (wx - camX) * xScale;
     const sy = horizonY + (camY - wy) * scale;
     return { x: sx, y: sy, scale };
@@ -748,7 +752,10 @@
     state.otterJumpCount = 0;
 
     state.camX = 0;
+    state.cameraZ = 0;
+    state.otterZ3D = 55;
     state.trackZ = 0;
+    state.hitStopTimer = 0;
     state.voxels3D = [];
     state.projectiles3D = [];
     state.flyingMonsters3D = [];
@@ -783,6 +790,8 @@
   }
 
   function stopRunLoop() {
+    clearTimeout(state.crashTimeout);
+    state.crashTimeout = null;
     state.running = false;
     if (state.rafId) {
       cancelAnimationFrame(state.rafId);
@@ -846,7 +855,8 @@
     state.isQuickKillDash = false;
     state.slowMoTimer = 0;
     state.otterSpin = 0;
-    state.monsterZ = 820; // Spawns near the top of the full-height 3-lane runway (y≈121px)!
+    state.monsterZ = state.otterZ3D + 850; // Fixed world-space destination: the otter runs to it.
+    state.waveElapsed = 0;
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
     state.waveStartTime = performance.now();
@@ -869,7 +879,8 @@
     const gateBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
     state.gateOptions.forEach((opt, idx) => {
       const signEl = document.getElementById(`mon-sign-${idx}`);
-      const renderedFormula = KkachiMathData.renderMathText(opt.text);
+      // Full formulas live in the readable HUD; matching numbers mark destinations.
+      const renderedFormula = ['①', '②', '③'][idx];
 
       // Render a sleek 1-line Pass-Through Arch Gate Banner with a top lane crest!
       if (signEl) {
@@ -883,13 +894,28 @@
       }
     });
 
+    document.getElementById('answer-choices').innerHTML = state.gateOptions.map((opt, idx) =>
+      '<button type="button" class="answer-choice lane-' + idx + '" onclick="OtterRun.selectAndFireLane(' + idx + ')">' +
+      '<span class="answer-lane">' + ['① 왼쪽', '② 가운데', '③ 오른쪽'][idx] + '</span>' +
+      '<span class="answer-formula">' + KkachiMathData.renderMathText(opt.text) + '</span></button>'
+    ).join('');
     updateAimedMonsterUI();
+    syncAnswerChoices();
+  }
+
+  function syncAnswerChoices() {
+    document.querySelectorAll('.answer-choice').forEach((button, idx) => {
+      button.disabled = !state.running || state.isDashing || state.pausedForCrash || state.gateClearRunTimer > 0;
+      button.classList.toggle('is-aimed', idx === state.targetLane);
+      button.setAttribute('aria-pressed', String(idx === state.targetLane));
+    });
   }
 
   function updateAimedMonsterUI() {
     const laneNames = ['왼쪽', '가운데', '오른쪽'];
     const defaultBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
     const aimedBadges = ['🎯 ① 왼쪽 관문 (내 수달 줄)', '🎯 ② 가운데 관문 (내 수달 줄)', '🎯 ③ 오른쪽 관문 (내 수달 줄)'];
+    syncAnswerChoices();
     const lbl = document.getElementById('current-lane-label');
     if (lbl) lbl.textContent = laneNames[state.targetLane] || '가운데';
 
@@ -926,6 +952,7 @@
 
   // Direct click on a Monster Character or 1/2/3 key: Move to that lane & Dash through!
   function selectAndFireLane(laneIdx) {
+    if (!Number.isInteger(laneIdx) || laneIdx < 0 || laneIdx > 2) return;
     if (!state.running || state.pausedForCrash || state.isDashing || state.gateClearRunTimer > 0) return;
     state.targetLane = laneIdx;
     updateAimedMonsterUI();
@@ -940,8 +967,10 @@
     state.selectedLane = laneIdx;
     state.targetLane = laneIdx;
     state.isDashing = true;
-    state.otterVy3D = 10.5;
-    state.otterX3D = state.otterX3D * 0.25 + LANE_X[laneIdx] * 0.75;
+    state.otterVy3D = 3.5;
+    // Keep the full lane change visible; do not teleport to the chosen answer.
+    state.dashSpeed = Math.max(120, state.monsterZ - state.otterZ3D) / 1.1;
+    syncAnswerChoices();
 
     [0, 1, 2].forEach((i) => {
       const signEl = document.getElementById(`mon-sign-${i}`);
@@ -1080,73 +1109,53 @@
   }
 
   function update3DPhysics(now, dtSec) {
-    const dashMult = (state.isDashing || state.gateClearRunTimer > 0) ? 5.5 : 1;
-    const speedZ = 380 * dashMult;
-
-    state.trackZ += speedZ * dtSec;
-    state.distance += 15 * dashMult * dtSec;
-    state.otterPhase += dtSec * ((state.isDashing || state.gateClearRunTimer > 0) ? 25 : 14);
-
-    // 1. 3D Lane Movement (wx) — Smooth & Responsive Left/Right Otter Steering
     const targetX = LANE_X[state.targetLane];
     const dx = targetX - state.otterX3D;
-    state.otterX3D += dx * 0.28;
+    state.otterX3D += dx * (1 - Math.exp(-12 * dtSec));
     state.otterRoll = Math.max(-0.28, Math.min(0.28, dx * 0.0018));
 
-    // Keep camera stable & centered so the 3 lanes and formulas never shift sideways!
-    state.camX = 0;
-    state.fov = 380;
+    const speed = state.isDashing ? state.dashSpeed : state.gateClearRunTimer > 0 ? 260 : 850 / (state.gateDurationMs / 1000);
+    state.otterZ3D += speed * dtSec;
+    state.trackZ = state.otterZ3D;
+    state.distance += speed * dtSec / 10;
+    state.otterPhase += dtSec * (state.isDashing ? 25 : 14);
+    // A gently trailing camera lets the otter visibly run forward during a dash.
+    const follow = 1 - Math.exp(-6 * dtSec);
+    state.cameraZ += (state.otterZ3D - 55 - state.cameraZ) * follow;
+    state.camX += (state.otterX3D * 0.22 - state.camX) * follow;
+    state.fov = 560;
 
-    // 2. 3D Jump Gravity (wy)
-    state.otterY3D += state.otterVy3D;
-    state.otterVy3D -= 0.72;
+    state.otterY3D += state.otterVy3D * dtSec * 60;
+    state.otterVy3D -= 43.2 * dtSec;
     if (state.otterY3D <= 0) {
       state.otterY3D = 0;
       state.otterVy3D = 0;
       state.otterJumpCount = 0;
     }
+    if (state.otterSpin > 0) state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
 
-    if (state.otterSpin > 0) {
-      state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
-    }
-
-    // 2.5 Post-Victory Sprint Across the Cleared Track!
+    const timeLbl = document.getElementById('q-time-label');
     if (state.gateClearRunTimer > 0) {
       state.gateClearRunTimer = Math.max(0, state.gateClearRunTimer - dtSec);
-      const timeLbl = document.getElementById('q-time-label');
-      if (timeLbl) timeLbl.textContent = '⭕ 정답 통과!';
-      updateHudUI();
-      if (state.gateClearRunTimer <= 0) {
-        spawnNextGate();
-      }
+      if (timeLbl) timeLbl.textContent = '⭕ 정답 도착!';
+      if (state.gateClearRunTimer <= 0) spawnNextGate();
       return;
     }
 
-    // 3. Move the 3 Pass-Through Arch Gates steadily down the 3 lanes (from Z=820 to Z=240 right in front of the Otter's nose!)
-    const START_MONSTER_Z = 820;
-    const PASS_MONSTER_Z = 240;
-    const baseMonSpeedZ = (START_MONSTER_Z - PASS_MONSTER_Z) / (state.gateDurationMs / 1000);
-    const monSpeedZ = state.isDashing ? baseMonSpeedZ * 9.5 : baseMonSpeedZ;
-    state.monsterZ -= monSpeedZ * dtSec;
+    state.waveElapsed += dtSec;
+    const remaining = Math.max(0, state.gateDurationMs / 1000 - state.waveElapsed);
+    if (timeLbl) timeLbl.textContent = state.isDashing ? '🦦 답을 향해 달리는 중!' : remaining.toFixed(1) + '초';
+    const progress = document.getElementById('q-progress-fill');
+    if (progress) progress.style.width = Math.max(0, 100 * (state.monsterZ - state.otterZ3D) / 850) + '%';
+    const status = document.getElementById('run-status');
+    if (status) status.textContent = state.isDashing ? '선택한 관문으로 달려가고 있어요!' : '답을 누르면 같은 번호의 관문으로 달려갑니다 · 방향키로 길 바꾸기';
 
-    const remSec = Math.max(0, (state.monsterZ - PASS_MONSTER_Z) / Math.max(1, baseMonSpeedZ));
-    const timeLbl = document.getElementById('q-time-label');
-    if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '⚡ 돌진중!' : `${remSec.toFixed(1)}초`;
-    }
-
-    const progFill = document.getElementById('q-progress-fill');
-    if (progFill) {
-      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - PASS_MONSTER_Z) / (START_MONSTER_Z - PASS_MONSTER_Z)) * 100));
-      progFill.style.width = `${remPct}%`;
-    }
-
-    // 4. Trigger Gate Pass / Collision the instant the Arch Gate threshold reaches right in front of the Otter's nose (Z=240, y≈274px) — never covering the Otter's head (y≈339px)!
-    if (state.monsterZ <= PASS_MONSTER_Z) {
+    // Resolve only after the visible otter reaches the gate, never at click time.
+    if (state.otterZ3D >= state.monsterZ && Math.abs(targetX - state.otterX3D) < 12) {
       state.selectedLane = state.targetLane;
       resolve3DMonsterCollision(false);
+      syncAnswerChoices();
     }
-
     updateHudUI();
   }
 
@@ -1157,7 +1166,7 @@
       m.z += m.vz;
       m.vy -= 0.65;
       m.rot += m.vRot;
-      return m.y > -100 && m.z < 2200;
+      return m.y > -100 && m.z < state.cameraZ + 2200;
     });
 
     state.shockwaves3D = state.shockwaves3D.filter((sw) => {
@@ -1196,29 +1205,36 @@
     const canvas = document.getElementById('runner-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const displayHeight = Math.round(960 * canvas.clientHeight / Math.max(1, canvas.clientWidth));
+    if (canvas.height !== displayHeight) canvas.height = displayHeight;
     const W = canvas.width;
     const H = canvas.height;
     const camX = state.camX;
     const camY = state.camY;
     const fov = state.fov;
     const horY = state.horizonY;
+    const project = (x, y, z, ...camera) => {
+      const p = project3D(x, y, z - state.cameraZ, ...camera);
+      p.y *= H / 440;
+      return p;
+    };
 
     // 1. Calm, Clean Sky & Soft Emerald Sea Background
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
     skyGrad.addColorStop(0, '#38bdf8');
-    skyGrad.addColorStop(0.14, '#bae6fd');
-    skyGrad.addColorStop(0.15, '#2dd4bf');
+    skyGrad.addColorStop(0.22, '#e0f2fe');
+    skyGrad.addColorStop(0.23, '#2dd4bf');
     skyGrad.addColorStop(1, '#0d9488');
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
     // 2. Full-Height 3-Lane Runway (Stretches from y≈64px near the top all the way down to y=440px at the bottom edge!)
-    const TOP_Z = 1450;
-    const BOT_Z = 15;
-    const pTopL = project3D(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const pTopR = project3D(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const pBotL = project3D(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
-    const pBotR = project3D(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const TOP_Z = state.cameraZ + 2200;
+    const BOT_Z = state.cameraZ + 15;
+    const pTopL = project(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pTopR = project(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pBotL = project(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const pBotR = project(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = '#fffbeb';
     ctx.beginPath();
@@ -1239,6 +1255,19 @@
     ctx.lineTo(pBotR.x, pBotR.y);
     ctx.stroke();
 
+    for (let z = state.cameraZ + 1600; z > state.cameraZ + 40; z -= 150) {
+      const railZ = z - (state.trackZ % 150);
+      if (railZ <= state.cameraZ + 15) continue;
+      [-485, 485].forEach((x) => {
+        const foot = project(x, 0, railZ, W, H, camX, camY, fov, horY);
+        const top = project(x, 55, railZ, W, H, camX, camY, fov, horY);
+        ctx.strokeStyle = '#0e7490';
+        ctx.lineWidth = Math.max(2, 9 * foot.scale);
+        ctx.beginPath(); ctx.moveTo(foot.x, foot.y + 20 * foot.scale); ctx.lineTo(top.x, top.y); ctx.stroke();
+        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(top.x, top.y, 5 * foot.scale, 0, Math.PI * 2); ctx.fill();
+      });
+    }
+
     // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Full-Height Track Floor!
     const laneEdges = [
       [-485, -162],
@@ -1246,10 +1275,10 @@
       [162, 485]
     ];
     const [curL, curR] = laneEdges[state.targetLane] || laneEdges[1];
-    const hlTopL = project3D(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const hlTopR = project3D(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const hlBotL = project3D(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
-    const hlBotR = project3D(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlTopL = project(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlTopR = project(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlBotL = project(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlBotR = project(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = 'rgba(253, 224, 71, 0.38)';
     ctx.beginPath();
@@ -1266,10 +1295,10 @@
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.14)';
     ctx.lineWidth = 2;
     for (let z = 1350; z >= 25; z -= segLen) {
-      const zCur = z - zOffset;
-      if (zCur < 15) continue;
-      const pL = project3D(-480, 0, zCur, W, H, camX, camY, fov, horY);
-      const pR = project3D(480, 0, zCur, W, H, camX, camY, fov, horY);
+      const zCur = state.cameraZ + z - zOffset;
+      if (zCur < state.cameraZ + 15) continue;
+      const pL = project(-480, 0, zCur, W, H, camX, camY, fov, horY);
+      const pR = project(480, 0, zCur, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(pL.x, pL.y);
       ctx.lineTo(pR.x, pR.y);
@@ -1280,8 +1309,8 @@
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
     ctx.lineWidth = 3;
     [-162, 162].forEach((divX) => {
-      const dTop = project3D(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
-      const dBot = project3D(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
+      const dTop = project(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
+      const dBot = project(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(dTop.x, dTop.y);
       ctx.lineTo(dBot.x, dBot.y);
@@ -1290,11 +1319,12 @@
 
     // Forward Guide Chevrons on the Otter's Active Lane pointing from the Otter toward the approaching Arch Gate!
     const activeX = LANE_X[state.targetLane] || 0;
-    [130, 195].forEach((cz) => {
+    [160, 300, 460, 620].forEach((offset) => {
+      const cz = state.otterZ3D + offset;
       if (cz >= state.monsterZ - 20) return;
-      const pTip = project3D(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
-      const pBL = project3D(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
-      const pBR = project3D(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
+      const pTip = project(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
+      const pBL = project(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
+      const pBR = project(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.strokeStyle = 'rgba(217, 119, 6, 0.55)';
       ctx.lineWidth = 4;
@@ -1317,19 +1347,23 @@
 
     [0, 1, 2].forEach((ln) => {
       const signEl = document.getElementById(`mon-sign-${ln}`);
-      if (!state.monstersAlive[ln]) return;
+      if (!state.monstersAlive[ln] || state.monsterZ < state.cameraZ + 10) {
+        if (signEl) signEl.style.visibility = 'hidden';
+        return;
+      }
+      if (signEl) signEl.style.visibility = 'visible';
 
       const wx = LANE_X[ln];
-      const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const pPilL = project3D(wx - 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const pPilR = project3D(wx + 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
+      const pMon = project(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
+      const pPilL = project(wx - 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
+      const pPilR = project(wx + 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
 
       const isAimed = ln === state.targetLane;
       const col = isAimed
         ? { main: '#f59e0b', dark: '#b45309', glow: 'rgba(245, 158, 11, 0.55)' }
         : gateColors[ln];
 
-      const gateBannerY = pMon.y - 38;
+      const gateBannerY = project(wx, 170, state.monsterZ, W, H, camX, camY, fov, horY).y;
 
       // 4.1 Draw Glowing Pass-Through Threshold Line on the Track Floor between the Left & Right Arch Pillars!
       ctx.save();
@@ -1370,14 +1404,15 @@
       ctx.restore();
 
       // 4.3 Draw the Cute 3D Monster Guardian Perched ON TOP of the Arch Gate Banner (100% visible above the formula!)
-      const mScale = Math.max(0.72, Math.min(0.92, 0.54 + pMon.scale * 0.56));
+      const mScale = pMon.scale * 0.9;
       draw3DMonster(ctx, pMon.x, gateBannerY - 12, mScale, ln, state.otterPhase * 0.5, false, 0);
 
       // 4.4 Lock the Slim 1-Line Formula Gate Banner onto the Arch Crossbar (gateBannerY)
       if (signEl) {
         const leftPct = (pMon.x / W) * 100;
         const topPct = (gateBannerY / H) * 100;
-        const shieldScale = Math.max(0.92, Math.min(1.04, 0.78 + pMon.scale * 0.36));
+        const shieldScale = 1;
+        signEl.style.width = ((pPilR.x - pPilL.x) / W * 100).toFixed(2) + '%';
         signEl.style.left = `${leftPct.toFixed(2)}%`;
         signEl.style.top = `${topPct.toFixed(2)}%`;
         signEl.style.transform = `translate(-50%, -50%) scale(${shieldScale.toFixed(2)})`;
@@ -1386,13 +1421,13 @@
 
     // 5. Draw Ragdoll 3D Monsters blasted into the sky!
     for (const fm of state.flyingMonsters3D) {
-      const p = project3D(fm.x, fm.y, fm.z, W, H, camX, camY, fov, horY);
+      const p = project(fm.x, fm.y, fm.z, W, H, camX, camY, fov, horY);
       draw3DMonster(ctx, p.x, p.y, p.scale * 1.4, fm.laneType, 0, true, fm.rot);
     }
 
     // 6. Draw 3D Shockwave Rings & Projectiles (with Glowing Water Cannon Beam from Otter to Target Monster!)
     for (const sw of state.shockwaves3D) {
-      const p = project3D(sw.x, sw.y, sw.z, W, H, camX, camY, fov, horY);
+      const p = project(sw.x, sw.y, sw.z, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = sw.life;
       ctx.strokeStyle = sw.color;
@@ -1403,9 +1438,9 @@
       ctx.restore();
     }
 
-    const pOtterPreview = project3D(state.otterX3D, state.otterY3D + 22, state.otterZ3D, W, H, camX, camY, fov, horY);
+    const pOtterPreview = project(state.otterX3D, state.otterY3D + 22, state.otterZ3D, W, H, camX, camY, fov, horY);
     for (const pr of state.projectiles3D) {
-      const p = project3D(pr.x, pr.y, pr.z, W, H, camX, camY, fov, horY);
+      const p = project(pr.x, pr.y, pr.z, W, H, camX, camY, fov, horY);
       const r = Math.max(6, 26 * p.scale);
       ctx.save();
       // Glowing Water Laser Stream connecting Otter directly to the flying projectile!
@@ -1433,9 +1468,9 @@
 
     // 7. Draw 3D Hyper Water Breath Ultimate Tunnel Beam!
     if (state.ultBeamLife > 0) {
-      const pNear = project3D(state.otterX3D, 30, state.otterZ3D + 20, W, H, camX, camY, fov, horY);
-      const pFarL = project3D(-280, 40, 1200, W, H, camX, camY, fov, horY);
-      const pFarR = project3D(280, 40, 1200, W, H, camX, camY, fov, horY);
+      const pNear = project(state.otterX3D, 30, state.otterZ3D + 20, W, H, camX, camY, fov, horY);
+      const pFarL = project(-280, 40, 1200, W, H, camX, camY, fov, horY);
+      const pFarR = project(280, 40, 1200, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = state.ultBeamLife;
       const bGrad = ctx.createLinearGradient(0, pFarL.y, 0, pNear.y);
@@ -1455,7 +1490,7 @@
 
     // 8. Draw 3D Explosion Voxel Cubes
     for (const v of state.voxels3D) {
-      const p = project3D(v.x, v.y, v.z, W, H, camX, camY, fov, horY);
+      const p = project(v.x, v.y, v.z, W, H, camX, camY, fov, horY);
       const sz = Math.max(2, v.size * p.scale * 1.5);
       ctx.save();
       ctx.globalAlpha = Math.max(0, v.life);
@@ -1466,7 +1501,7 @@
 
     // 8.5 Draw 3D Otter Booster Afterimage Trail Rings
     for (const tr of state.otterTrails3D) {
-      const p = project3D(tr.x, tr.y, tr.z, W, H, camX, camY, fov, horY);
+      const p = project(tr.x, tr.y, tr.z, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = tr.life * 0.55;
       ctx.strokeStyle = tr.color;
@@ -1478,7 +1513,7 @@
     }
 
     // 9. Draw the 3D Volumetric Cute Otter at the very bottom foreground (Z = 55, y ≈ 408px)!
-    const pOtter = project3D(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
+    const pOtter = project(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
     draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.15, state.otterPhase, {
       skin: state.skin,
       roll: state.otterRoll,
@@ -1592,7 +1627,7 @@
     } else {
       // 2. WRONG CHARACTER COLLISION!
       state.pausedForCrash = true;
-      state.monsterZ = Math.max(255, Math.min(380, state.monsterZ));
+      // Keep the gate at its actual world-space collision position.
 
       [0, 1, 2].forEach((i) => {
         const signEl = document.getElementById(`mon-sign-${i}`);
@@ -1648,7 +1683,8 @@
         `💡 ${KkachiMathData.renderMathText(state.currentQ.tip)}`;
       overlay.classList.add('active');
 
-      setTimeout(() => {
+      state.crashTimeout = setTimeout(() => {
+        if (!state.running) return;
         overlay.classList.remove('active');
         if (state.hearts <= 0) {
           finishRun(false);
@@ -1738,8 +1774,7 @@
         fireCurrentLane();
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        if (state.ultGauge >= 100) fireUltimateSkill();
-        else fireCurrentLane();
+        fireCurrentLane();
       } else if (e.key === '1') {
         e.preventDefault();
         selectAndFireLane(0);
