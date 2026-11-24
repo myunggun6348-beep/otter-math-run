@@ -1,6 +1,6 @@
 /**
  * 수달런 3D (OTTER MATH RUN 3D) - 3인칭 원근 투영(Perspective 3D) & 3D 볼륨 셰이딩 런게임 엔진
- * 서브웨이 서퍼 / 템플런 스타일 좌·중·우 3레인 입체 다리 질주 및 3D 몬스터 격파 액션
+ * 서브웨이 서퍼 / 템플런 스타일 좌·중·우 3레인 입체 다리 질주 및 정답 먹이 찾기
  */
 (function (global) {
   const SPEED_MAP = {
@@ -17,7 +17,7 @@
     skin: 'basic',   // 'basic' | 'scholar' | 'surfer' | 'king'
     chapterId: 'all',
     speedKey: 'normal',
-    gateDurationMs: 15000,
+    questionDurationMs: 15000,
 
     // Intro 3D preview animation
     introRafId: null,
@@ -42,17 +42,20 @@
     otterMood: 'run',
 
     // 3D Camera state — Full-height runway from top horizon (y≈64px) to bottom edge (y=440px)
+    cameraZ: 0,
+    dashSpeed: 0,
+    waveElapsed: 0,
+    crashTimeout: null,
     camX: 0,
-    camY: 515,
+    camY: 480,
     camRoll: 0,
-    fov: 380,
-    horizonY: -42,
+    fov: 560,
+    horizonY: -50,
 
     // 3D World objects & FX
     trackZ: 0,
     voxels3D: [],        // 3D explosion cubes & footstep splash particles
     projectiles3D: [],   // [{ x, y, z, targetX, rot }]
-    flyingMonsters3D: [],// [{ x, y, z, vx, vy, vz, rot, vRot, laneType }]
     shockwaves3D: [],    // [{ x, y, z, r, life, color }]
     floatingTexts: [],   // [{ x, y, text, subText, color, life }]
     ultBeamLife: 0,
@@ -60,6 +63,8 @@
     lastCoinSpawn: 0,
 
     // Game stats
+    foodEaten: 0,
+    foodHitTargets: [],
     hearts: 5,
     maxHearts: 5,
     hasShield: false,
@@ -69,20 +74,20 @@
     score: 0,
     combo: 0,
     maxCombo: 0,
-    gateCount: 0,
-    targetGates: 10,
+    questionCount: 0,
+    targetQuestions: 10,
 
-    // Approaching 3D Monster Wave & Thrill Mechanics
+    // Food destinations and collection state
     questionPool: [],
     currentQ: null,
-    gateOptions: [],
+    foodOptions: [],
     selectedLane: null,
     hasSteeredThisWave: false,
     laneStayTimer: 0,
-    monsterState: ['normal', 'normal', 'normal'],
-    gateClearRunTimer: 0,
-    monstersAlive: [true, true, true],
-    monsterZ: 1180, // Approaches from Z=1180 down to Z=140
+    foodState: ['normal', 'normal', 'normal'],
+    mealTimer: 0,
+    foodAvailable: [true, true, true],
+    foodZ: 1180, // Approaches from Z=1180 down to Z=140
     isBossWave: false,
     isGoldenWave: false,
     waveStartTime: 0,
@@ -108,8 +113,8 @@
   function project3D(wx, wy, wz, W, H, camX, camY, fov, horizonY) {
     const safeZ = Math.max(10, wz);
     const scale = fov / (fov + safeZ);
-    // Wide-lane 3D perspective factor so the 3 Monster Characters & their Body Formula Shields never overlap!
-    const xScale = W >= 700 ? (0.68 + 0.28 * scale) : scale;
+    // Horizontal and vertical coordinates share the same perspective scale.
+    const xScale = scale;
     const sx = W * 0.5 + (wx - camX) * xScale;
     const sy = horizonY + (camY - wy) * scale;
     return { x: sx, y: sy, scale };
@@ -160,7 +165,7 @@
     ctx.fill();
 
     // Apply jump height & banking roll
-    const bounceY = airborne ? 0 : Math.abs(Math.sin(phase)) * -7;
+    const bounceY = airborne ? 0 : Math.abs(Math.sin(phase)) * (opts.eating ? -2 : -7);
     ctx.translate(0, -32 + bounceY);
     ctx.rotate(roll + spin);
 
@@ -199,8 +204,10 @@
     drawShadedSphere(ctx, -26, 2 - armSwing, 8.5, '#8b5428', '#b87a44', '#4a290e');
     drawShadedSphere(ctx, 26, 2 + armSwing, 8.5, '#8b5428', '#b87a44', '#4a290e');
 
-    // Golden Seashell glowing next to right paw
-    drawShadedSphere(ctx, 31, -2 + armSwing, 6.5, '#f59e0b', '#fef08a', '#92400e');
+    // Hold and nibble the collected fish; it shrinks as the meal finishes.
+    if (opts.eating) {
+      draw3DFish(ctx, 35, -10 + Math.sin(phase * 2) * 2, 0.32 * opts.biteScale, phase, state.targetLane);
+    }
 
     // 5. 3D Volumetric Plump Otter Torso
     drawShadedSphere(ctx, 0, 6, 25, '#9a6232', '#c68b59', '#4a290e');
@@ -358,173 +365,39 @@
   // =========================================================================
   // 3D VOLUMETRIC MONSTERS WEARING THE ANSWER FORMULA ON THEIR BODIES!
   // =========================================================================
-  function draw3DMonster(ctx, sx, sy, sc, laneType, phase, isKO = false, rot = 0) {
+  // A shaded fish collectible, shared by the runway and the otter's paws.
+  function draw3DFish(ctx, x, y, scale, phase, lane = 1) {
+    const colors = [
+      ['#60a5fa', '#dbeafe', '#1d4ed8'],
+      ['#fb923c', '#ffedd5', '#c2410c'],
+      ['#2dd4bf', '#ccfbf1', '#0f766e']
+    ][lane];
     ctx.save();
-    ctx.translate(sx, sy);
-    const bossScale = state.isBossWave && !isKO ? 1.18 : 1.0;
-    ctx.scale(sc * bossScale, sc * bossScale);
-
-    // 1. 3D Ground Shadow & Boss/Golden Glowing Floor Aura Ring
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.rotate(Math.sin(phase * 0.6) * 0.045);
+    // Tail and fins sit behind the rounded, glossy body.
+    ctx.fillStyle = colors[2];
     ctx.beginPath();
-    ctx.ellipse(0, 8, 56, 14, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (state.isBossWave && !isKO) {
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.ellipse(0, 8, 66 + Math.sin(phase * 3) * 5, 18, 0, 0, Math.PI * 2);
-      ctx.stroke();
-    } else if (state.isGoldenWave && !isKO) {
-      ctx.strokeStyle = '#fbbf24';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.ellipse(0, 8, 62 + Math.sin(phase * 3) * 4, 17, 0, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    // 2. Monster Walking 3D Feet below its Body Formula Shield!
-    const stepSin = isKO ? 0 : Math.sin(phase * 2.2 + laneType);
-    const footCol = state.isGoldenWave
-      ? ['#d97706', '#fef08a', '#78350f']
-      : laneType === 0
-        ? ['#4c1d95', '#a78bfa', '#1e1b4b']
-        : laneType === 1
-          ? ['#9f1239', '#fda4af', '#4c0519']
-          : ['#065f46', '#6ee7b7', '#022c22'];
-    drawShadedSphere(ctx, -22, -2 + stepSin * 7, 13, footCol[0], footCol[1], footCol[2]);
-    drawShadedSphere(ctx, 22, -2 - stepSin * 7, 13, footCol[0], footCol[1], footCol[2]);
-
-    const bob = 0; // No vertical bouncing so the formula on the character's body is 100% steady and easy to read!
-    // Shift upward so the Monster's Torso (-45) holds the Body Formula Shield and its Head (-94) rises above the Shield!
-    ctx.translate(0, -45 + bob);
-    if (rot !== 0) ctx.rotate(rot);
-
-    // 3. Monster Torso & Wide Wings/Arms holding the Body Formula Shield!
-    if (state.isGoldenWave && !isKO) {
-      drawShadedSphere(ctx, 0, 0, 44, '#f59e0b', '#fef9c3', '#92400e');
-      drawShadedSphere(ctx, 0, -48, 28, '#f59e0b', '#fef9c3', '#92400e');
-      ctx.fillStyle = '#fef08a';
-      ctx.beginPath();
-      ctx.moveTo(-18, -62); ctx.lineTo(-32, -88); ctx.lineTo(-6, -70);
-      ctx.moveTo(18, -62); ctx.lineTo(32, -88); ctx.lineTo(6, -70);
-      ctx.fill();
-    } else if (laneType === 0) {
-      // Left Lane: 🦇 3D 다크 배트 (Wide Bat Wings flanking the Body Formula Shield + Head above!)
-      const flap = isKO ? 0 : Math.sin(phase * 2.5) * 18;
-      ctx.fillStyle = state.isBossWave ? '#991b1b' : '#5b21b6';
-      ctx.strokeStyle = state.isBossWave ? '#fde047' : '#c4b5fd';
-      ctx.lineWidth = 2.8;
-      ctx.beginPath();
-      ctx.moveTo(-25, -35);
-      ctx.quadraticCurveTo(-88, -68 + flap, -96, -15 + flap);
-      ctx.quadraticCurveTo(-60, -8, -25, -12);
-      ctx.moveTo(25, -35);
-      ctx.quadraticCurveTo(88, -68 + flap, 96, -15 + flap);
-      ctx.quadraticCurveTo(60, -8, 25, -12);
-      ctx.fill();
-      ctx.stroke();
-
-      drawShadedSphere(ctx, 0, 0, 42, '#5b21b6', '#8b5cf6', '#2e1065');
-      drawShadedSphere(ctx, 0, -48, 27, '#6d28d9', '#a78bfa', '#2e1065');
-      // Bat Ears
-      ctx.fillStyle = '#4c1d95';
-      ctx.beginPath();
-      ctx.moveTo(-20, -64); ctx.lineTo(-28, -88); ctx.lineTo(-6, -72);
-      ctx.moveTo(20, -64); ctx.lineTo(28, -88); ctx.lineTo(6, -72);
-      ctx.fill();
-    } else if (laneType === 1) {
-      // Center Lane: 👹 3D 아이언 고블린 (Muscular Torso + Head & Golden Horns above the Formula Shield!)
-      drawShadedSphere(ctx, 0, 2, 44, '#be123c', '#fb7185', '#4c0519');
-      drawShadedSphere(ctx, 0, -48, 29, '#e11d48', '#fda4af', '#4c0519');
-      ctx.fillStyle = '#fbbf24';
-      ctx.beginPath();
-      ctx.moveTo(-18, -62); ctx.lineTo(-36, -90); ctx.lineTo(-7, -72);
-      ctx.moveTo(18, -62); ctx.lineTo(36, -90); ctx.lineTo(7, -72);
-      ctx.fill();
-    } else {
-      // Right Lane: 👾 3D 킹 슬라임 (Giant Jelly Body + Cute Head & Crown above the Formula Shield!)
-      drawShadedSphere(ctx, 0, 4, 46, '#059669', '#6ee7b7', '#064e3b');
-      drawShadedSphere(ctx, 0, -46, 28, '#10b981', '#a7f3d0', '#064e3b');
-      ctx.fillStyle = '#fbbf24';
-      ctx.beginPath();
-      ctx.moveTo(-14, -70); ctx.lineTo(-16, -86); ctx.lineTo(0, -76); ctx.lineTo(16, -86); ctx.lineTo(14, -70);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    // Boss Dragon Crown on Wave 5 & Wave 10
-    if (state.isBossWave && !isKO) {
-      ctx.fillStyle = '#fde047';
-      ctx.strokeStyle = '#991b1b';
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.moveTo(-18, -72);
-      ctx.lineTo(-22, -92);
-      ctx.lineTo(-8, -80);
-      ctx.lineTo(0, -96);
-      ctx.lineTo(8, -80);
-      ctx.lineTo(22, -92);
-      ctx.lineTo(18, -72);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-    }
-
-    // 4. Monster Face on the Head Sphere (at y = -48, right above the Body Formula Shield!)
-    if (isKO) {
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.moveTo(-14, -54); ctx.lineTo(-5, -45);
-      ctx.moveTo(-5, -54); ctx.lineTo(-14, -45);
-      ctx.moveTo(5, -54); ctx.lineTo(14, -45);
-      ctx.moveTo(14, -54); ctx.lineTo(5, -45);
-      ctx.stroke();
-    } else {
-      drawShadedSphere(ctx, -10, -51, 6.2, '#fef08a', '#ffffff', '#ca8a04');
-      drawShadedSphere(ctx, 10, -51, 6.2, '#fef08a', '#ffffff', '#ca8a04');
-      ctx.fillStyle = '#dc2626';
-      ctx.beginPath();
-      ctx.arc(-10, -51, 2.7, 0, Math.PI * 2);
-      ctx.arc(10, -51, 2.7, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Fangs peeking right over the top edge of the Body Formula Shield!
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.moveTo(-11, -39); ctx.lineTo(-7, -30); ctx.lineTo(-3, -39);
-      ctx.moveTo(3, -39); ctx.lineTo(7, -30); ctx.lineTo(11, -39);
-      ctx.fill();
-
-      // Visual 3D State Overlays on the Monster itself (Wrong Shield / Correct Halo)
-      const mState = (state.monsterState && state.monsterState[laneType]) || 'normal';
-      if (mState === 'wrong') {
-        ctx.fillStyle = 'rgba(225, 29, 72, 0.26)';
-        ctx.strokeStyle = '#f43f5e';
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.arc(0, -18, 56, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      } else if (mState === 'correct') {
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
-        ctx.strokeStyle = '#10b981';
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.arc(0, -18, 56, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-    }
-
+    ctx.moveTo(-36, 0); ctx.lineTo(-78, -30); ctx.quadraticCurveTo(-66, 0, -78, 30); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = colors[0];
+    ctx.beginPath(); ctx.moveTo(-12, -19); ctx.lineTo(5, -41); ctx.lineTo(26, -17); ctx.fill();
+    const gradient = ctx.createRadialGradient(7, -11, 2, 0, 0, 65);
+    gradient.addColorStop(0, colors[1]); gradient.addColorStop(0.45, colors[0]); gradient.addColorStop(1, colors[2]);
+    ctx.fillStyle = gradient;
+    ctx.beginPath(); ctx.ellipse(0, 0, 57, 29, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.beginPath(); ctx.ellipse(3, 12, 37, 11, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = colors[2]; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(20, 0, 16, -0.9, 0.9); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(36, -7, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.arc(39, -7, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(40, -9, 1.8, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 3;
+    [-22, -7].forEach((sx) => { ctx.beginPath(); ctx.arc(sx, -3, 9, -0.8, 0.8); ctx.stroke(); });
     ctx.restore();
   }
 
-  // =========================================================================
-  // INTRO 3D MINI PREVIEW LOOP
-  // =========================================================================
   function startIntroPreviewLoop() {
     if (state.introRafId) cancelAnimationFrame(state.introRafId);
     const canvas = document.getElementById('intro-otter-canvas');
@@ -655,7 +528,7 @@
   function setSpeed(spdKey) {
     KkachiSound.click();
     state.speedKey = spdKey;
-    state.gateDurationMs = SPEED_MAP[spdKey] || 6500;
+    state.questionDurationMs = SPEED_MAP[spdKey] || 6500;
     ['slow', 'normal', 'fast'].forEach((k) => {
       const btn = document.getElementById(`spd-${k}`);
       if (btn) btn.classList.toggle('active', k === spdKey);
@@ -748,15 +621,19 @@
     state.otterJumpCount = 0;
 
     state.camX = 0;
+    state.cameraZ = 0;
+    state.otterZ3D = 55;
     state.trackZ = 0;
+    state.hitStopTimer = 0;
     state.voxels3D = [];
     state.projectiles3D = [];
-    state.flyingMonsters3D = [];
     state.shockwaves3D = [];
     state.floatingTexts = [];
     state.ultBeamLife = 0;
     state.coins3D = [];
 
+    state.foodEaten = 0;
+    state.foodHitTargets = [];
     state.hearts = 5;
     state.hasShield = false;
     state.freeShieldUsed = false;
@@ -765,7 +642,7 @@
     state.score = 0;
     state.combo = 0;
     state.maxCombo = 0;
-    state.gateCount = 0;
+    state.questionCount = 0;
     state.history = [];
 
     const shieldBtn = document.getElementById('btn-shield-chance');
@@ -776,13 +653,15 @@
 
     state.questionPool = buildQuestionPool();
     updateHudUI();
-    spawnNextGate();
+    spawnNextFood();
 
     state.lastFrameTime = performance.now();
     state.rafId = requestAnimationFrame(gameLoop);
   }
 
   function stopRunLoop() {
+    clearTimeout(state.crashTimeout);
+    state.crashTimeout = null;
     state.running = false;
     if (state.rafId) {
       cancelAnimationFrame(state.rafId);
@@ -822,10 +701,11 @@
     document.getElementById('hud-hearts').textContent = heartStr;
     document.getElementById('hud-score').textContent = `⭐ ${state.score.toLocaleString()}점`;
     document.getElementById('hud-combo').textContent = `🔥 ${state.combo} 콤보`;
+    document.getElementById('hud-food').textContent = `🐟 ${state.foodEaten}마리`;
   }
 
-  function spawnNextGate() {
-    if (state.gateCount >= state.targetGates) {
+  function spawnNextFood() {
+    if (state.questionCount >= state.targetQuestions) {
       finishRun(true);
       return;
     }
@@ -835,68 +715,86 @@
 
     const q = state.questionPool.pop();
     state.currentQ = q;
-    state.gateCount += 1;
+    state.questionCount += 1;
     state.isDashing = false;
     state.selectedLane = null;
     state.hasSteeredThisWave = false;
     state.laneStayTimer = 0;
-    state.monsterState = ['normal', 'normal', 'normal'];
-    state.gateClearRunTimer = 0;
+    state.foodState = ['normal', 'normal', 'normal'];
+    state.mealTimer = 0;
     state.isCounterDash = false;
     state.isQuickKillDash = false;
     state.slowMoTimer = 0;
     state.otterSpin = 0;
-    state.monsterZ = 820; // Spawns near the top of the full-height 3-lane runway (y≈121px)!
-    state.monstersAlive = [true, true, true];
+    state.foodZ = state.otterZ3D + 850; // Fixed world-space destination: the otter runs to it.
+    state.waveElapsed = 0;
+    state.foodAvailable = [true, true, true];
     state.projectiles3D = [];
     state.waveStartTime = performance.now();
     state.isBossWave = false;
     state.isGoldenWave = false;
 
-    state.gateOptions = shuffle([
+    state.foodOptions = shuffle([
       { text: q.ans, isCorrect: true },
       { text: q.w1, isCorrect: false },
       { text: q.w2, isCorrect: false }
     ]);
 
-    const waveTagEl = document.getElementById('q-gate-num');
+    const waveTagEl = document.getElementById('q-question-num');
     if (waveTagEl) {
-      waveTagEl.textContent = `${state.gateCount} / ${state.targetGates}`;
+      waveTagEl.textContent = `${state.questionCount} / ${state.targetQuestions}`;
       waveTagEl.style.background = '#0284c7';
     }
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
-    const gateBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
-    state.gateOptions.forEach((opt, idx) => {
-      const signEl = document.getElementById(`mon-sign-${idx}`);
+    const foodBadges = ['🐟 ① 왼쪽 먹이', '🐟 ② 가운데 먹이', '🐟 ③ 오른쪽 먹이'];
+    state.foodOptions.forEach((opt, idx) => {
+      const signEl = document.getElementById(`food-sign-${idx}`);
       const renderedFormula = KkachiMathData.renderMathText(opt.text);
 
-      // Render a sleek 1-line Pass-Through Arch Gate Banner with a top lane crest!
+      // Attach the full answer directly above its fish.
       if (signEl) {
-        signEl.className = `monster-body-shield lane-${idx}`;
+        signEl.className = `food-answer-tag lane-${idx}`;
         signEl.innerHTML = `
-          <span class="gate-arch-badge" id="gate-badge-${idx}">${gateBadges[idx]}</span>
+          <span class="food-name-badge" id="food-badge-${idx}">${foodBadges[idx]}</span>
           <div class="sign-formula">
-            ${renderedFormula}
+            <span class="food-formula-content">${renderedFormula}</span>
           </div>
         `;
       }
     });
 
-    updateAimedMonsterUI();
+    document.getElementById('answer-choices').innerHTML = state.foodOptions.map((opt, idx) =>
+      '<button type="button" class="answer-choice lane-' + idx + '" onclick="OtterRun.selectAndFireLane(' + idx + ')">' +
+      '<span class="answer-lane">🐟 ' + ['① 왼쪽 먹이', '② 가운데 먹이', '③ 오른쪽 먹이'][idx] + '</span>' +
+      '<span class="answer-formula">' + KkachiMathData.renderMathText(opt.text) + '</span></button>'
+    ).join('');
+    updateAimedFoodUI();
+    syncAnswerChoices();
   }
 
-  function updateAimedMonsterUI() {
+  function syncAnswerChoices() {
+    document.querySelectorAll('.answer-choice').forEach((button, idx) => {
+      button.disabled = !state.running || state.isDashing || state.pausedForCrash || state.mealTimer > 0;
+      button.classList.toggle('is-aimed', idx === state.targetLane);
+      button.classList.toggle('food-correct', state.foodState[idx] === 'correct');
+      button.classList.toggle('food-wrong', state.foodState[idx] === 'wrong');
+      button.setAttribute('aria-pressed', String(idx === state.targetLane));
+    });
+  }
+
+  function updateAimedFoodUI() {
     const laneNames = ['왼쪽', '가운데', '오른쪽'];
-    const defaultBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
-    const aimedBadges = ['🎯 ① 왼쪽 관문 (내 수달 줄)', '🎯 ② 가운데 관문 (내 수달 줄)', '🎯 ③ 오른쪽 관문 (내 수달 줄)'];
+    const defaultBadges = ['🐟 ① 왼쪽 먹이', '🐟 ② 가운데 먹이', '🐟 ③ 오른쪽 먹이'];
+    const aimedBadges = ['🐟 ① 선택한 먹이', '🐟 ② 선택한 먹이', '🐟 ③ 선택한 먹이'];
+    syncAnswerChoices();
     const lbl = document.getElementById('current-lane-label');
     if (lbl) lbl.textContent = laneNames[state.targetLane] || '가운데';
 
     [0, 1, 2].forEach((i) => {
-      const signEl = document.getElementById(`mon-sign-${i}`);
-      const badgeEl = document.getElementById(`gate-badge-${i}`);
-      if (!signEl || state.isDashing || state.pausedForCrash || state.gateClearRunTimer > 0) return;
+      const signEl = document.getElementById(`food-sign-${i}`);
+      const badgeEl = document.getElementById(`food-badge-${i}`);
+      if (!signEl || state.isDashing || state.pausedForCrash || state.mealTimer > 0) return;
       const isAimed = i === state.targetLane;
       signEl.classList.toggle('otter-aimed', isAimed);
       if (badgeEl) {
@@ -907,7 +805,7 @@
 
   // Steer the 3D Otter Left (-1) or Right (+1) using Arrow Keys (←, →)
   function steerOtter(delta) {
-    if (!state.running || state.pausedForCrash || state.isDashing || state.gateClearRunTimer > 0) return;
+    if (!state.running || state.pausedForCrash || state.isDashing || state.mealTimer > 0) return;
     const nextLane = Math.max(0, Math.min(2, state.targetLane + delta));
     if (nextLane !== state.targetLane) {
       KkachiSound.click();
@@ -915,7 +813,7 @@
       if (state.otterY3D <= 3) {
         state.otterVy3D = 6.2; // Gentle lane-switch hop
       }
-      updateAimedMonsterUI();
+      updateAimedFoodUI();
     }
   }
 
@@ -924,107 +822,38 @@
     jumpToFloorAndDash(state.targetLane);
   }
 
-  // Direct click on a Monster Character or 1/2/3 key: Move to that lane & Dash through!
+  // Click a fish or use 1/2/3 to run towards that food.
   function selectAndFireLane(laneIdx) {
-    if (!state.running || state.pausedForCrash || state.isDashing || state.gateClearRunTimer > 0) return;
+    if (!Number.isInteger(laneIdx) || laneIdx < 0 || laneIdx > 2) return;
+    if (!state.running || state.pausedForCrash || state.isDashing || state.mealTimer > 0) return;
     state.targetLane = laneIdx;
-    updateAimedMonsterUI();
+    updateAimedFoodUI();
     jumpToFloorAndDash(laneIdx);
   }
 
   // Dash forward in the chosen lane to physically smash through the character!
   function jumpToFloorAndDash(laneIdx) {
-    if (!state.running || state.pausedForCrash || state.isDashing || state.gateClearRunTimer > 0) return;
-    KkachiSound.shoot();
+    if (!state.running || state.pausedForCrash || state.isDashing || state.mealTimer > 0) return;
+    KkachiSound.click();
 
     state.selectedLane = laneIdx;
     state.targetLane = laneIdx;
     state.isDashing = true;
-    state.otterVy3D = 10.5;
-    state.otterX3D = state.otterX3D * 0.25 + LANE_X[laneIdx] * 0.75;
+    state.otterVy3D = 3.5;
+    // Keep the full lane change visible; do not teleport to the chosen answer.
+    state.dashSpeed = Math.max(120, state.foodZ - state.otterZ3D) / 1.1;
+    syncAnswerChoices();
 
     [0, 1, 2].forEach((i) => {
-      const signEl = document.getElementById(`mon-sign-${i}`);
+      const signEl = document.getElementById(`food-sign-${i}`);
       if (signEl) {
         signEl.classList.toggle('otter-aimed', i === laneIdx);
       }
     });
   }
 
-  // 3D MEGA WATER BREATH ULTIMATE (Blasts all 3 3D Monsters into the sky!)
-  function fireUltimateSkill() {
-    if (!state.running || state.pausedForCrash || state.gateClearRunTimer > 0 || state.ultGauge < 100) return;
-    state.ultGauge = 0;
-    state.isDashing = false;
-    state.ultBeamLife = 1.0;
-    KkachiSound.ultimate();
-    triggerScreenShake();
-    triggerImpactPunch();
-
-    [0, 1, 2].forEach((ln) => {
-      state.monstersAlive[ln] = false;
-      const cardEl = document.getElementById(`plat-card-${ln}`);
-      const signEl = document.getElementById(`mon-sign-${ln}`);
-      const cardStat = document.getElementById(`card-status-${ln}`);
-      const signStat = document.getElementById(`sign-status-${ln}`);
-      const isAns = state.gateOptions[ln] && state.gateOptions[ln].isCorrect;
-
-      if (isAns) {
-        if (cardEl) cardEl.classList.add('shield-correct');
-        if (signEl) signEl.classList.add('shield-correct');
-        if (cardStat) cardStat.innerHTML = `<span style="color:#059669;font-weight:900;">⭕ 필살기 정답 격파!</span>`;
-        if (signStat) signStat.innerHTML = `<span style="color:#059669;font-weight:900;">⭕ 정답!</span>`;
-      } else {
-        if (cardEl) cardEl.classList.add('shield-dissolve');
-        if (signEl) signEl.classList.add('shield-dissolve');
-      }
-
-      state.flyingMonsters3D.push({
-        x: LANE_X[ln],
-        y: 10,
-        z: state.monsterZ,
-        vx: (ln - 1) * 14,
-        vy: 20 + Math.random() * 6,
-        vz: 28,
-        rot: 0,
-        vRot: 0.38,
-        laneType: ln
-      });
-
-      state.shockwaves3D.push({
-        x: LANE_X[ln],
-        y: 35,
-        z: state.monsterZ,
-        r: 10,
-        life: 1.0,
-        color: '#fbbf24'
-      });
-    });
-
-    state.floatingTexts.push({
-      x: 480,
-      y: 155,
-      text: '🌈 3D HYPER WATER BREATH!! 99,999 DMG!',
-      subText: '좌·중·우 3D 몬스터 전원 일격 폭파! (+500점)',
-      color: '#fde68a',
-      life: 1.5
-    });
-
-    state.combo += 1;
-    if (state.combo > state.maxCombo) state.maxCombo = state.combo;
-    state.score += 500;
-    state.otterSpin = Math.PI * 2;
-
-    state.history.push({
-      q: state.currentQ.q,
-      ans: state.currentQ.ans,
-      tip: state.currentQ.tip,
-      passed: true
-    });
-
-    updateHudUI();
-    state.gateClearRunTimer = 0.85;
-  }
+  // Retain the old public action name for integrations; answer selection is always required.
+  function fireUltimateSkill() { fireCurrentLane(); }
 
   function freeHop() {
     if (!state.running || state.pausedForCrash || state.isDashing) return;
@@ -1080,86 +909,59 @@
   }
 
   function update3DPhysics(now, dtSec) {
-    const dashMult = (state.isDashing || state.gateClearRunTimer > 0) ? 5.5 : 1;
-    const speedZ = 380 * dashMult;
-
-    state.trackZ += speedZ * dtSec;
-    state.distance += 15 * dashMult * dtSec;
-    state.otterPhase += dtSec * ((state.isDashing || state.gateClearRunTimer > 0) ? 25 : 14);
-
-    // 1. 3D Lane Movement (wx) — Smooth & Responsive Left/Right Otter Steering
     const targetX = LANE_X[state.targetLane];
     const dx = targetX - state.otterX3D;
-    state.otterX3D += dx * 0.28;
+    state.otterX3D += dx * (1 - Math.exp(-12 * dtSec));
     state.otterRoll = Math.max(-0.28, Math.min(0.28, dx * 0.0018));
 
-    // Keep camera stable & centered so the 3 lanes and formulas never shift sideways!
-    state.camX = 0;
-    state.fov = 380;
+    const speed = state.isDashing ? state.dashSpeed : state.mealTimer > 0 ? 260 : 850 / (state.questionDurationMs / 1000);
+    state.otterZ3D += speed * dtSec;
+    state.trackZ = state.otterZ3D;
+    state.distance += speed * dtSec / 10;
+    state.otterPhase += dtSec * (state.isDashing ? 25 : 14);
+    // A gently trailing camera lets the otter visibly run forward during a dash.
+    const follow = 1 - Math.exp(-6 * dtSec);
+    state.cameraZ += (state.otterZ3D - 55 - state.cameraZ) * follow;
+    state.camX += (state.otterX3D * 0.22 - state.camX) * follow;
+    state.fov = 560;
 
-    // 2. 3D Jump Gravity (wy)
-    state.otterY3D += state.otterVy3D;
-    state.otterVy3D -= 0.72;
+    state.otterY3D += state.otterVy3D * dtSec * 60;
+    state.otterVy3D -= 43.2 * dtSec;
     if (state.otterY3D <= 0) {
       state.otterY3D = 0;
       state.otterVy3D = 0;
       state.otterJumpCount = 0;
     }
+    if (state.otterSpin > 0) state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
 
-    if (state.otterSpin > 0) {
-      state.otterSpin = Math.max(0, state.otterSpin - dtSec * 12);
-    }
-
-    // 2.5 Post-Victory Sprint Across the Cleared Track!
-    if (state.gateClearRunTimer > 0) {
-      state.gateClearRunTimer = Math.max(0, state.gateClearRunTimer - dtSec);
-      const timeLbl = document.getElementById('q-time-label');
-      if (timeLbl) timeLbl.textContent = '⭕ 정답 통과!';
-      updateHudUI();
-      if (state.gateClearRunTimer <= 0) {
-        spawnNextGate();
-      }
+    const timeLbl = document.getElementById('q-time-label');
+    if (state.mealTimer > 0) {
+      state.mealTimer = Math.max(0, state.mealTimer - dtSec);
+      if (timeLbl) timeLbl.textContent = '🐟 냠냠!';
+      const status = document.getElementById('run-status');
+      if (status) status.textContent = '정답 먹이를 찾았어요! 맛있게 냠냠!';
+      if (state.mealTimer <= 0) spawnNextFood();
       return;
     }
 
-    // 3. Move the 3 Pass-Through Arch Gates steadily down the 3 lanes (from Z=820 to Z=240 right in front of the Otter's nose!)
-    const START_MONSTER_Z = 820;
-    const PASS_MONSTER_Z = 240;
-    const baseMonSpeedZ = (START_MONSTER_Z - PASS_MONSTER_Z) / (state.gateDurationMs / 1000);
-    const monSpeedZ = state.isDashing ? baseMonSpeedZ * 9.5 : baseMonSpeedZ;
-    state.monsterZ -= monSpeedZ * dtSec;
+    state.waveElapsed += dtSec;
+    const remaining = Math.max(0, state.questionDurationMs / 1000 - state.waveElapsed);
+    if (timeLbl) timeLbl.textContent = state.isDashing ? '🐟 먹이를 향해!' : remaining.toFixed(1) + '초';
+    const progress = document.getElementById('q-progress-fill');
+    if (progress) progress.style.width = Math.max(0, 100 * (state.foodZ - state.otterZ3D) / 850) + '%';
+    const status = document.getElementById('run-status');
+    if (status) status.textContent = state.isDashing ? '선택한 물고기를 먹으러 달려가요!' : '정답이 적힌 물고기를 골라 수달에게 먹여 주세요!';
 
-    const remSec = Math.max(0, (state.monsterZ - PASS_MONSTER_Z) / Math.max(1, baseMonSpeedZ));
-    const timeLbl = document.getElementById('q-time-label');
-    if (timeLbl) {
-      timeLbl.textContent = state.isDashing ? '⚡ 돌진중!' : `${remSec.toFixed(1)}초`;
-    }
-
-    const progFill = document.getElementById('q-progress-fill');
-    if (progFill) {
-      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - PASS_MONSTER_Z) / (START_MONSTER_Z - PASS_MONSTER_Z)) * 100));
-      progFill.style.width = `${remPct}%`;
-    }
-
-    // 4. Trigger Gate Pass / Collision the instant the Arch Gate threshold reaches right in front of the Otter's nose (Z=240, y≈274px) — never covering the Otter's head (y≈339px)!
-    if (state.monsterZ <= PASS_MONSTER_Z) {
+    // Resolve only after the visible otter reaches the food, never at click time.
+    if (state.otterZ3D >= state.foodZ && Math.abs(targetX - state.otterX3D) < 12) {
       state.selectedLane = state.targetLane;
-      resolve3DMonsterCollision(false);
+      resolveFoodPickup(false);
+      syncAnswerChoices();
     }
-
     updateHudUI();
   }
 
   function update3DActionFX(dtSec) {
-    state.flyingMonsters3D = state.flyingMonsters3D.filter((m) => {
-      m.x += m.vx;
-      m.y += m.vy;
-      m.z += m.vz;
-      m.vy -= 0.65;
-      m.rot += m.vRot;
-      return m.y > -100 && m.z < 2200;
-    });
-
     state.shockwaves3D = state.shockwaves3D.filter((sw) => {
       sw.r += 260 * dtSec;
       sw.life -= dtSec * 2.4;
@@ -1196,29 +998,36 @@
     const canvas = document.getElementById('runner-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const displayHeight = Math.round(960 * canvas.clientHeight / Math.max(1, canvas.clientWidth));
+    if (canvas.height !== displayHeight) canvas.height = displayHeight;
     const W = canvas.width;
     const H = canvas.height;
     const camX = state.camX;
     const camY = state.camY;
     const fov = state.fov;
     const horY = state.horizonY;
+    const project = (x, y, z, ...camera) => {
+      const p = project3D(x, y, z - state.cameraZ, ...camera);
+      p.y *= H / 440;
+      return p;
+    };
 
     // 1. Calm, Clean Sky & Soft Emerald Sea Background
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
     skyGrad.addColorStop(0, '#38bdf8');
-    skyGrad.addColorStop(0.14, '#bae6fd');
-    skyGrad.addColorStop(0.15, '#2dd4bf');
+    skyGrad.addColorStop(0.22, '#e0f2fe');
+    skyGrad.addColorStop(0.23, '#2dd4bf');
     skyGrad.addColorStop(1, '#0d9488');
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
     // 2. Full-Height 3-Lane Runway (Stretches from y≈64px near the top all the way down to y=440px at the bottom edge!)
-    const TOP_Z = 1450;
-    const BOT_Z = 15;
-    const pTopL = project3D(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const pTopR = project3D(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const pBotL = project3D(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
-    const pBotR = project3D(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const TOP_Z = state.cameraZ + 2200;
+    const BOT_Z = state.cameraZ + 15;
+    const pTopL = project(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pTopR = project(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pBotL = project(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const pBotR = project(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = '#fffbeb';
     ctx.beginPath();
@@ -1239,6 +1048,19 @@
     ctx.lineTo(pBotR.x, pBotR.y);
     ctx.stroke();
 
+    for (let z = state.cameraZ + 1600; z > state.cameraZ + 40; z -= 150) {
+      const railZ = z - (state.trackZ % 150);
+      if (railZ <= state.cameraZ + 15) continue;
+      [-485, 485].forEach((x) => {
+        const foot = project(x, 0, railZ, W, H, camX, camY, fov, horY);
+        const top = project(x, 55, railZ, W, H, camX, camY, fov, horY);
+        ctx.strokeStyle = '#0e7490';
+        ctx.lineWidth = Math.max(2, 9 * foot.scale);
+        ctx.beginPath(); ctx.moveTo(foot.x, foot.y + 20 * foot.scale); ctx.lineTo(top.x, top.y); ctx.stroke();
+        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(top.x, top.y, 5 * foot.scale, 0, Math.PI * 2); ctx.fill();
+      });
+    }
+
     // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Full-Height Track Floor!
     const laneEdges = [
       [-485, -162],
@@ -1246,10 +1068,10 @@
       [162, 485]
     ];
     const [curL, curR] = laneEdges[state.targetLane] || laneEdges[1];
-    const hlTopL = project3D(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const hlTopR = project3D(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
-    const hlBotL = project3D(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
-    const hlBotR = project3D(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlTopL = project(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlTopR = project(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlBotL = project(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlBotR = project(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = 'rgba(253, 224, 71, 0.38)';
     ctx.beginPath();
@@ -1266,10 +1088,10 @@
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.14)';
     ctx.lineWidth = 2;
     for (let z = 1350; z >= 25; z -= segLen) {
-      const zCur = z - zOffset;
-      if (zCur < 15) continue;
-      const pL = project3D(-480, 0, zCur, W, H, camX, camY, fov, horY);
-      const pR = project3D(480, 0, zCur, W, H, camX, camY, fov, horY);
+      const zCur = state.cameraZ + z - zOffset;
+      if (zCur < state.cameraZ + 15) continue;
+      const pL = project(-480, 0, zCur, W, H, camX, camY, fov, horY);
+      const pR = project(480, 0, zCur, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(pL.x, pL.y);
       ctx.lineTo(pR.x, pR.y);
@@ -1280,21 +1102,22 @@
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
     ctx.lineWidth = 3;
     [-162, 162].forEach((divX) => {
-      const dTop = project3D(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
-      const dBot = project3D(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
+      const dTop = project(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
+      const dBot = project(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(dTop.x, dTop.y);
       ctx.lineTo(dBot.x, dBot.y);
       ctx.stroke();
     });
 
-    // Forward Guide Chevrons on the Otter's Active Lane pointing from the Otter toward the approaching Arch Gate!
+    // Forward Guide Chevrons on the Otter's Active Lane pointing from the Otter toward the selected food!
     const activeX = LANE_X[state.targetLane] || 0;
-    [130, 195].forEach((cz) => {
-      if (cz >= state.monsterZ - 20) return;
-      const pTip = project3D(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
-      const pBL = project3D(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
-      const pBR = project3D(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
+    [160, 300, 460, 620].forEach((offset) => {
+      const cz = state.otterZ3D + offset;
+      if (cz >= state.foodZ - 20) return;
+      const pTip = project(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
+      const pBL = project(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
+      const pBR = project(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.strokeStyle = 'rgba(217, 119, 6, 0.55)';
       ctx.lineWidth = 4;
@@ -1308,91 +1131,42 @@
       ctx.restore();
     });
 
-    // 4. Draw Approaching 3D Pass-Through Arch Gates + Perched Monster Guardians Above the Slim Formula Banners!
-    const gateColors = [
-      { main: '#9333ea', dark: '#581c87', glow: 'rgba(147, 51, 234, 0.35)' },
-      { main: '#e11d48', dark: '#881337', glow: 'rgba(225, 29, 72, 0.35)' },
-      { main: '#059669', dark: '#064e3b', glow: 'rgba(5, 150, 105, 0.35)' }
-    ];
-
-    [0, 1, 2].forEach((ln) => {
-      const signEl = document.getElementById(`mon-sign-${ln}`);
-      if (!state.monstersAlive[ln]) return;
-
-      const wx = LANE_X[ln];
-      const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const pPilL = project3D(wx - 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const pPilR = project3D(wx + 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-
-      const isAimed = ln === state.targetLane;
-      const col = isAimed
-        ? { main: '#f59e0b', dark: '#b45309', glow: 'rgba(245, 158, 11, 0.55)' }
-        : gateColors[ln];
-
-      const gateBannerY = pMon.y - 38;
-
-      // 4.1 Draw Glowing Pass-Through Threshold Line on the Track Floor between the Left & Right Arch Pillars!
+    // Fish sit in the world itself, with each possible answer attached to its food.
+    state.foodHitTargets = [];
+    [0, 1, 2].forEach((lane) => {
+      const label = document.getElementById('food-sign-' + lane);
+      if (!state.foodAvailable[lane] || state.foodZ < state.cameraZ + 10) {
+        if (label) label.style.visibility = 'hidden';
+        return;
+      }
+      const x = LANE_X[lane];
+      const ground = project(x, 0, state.foodZ, W, H, camX, camY, fov, horY);
+      const food = project(x, 43 + Math.sin(state.otterPhase * 0.35 + lane) * 3, state.foodZ, W, H, camX, camY, fov, horY);
+      const tag = project(x, 125, state.foodZ, W, H, camX, camY, fov, horY);
       ctx.save();
-      ctx.strokeStyle = col.glow;
-      ctx.lineWidth = isAimed ? 9 : 6;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(pPilL.x, pMon.y);
-      ctx.lineTo(pPilR.x, pMon.y);
-      ctx.stroke();
-
-      ctx.strokeStyle = col.main;
-      ctx.lineWidth = isAimed ? 3.5 : 2.5;
-      ctx.setLineDash([8, 6]);
-      ctx.beginPath();
-      ctx.moveTo(pPilL.x, pMon.y);
-      ctx.lineTo(pPilR.x, pMon.y);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // 4.2 Draw Left & Right 3D Arch Gate Pillars standing on the lane edges
-      const pilW = Math.max(6, 12 * pMon.scale);
-      [pPilL.x, pPilR.x].forEach((px) => {
-        // Pillar ground base pad
-        ctx.fillStyle = col.dark;
-        ctx.beginPath();
-        ctx.ellipse(px, pMon.y, pilW * 0.95, pilW * 0.42, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Vertical Arch Pillar column rising up to the Formula Gate Banner
-        const pGrad = ctx.createLinearGradient(px - pilW * 0.5, 0, px + pilW * 0.5, 0);
-        pGrad.addColorStop(0, col.dark);
-        pGrad.addColorStop(0.45, col.main);
-        pGrad.addColorStop(1, col.dark);
-        ctx.fillStyle = pGrad;
-        ctx.fillRect(px - pilW * 0.5, gateBannerY, pilW, pMon.y - gateBannerY);
-      });
+      ctx.fillStyle = lane === state.targetLane ? 'rgba(245,158,11,.24)' : 'rgba(15,118,110,.15)';
+      ctx.beginPath(); ctx.ellipse(ground.x, ground.y, 83 * ground.scale, 17 * ground.scale, 0, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
-
-      // 4.3 Draw the Cute 3D Monster Guardian Perched ON TOP of the Arch Gate Banner (100% visible above the formula!)
-      const mScale = Math.max(0.72, Math.min(0.92, 0.54 + pMon.scale * 0.56));
-      draw3DMonster(ctx, pMon.x, gateBannerY - 12, mScale, ln, state.otterPhase * 0.5, false, 0);
-
-      // 4.4 Lock the Slim 1-Line Formula Gate Banner onto the Arch Crossbar (gateBannerY)
-      if (signEl) {
-        const leftPct = (pMon.x / W) * 100;
-        const topPct = (gateBannerY / H) * 100;
-        const shieldScale = Math.max(0.92, Math.min(1.04, 0.78 + pMon.scale * 0.36));
-        signEl.style.left = `${leftPct.toFixed(2)}%`;
-        signEl.style.top = `${topPct.toFixed(2)}%`;
-        signEl.style.transform = `translate(-50%, -50%) scale(${shieldScale.toFixed(2)})`;
+      draw3DFish(ctx, food.x, food.y, food.scale * 1.25, state.otterPhase, lane);
+      state.foodHitTargets.push({ lane, x: food.x / W, y: food.y / H, rx: Math.max(0.035, 100 * food.scale / W), ry: Math.max(0.04, 60 * food.scale / H) });
+      if (label) {
+        label.style.visibility = 'visible';
+        label.style.width = (265 * food.scale / W * 100).toFixed(2) + '%';
+        label.style.left = (tag.x / W * 100).toFixed(2) + '%';
+        label.style.top = (tag.y / H * 100).toFixed(2) + '%';
+        label.style.transform = 'translate(-50%, -50%)';
+        const formula = label.querySelector('.food-formula-content');
+        if (formula) {
+          // Scale the whole formula to fit: never crop away part of an answer.
+          const fit = Math.min(1, (label.clientWidth - 12) / Math.max(1, formula.scrollWidth));
+          formula.style.transform = 'scale(' + Math.max(0.1, fit).toFixed(3) + ')';
+        }
       }
     });
 
-    // 5. Draw Ragdoll 3D Monsters blasted into the sky!
-    for (const fm of state.flyingMonsters3D) {
-      const p = project3D(fm.x, fm.y, fm.z, W, H, camX, camY, fov, horY);
-      draw3DMonster(ctx, p.x, p.y, p.scale * 1.4, fm.laneType, 0, true, fm.rot);
-    }
-
     // 6. Draw 3D Shockwave Rings & Projectiles (with Glowing Water Cannon Beam from Otter to Target Monster!)
     for (const sw of state.shockwaves3D) {
-      const p = project3D(sw.x, sw.y, sw.z, W, H, camX, camY, fov, horY);
+      const p = project(sw.x, sw.y, sw.z, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = sw.life;
       ctx.strokeStyle = sw.color;
@@ -1403,9 +1177,9 @@
       ctx.restore();
     }
 
-    const pOtterPreview = project3D(state.otterX3D, state.otterY3D + 22, state.otterZ3D, W, H, camX, camY, fov, horY);
+    const pOtterPreview = project(state.otterX3D, state.otterY3D + 22, state.otterZ3D, W, H, camX, camY, fov, horY);
     for (const pr of state.projectiles3D) {
-      const p = project3D(pr.x, pr.y, pr.z, W, H, camX, camY, fov, horY);
+      const p = project(pr.x, pr.y, pr.z, W, H, camX, camY, fov, horY);
       const r = Math.max(6, 26 * p.scale);
       ctx.save();
       // Glowing Water Laser Stream connecting Otter directly to the flying projectile!
@@ -1433,9 +1207,9 @@
 
     // 7. Draw 3D Hyper Water Breath Ultimate Tunnel Beam!
     if (state.ultBeamLife > 0) {
-      const pNear = project3D(state.otterX3D, 30, state.otterZ3D + 20, W, H, camX, camY, fov, horY);
-      const pFarL = project3D(-280, 40, 1200, W, H, camX, camY, fov, horY);
-      const pFarR = project3D(280, 40, 1200, W, H, camX, camY, fov, horY);
+      const pNear = project(state.otterX3D, 30, state.otterZ3D + 20, W, H, camX, camY, fov, horY);
+      const pFarL = project(-280, 40, 1200, W, H, camX, camY, fov, horY);
+      const pFarR = project(280, 40, 1200, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = state.ultBeamLife;
       const bGrad = ctx.createLinearGradient(0, pFarL.y, 0, pNear.y);
@@ -1455,7 +1229,7 @@
 
     // 8. Draw 3D Explosion Voxel Cubes
     for (const v of state.voxels3D) {
-      const p = project3D(v.x, v.y, v.z, W, H, camX, camY, fov, horY);
+      const p = project(v.x, v.y, v.z, W, H, camX, camY, fov, horY);
       const sz = Math.max(2, v.size * p.scale * 1.5);
       ctx.save();
       ctx.globalAlpha = Math.max(0, v.life);
@@ -1466,7 +1240,7 @@
 
     // 8.5 Draw 3D Otter Booster Afterimage Trail Rings
     for (const tr of state.otterTrails3D) {
-      const p = project3D(tr.x, tr.y, tr.z, W, H, camX, camY, fov, horY);
+      const p = project(tr.x, tr.y, tr.z, W, H, camX, camY, fov, horY);
       ctx.save();
       ctx.globalAlpha = tr.life * 0.55;
       ctx.strokeStyle = tr.color;
@@ -1478,7 +1252,7 @@
     }
 
     // 9. Draw the 3D Volumetric Cute Otter at the very bottom foreground (Z = 55, y ≈ 408px)!
-    const pOtter = project3D(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
+    const pOtter = project(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
     draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.15, state.otterPhase, {
       skin: state.skin,
       roll: state.otterRoll,
@@ -1486,8 +1260,18 @@
       airborne: state.otterY3D > 3,
       heightY: state.otterY3D,
       fever: state.combo >= 5,
-      shielded: state.hasShield
+      shielded: state.hasShield,
+      eating: state.mealTimer > 0,
+      biteScale: Math.min(1, state.mealTimer / 0.55)
     });
+    if (state.mealTimer > 0) {
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.font = "900 24px sans-serif";
+      ctx.fillStyle = "#059669";
+      ctx.fillText("냠냠! ♡", pOtter.x, pOtter.y - 92 * pOtter.scale);
+      ctx.restore();
+    }
 
     // 10. Draw Floating 3D Critical Damage Texts
     for (const ft of state.floatingTexts) {
@@ -1512,52 +1296,42 @@
   }
 
   // =========================================================================
-  // 3D MONSTER SMASH RESOLUTION & 1:1 SYNCHRONIZED VISUAL OUTCOME
+  // 3D FOOD ANSWER RESOLUTION & 1:1 SYNCHRONIZED VISUAL OUTCOME
   // =========================================================================
-  function resolve3DMonsterCollision(isTimeout = false) {
+  function resolveFoodPickup(isTimeout = false) {
     state.isDashing = false;
     const pickedIdx = state.selectedLane !== null ? state.selectedLane : state.targetLane;
-    const pickedOpt = state.gateOptions[pickedIdx] || null;
-    const correctIdx = state.gateOptions.findIndex((o) => o.isCorrect);
+    const pickedOpt = state.foodOptions[pickedIdx] || null;
+    const correctIdx = state.foodOptions.findIndex((o) => o.isCorrect);
 
     if (pickedOpt && pickedOpt.isCorrect) {
-      // 1. CORRECT CHARACTER PASSED / SMASHED!
-      state.monstersAlive[pickedIdx] = false;
-      state.monsterState[pickedIdx] = 'correct';
+      // 1. CORRECT FOOD COLLECTED
+      state.foodAvailable[pickedIdx] = false;
+      state.foodState[pickedIdx] = 'correct';
 
       [0, 1, 2].forEach((i) => {
-        const signEl = document.getElementById(`mon-sign-${i}`);
-        const badgeEl = document.getElementById(`gate-badge-${i}`);
+        const signEl = document.getElementById(`food-sign-${i}`);
+        const badgeEl = document.getElementById(`food-badge-${i}`);
         if (i === pickedIdx) {
           if (signEl) {
             signEl.classList.remove('otter-aimed', 'selected-lane');
-            signEl.classList.add('shield-correct');
+            signEl.classList.add('food-correct');
           }
-          if (badgeEl) badgeEl.textContent = '⭕ 정답 관문 돌파!';
+          if (badgeEl) badgeEl.textContent = '🐟 냠냠! 정답 먹이!';
         } else {
-          state.monstersAlive[i] = false;
-          state.monsterState[i] = 'dissolved';
-          if (signEl) signEl.classList.add('shield-dissolve');
+          state.foodAvailable[i] = false;
+          state.foodState[i] = 'dissolved';
+          if (signEl) signEl.classList.add('food-dismissed');
         }
       });
 
       const hitX3D = LANE_X[pickedIdx];
-      state.flyingMonsters3D.push({
-        x: hitX3D,
-        y: 15,
-        z: state.monsterZ,
-        vx: (pickedIdx - 1) * 10,
-        vy: 20,
-        vz: 28,
-        rot: 0,
-        vRot: 0.35,
-        laneType: pickedIdx
-      });
+      state.foodEaten += 1;
 
       state.shockwaves3D.push({
         x: hitX3D,
         y: 35,
-        z: state.monsterZ,
+        z: state.foodZ,
         r: 12,
         life: 0.9,
         color: '#10b981'
@@ -1565,7 +1339,7 @@
 
       state.combo += 1;
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
-      state.otterSpin = Math.PI * 2;
+      state.otterSpin = 0;
 
       const pts = 200 + (state.combo - 1) * 40;
       state.score += pts;
@@ -1573,7 +1347,7 @@
       state.floatingTexts.push({
         x: 480 + (pickedIdx - 1) * 150,
         y: 230,
-        text: `⭕ 정답 통과!! (+${pts}점)`,
+        text: `🐟 정답 먹이 획득! (+${pts}점)`,
         subText: state.combo >= 2 ? `🔥 ${state.combo}연속 정답!` : '',
         color: '#fde047',
         life: 1.05
@@ -1586,43 +1360,43 @@
         passed: true
       });
 
-      KkachiSound.smash(state.combo);
+      KkachiSound.eat(state.combo);
       updateHudUI();
-      state.gateClearRunTimer = 0.65;
+      state.mealTimer = 0.95;
     } else {
-      // 2. WRONG CHARACTER COLLISION!
+      // 2. WRONG FOOD ANSWER
       state.pausedForCrash = true;
-      state.monsterZ = Math.max(255, Math.min(380, state.monsterZ));
+      // Keep the food at its actual world-space pickup position.
 
       [0, 1, 2].forEach((i) => {
-        const signEl = document.getElementById(`mon-sign-${i}`);
-        const badgeEl = document.getElementById(`gate-badge-${i}`);
+        const signEl = document.getElementById(`food-sign-${i}`);
+        const badgeEl = document.getElementById(`food-badge-${i}`);
         if (signEl) signEl.classList.remove('otter-aimed', 'selected-lane');
 
         if (i === correctIdx) {
-          state.monsterState[i] = 'correct';
-          if (signEl) signEl.classList.add('shield-correct');
-          if (badgeEl) badgeEl.textContent = '⭕ 진짜 정답 관문!';
+          state.foodState[i] = 'correct';
+          if (signEl) signEl.classList.add('food-correct');
+          if (badgeEl) badgeEl.textContent = '🐟 정답이 적힌 먹이';
         } else if (i === pickedIdx) {
-          state.monsterState[i] = 'wrong';
-          if (signEl) signEl.classList.add('shield-wrong');
+          state.foodState[i] = 'wrong';
+          if (signEl) signEl.classList.add('food-wrong');
           if (badgeEl) badgeEl.textContent = '❌ 내가 고른 오답';
         } else {
-          state.monstersAlive[i] = false;
-          state.monsterState[i] = 'dissolved';
-          if (signEl) signEl.classList.add('shield-dissolve');
+          state.foodAvailable[i] = false;
+          state.foodState[i] = 'dissolved';
+          if (signEl) signEl.classList.add('food-dismissed');
         }
       });
 
       state.shockwaves3D.push({
         x: LANE_X[pickedIdx],
         y: 30,
-        z: state.monsterZ,
+        z: state.foodZ,
         r: 14,
         life: 1.0,
         color: '#f43f5e'
       });
-      state.otterVy3D = 8.0;
+      state.otterVy3D = 0;
 
       state.history.push({
         q: state.currentQ.q,
@@ -1633,14 +1407,13 @@
 
       state.combo = 0;
       state.hearts -= 1;
-      KkachiSound.bomb();
-      triggerScreenShake();
+      KkachiSound.wrong();
       updateHudUI();
 
       const overlay = document.getElementById('crash-tip-overlay');
       const headlineEl = document.getElementById('crash-headline-text');
       if (headlineEl) {
-        headlineEl.textContent = `❌ 선택한 줄은 오답입니다! (초록색 ⭕ 표시가 진짜 정답)`;
+        headlineEl.textContent = '다른 답이 적힌 먹이를 골랐어요. 정답을 확인해 볼까요?';
       }
       document.getElementById('crash-correct-text').innerHTML =
         `⭕ 정답 수식 : ${KkachiMathData.renderMathText(state.currentQ.ans)}`;
@@ -1648,13 +1421,14 @@
         `💡 ${KkachiMathData.renderMathText(state.currentQ.tip)}`;
       overlay.classList.add('active');
 
-      setTimeout(() => {
+      state.crashTimeout = setTimeout(() => {
+        if (!state.running) return;
         overlay.classList.remove('active');
         if (state.hearts <= 0) {
           finishRun(false);
         } else {
           state.pausedForCrash = false;
-          spawnNextGate();
+          spawnNextFood();
         }
       }, 2100);
     }
@@ -1668,20 +1442,20 @@
     const passedCount = state.history.filter((h) => h.passed).length;
 
     document.getElementById('result-title').textContent = cleared
-      ? `🎉 10개 3D 몬스터 웨이브 완전 토벌!`
+      ? `🎉 먹이 찾기 완료! 물고기 ${state.foodEaten}마리 획득!`
       : `🦦 아쉽게 체력 소진! (${Math.floor(state.distance)}m 질주)`;
 
     document.getElementById('result-desc').innerHTML =
-      `최종 점수 <strong style="color:#d97706;">${state.score.toLocaleString()}점</strong> · 토벌 성공 <strong style="color:#059669;">${passedCount}/${state.history.length}마리</strong> · 최고 <strong>${state.maxCombo}연속 격파</strong>`;
+      `최종 점수 <strong style="color:#d97706;">${state.score.toLocaleString()}점</strong> · 먹이 획득 <strong style="color:#059669;">${state.foodEaten}마리 · ${passedCount}/${state.history.length}문제 정답</strong> · 최고 <strong>${state.maxCombo}연속 정답</strong>`;
 
     const reviewEl = document.getElementById('result-review-box');
     reviewEl.innerHTML =
-      `<div style="font-weight:900;color:#0284c7;margin-bottom:6px;">📘 이번 3D 출격에서 격파한 고1 수학 수식 복습</div>` +
+      `<div style="font-weight:900;color:#0284c7;margin-bottom:6px;">📘 먹이를 찾으며 풀어 본 고1 수학 복습</div>` +
       state.history
         .map((h, i) => `
           <div style="border-bottom:1px solid #bae6fd;padding:6px 0;">
             <div style="font-weight:800;color:#0f172a;">
-              ${h.passed ? '⚔️' : '🛡️'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
+              ${h.passed ? '🐟' : '📘'} #${i + 1}. ${KkachiMathData.renderMathText(h.q)}
               <span style="color:#059669;margin-left:6px;">→ ${KkachiMathData.renderMathText(h.ans)}</span>
             </div>
             ${!h.passed ? `<div style="font-size:0.8rem;color:#0369a1;margin-top:2px;">💡 ${KkachiMathData.renderMathText(h.tip)}</div>` : ''}
@@ -1706,9 +1480,17 @@
     const canvas = document.getElementById('runner-canvas');
     if (canvas) {
       canvas.addEventListener('pointerdown', (e) => {
-        if (!state.running || state.pausedForCrash || state.isDashing || state.gateClearRunTimer > 0) return;
+        if (!state.running || state.pausedForCrash || state.isDashing || state.mealTimer > 0) return;
         const rect = canvas.getBoundingClientRect();
         const relX = (e.clientX - rect.left) / Math.max(1, rect.width);
+        const relY = (e.clientY - rect.top) / Math.max(1, rect.height);
+        const food = state.foodHitTargets.find((target) =>
+          ((relX - target.x) / target.rx) ** 2 + ((relY - target.y) / target.ry) ** 2 <= 1
+        );
+        if (food) {
+          selectAndFireLane(food.lane);
+          return;
+        }
         const clickedLane = relX < 0.34 ? 0 : relX > 0.66 ? 2 : 1;
         if (clickedLane === state.targetLane) {
           fireCurrentLane();
@@ -1716,7 +1498,7 @@
           KkachiSound.click();
           state.targetLane = clickedLane;
           if (state.otterY3D <= 3) state.otterVy3D = 6.8;
-          updateAimedMonsterUI();
+          updateAimedFoodUI();
         }
       });
     }
@@ -1738,8 +1520,7 @@
         fireCurrentLane();
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        if (state.ultGauge >= 100) fireUltimateSkill();
-        else fireCurrentLane();
+        fireCurrentLane();
       } else if (e.key === '1') {
         e.preventDefault();
         selectAndFireLane(0);

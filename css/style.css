@@ -789,7 +789,7 @@ html, body {
   transform: translateY(-3px);
 }
 
-.answer-target-card.shield-correct {
+.answer-target-card.food-correct {
   background: #d1fae5 !important;
   border-color: #059669 !important;
   border-bottom-color: #064e3b !important;
@@ -797,21 +797,21 @@ html, body {
   transform: scale(1.03);
 }
 
-.answer-target-card.shield-wrong {
+.answer-target-card.food-wrong {
   background: #ffe4e6 !important;
   border-color: #e11d48 !important;
   border-bottom-color: #881337 !important;
   box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.45);
 }
 
-.answer-target-card.shield-dissolve {
+.answer-target-card.food-dismissed {
   opacity: 0.32;
   filter: grayscale(0.7);
   transform: scale(0.95);
 }
 
 /* Sleek 1-Line Pass-Through Arch Gate Banners (Zero overlap with Otter head, no side pill handles!) */
-.monster-signs-layer {
+.food-signs-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -819,7 +819,7 @@ html, body {
   overflow: hidden;
 }
 
-.monster-body-shield {
+.food-answer-tag {
   position: absolute;
   top: 160px;
   left: 50%;
@@ -845,7 +845,7 @@ html, body {
 }
 
 /* Top Arch Gate Badge Pill */
-.gate-arch-badge {
+.food-name-badge {
   position: absolute;
   top: -12px;
   left: 50%;
@@ -860,34 +860,34 @@ html, body {
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
 }
 
-.monster-body-shield.lane-0 {
+.food-answer-tag.lane-0 {
   background: rgba(255, 255, 255, 0.97);
   border-color: #9333ea;
   border-bottom-color: #6b21a8;
 }
-.monster-body-shield.lane-0 .gate-arch-badge {
+.food-answer-tag.lane-0 .food-name-badge {
   background: linear-gradient(90deg, #9333ea, #7e22ce);
 }
 
-.monster-body-shield.lane-1 {
+.food-answer-tag.lane-1 {
   background: rgba(255, 255, 255, 0.97);
   border-color: #e11d48;
   border-bottom-color: #9f1239;
 }
-.monster-body-shield.lane-1 .gate-arch-badge {
+.food-answer-tag.lane-1 .food-name-badge {
   background: linear-gradient(90deg, #f43f5e, #be123c);
 }
 
-.monster-body-shield.lane-2 {
+.food-answer-tag.lane-2 {
   background: rgba(255, 255, 255, 0.97);
   border-color: #059669;
   border-bottom-color: #065f46;
 }
-.monster-body-shield.lane-2 .gate-arch-badge {
+.food-answer-tag.lane-2 .food-name-badge {
   background: linear-gradient(90deg, #10b981, #047857);
 }
 
-.monster-body-shield .sign-formula {
+.food-answer-tag .sign-formula {
   font-size: clamp(0.95rem, 1.32vw, 1.15rem);
   font-weight: 900;
   color: #0f172a;
@@ -897,19 +897,19 @@ html, body {
 }
 
 /* Highlight when the Otter is currently aligned with this Arch Gate lane! */
-.monster-body-shield.otter-aimed {
+.food-answer-tag.otter-aimed {
   background: #fffbeb !important;
   border-color: #f59e0b !important;
   border-bottom-color: #b45309 !important;
   box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.65), 0 10px 22px rgba(15, 23, 42, 0.26);
   z-index: 21;
 }
-.monster-body-shield.otter-aimed .gate-arch-badge {
+.food-answer-tag.otter-aimed .food-name-badge {
   background: linear-gradient(90deg, #f59e0b, #d97706) !important;
   color: #ffffff !important;
 }
 
-.monster-body-shield.selected-lane {
+.food-answer-tag.selected-lane {
   background: #fef08a !important;
   border-color: #d97706 !important;
   border-bottom-color: #92400e !important;
@@ -917,29 +917,29 @@ html, body {
   z-index: 22;
 }
 
-.monster-body-shield.shield-correct {
+.food-answer-tag.food-correct {
   background: #d1fae5 !important;
   border-color: #059669 !important;
   border-bottom-color: #064e3b !important;
   box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.75);
   z-index: 23;
 }
-.monster-body-shield.shield-correct .gate-arch-badge {
+.food-answer-tag.food-correct .food-name-badge {
   background: #059669 !important;
 }
 
-.monster-body-shield.shield-wrong {
+.food-answer-tag.food-wrong {
   background: #ffe4e6 !important;
   border-color: #e11d48 !important;
   border-bottom-color: #881337 !important;
   box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.75);
   z-index: 23;
 }
-.monster-body-shield.shield-wrong .gate-arch-badge {
+.food-answer-tag.food-wrong .food-name-badge {
   background: #e11d48 !important;
 }
 
-.monster-body-shield.shield-dissolve {
+.food-answer-tag.food-dismissed {
   opacity: 0;
   pointer-events: none;
 }
@@ -1084,4 +1084,58 @@ html, body {
   box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.4);
   max-height: 90vh;
   overflow-y: auto;
+}
+
+/* Readable answer controls stay in the HUD while the destination gates use perspective. */
+.run-status { margin: 10px 0 8px; font-size: 0.9rem; color: #075985; text-align: center; font-weight: 800; }
+.answer-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.answer-choice { min-height: 68px; padding: 8px; border: 2px solid #cbd5e1; border-bottom-width: 5px; border-radius: 14px; background: #fff; color: #0f172a; cursor: pointer; display: grid; gap: 4px; align-content: center; transition: background .15s, border-color .15s; }
+.answer-choice.lane-0 { border-color: #9333ea; }
+.answer-choice.lane-1 { border-color: #e11d48; }
+.answer-choice.lane-2 { border-color: #059669; }
+.answer-lane { font-size: 0.875rem; font-weight: 800; }
+.answer-formula { font-size: 1.05rem; overflow-x: auto; padding: 2px; }
+.answer-choice.is-aimed { background: #fffbeb; border-color: #d97706; }
+.answer-choice:focus-visible { outline: 3px solid #0284c7; outline-offset: 3px; }
+.answer-choice:disabled { cursor: default; }
+.canvas-stage-wrap { height: auto; aspect-ratio: 24 / 11; }
+.food-answer-tag { min-width: 0; max-width: none; min-height: 28px; padding: 4px 2px; border-width: 2px; border-bottom-width: 4px; border-radius: 8px; }
+.food-answer-tag .sign-formula { font-size: clamp(0.65rem, 1.25vw, 1rem); max-width: 100%; overflow: hidden; }
+.food-name-badge { font-size: 0.625rem; padding: 1px 4px; max-width: 100%; overflow: hidden; }
+@media (max-width: 680px) {
+  .canvas-stage-wrap { aspect-ratio: 4 / 3; }
+  .steer-btn { display: block; padding: 10px 6px; }
+  .steer-btn .keycap { display: none; }
+  .top-question-box { flex-wrap: wrap; gap: 6px; }
+  .top-question-box .q-main-text { order: 3; flex-basis: 100%; }
+  .top-question-box .q-timer-chip { margin-left: auto; }
+  .answer-choices { gap: 6px; }
+  .answer-choice { padding: 6px 3px; min-height: 72px; }
+  .answer-formula { font-size: 0.9rem; }
+  .run-status { font-size: 0.875rem; line-height: 1.5; }
+  .food-answer-tag .sign-formula { font-size: 0.6rem; }
+  .food-name-badge { display: none; }
+}
+
+/* Food labels follow their fish. The complete answer always scales to fit. */
+.food-answer-tag { border-radius: 999px; padding: 6px 5px; min-height: 34px; border-bottom-width: 3px; }
+.food-answer-tag .sign-formula { width: 100%; font-size: 1rem; overflow: visible; line-height: 1.25; }
+.food-formula-content { display: inline-block; white-space: nowrap; transform-origin: center; }
+.food-name-badge { top: -14px; font-size: 0.625rem; }
+.answer-choice.food-correct { background: #d1fae5; border-color: #059669; }
+.answer-choice.food-wrong { background: #fff1f2; border-color: #e11d48; }
+.food-answer-tag.lane-0, .answer-choice.lane-0 { border-color: #2563eb; }
+.food-answer-tag.lane-0 .food-name-badge { background: #2563eb; }
+.food-answer-tag.lane-1, .answer-choice.lane-1 { border-color: #ea580c; }
+.food-answer-tag.lane-1 .food-name-badge { background: #ea580c; }
+.food-answer-tag.lane-2, .answer-choice.lane-2 { border-color: #0f766e; }
+.food-answer-tag.lane-2 .food-name-badge { background: #0f766e; }
+.answer-choice.is-aimed { border-color: #d97706; }
+.answer-choice.food-correct { border-color: #059669; }
+.answer-choice.food-wrong { border-color: #e11d48; }
+.top-hud-row .hud-group { flex-wrap: wrap; }
+@media (max-width: 680px) {
+  .food-answer-tag { min-height: 24px; padding: 3px; }
+  .food-answer-tag .sign-formula { font-size: 0.7rem; }
+  .answer-lane { font-size: 0.8rem; }
 }

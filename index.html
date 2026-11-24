@@ -10,10 +10,10 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
+  <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 정답 먹이 찾기</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/style.css?v=12" />
+  <link rel="stylesheet" href="css/style.css?v=14" />
 </head>
 <body>
   <div class="app-wrap">
@@ -28,10 +28,10 @@
         </div>
         <div style="flex:1;min-width:250px;">
           <div class="intro-badge">🦦 고등학교 1학년 수학 3D 액션 러너</div>
-          <h1 class="intro-title">수달런 3D : 수학 관문 돌파!</h1>
+          <h1 class="intro-title">수달런 3D : 정답 먹이를 찾아라!</h1>
           <p class="intro-subtitle">
             화면 상단의 <strong>고1 수학 문제</strong>를 보고, <strong>키보드 방향키(← · →)로 수달을 좌우로 움직여</strong><br />
-            세 갈래 길에서 내려오는 <strong>정답 수식 아치 관문(게이트)</strong>을 통과해 몬스터를 격파하세요!
+            세 갈래 길에 놓인 <strong>물고기의 답을 보고, 정답 먹이를 찾아 주세요.</strong><br />물고기를 누르거나, 방향키로 길을 고른 뒤 Space로 먹으러 가세요!
           </p>
         </div>
       </div>
@@ -55,9 +55,9 @@
           <div class="flow-card fc-2">
             <div class="flow-num-badge">🦦</div>
             <div>
-              <div class="flow-text-title">② 방향키(←·→)로 정답 관문 맞추기!</div>
+              <div class="flow-text-title">② 방향키(←·→)로 정답 먹이 고르기!</div>
               <div class="flow-text-desc">
-                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답 수식 게이트가 내려오는 줄</strong>로 수달을 옮기세요!
+                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답 먹이가 있는 길</strong>로 수달을 옮기세요!
               </div>
             </div>
           </div>
@@ -65,9 +65,9 @@
           <div class="flow-card fc-3">
             <div class="flow-num-badge">⚡</div>
             <div>
-              <div class="flow-text-title">③ Space 키로 즉시 돌파</div>
+              <div class="flow-text-title">③ 정답 먹이를 냠냠!</div>
               <div class="flow-text-desc">
-                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 통과해 격파</strong>합니다!
+                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>선택한 물고기까지 달려가 냠냠</strong>합니다!
               </div>
             </div>
           </div>
@@ -102,6 +102,7 @@
           </div>
 
           <div class="hud-group">
+            <div class="hud-glass-pill" id="hud-food" style="color:#0f766e;">🐟 0마리</div>
             <div class="hud-glass-pill" style="color:#db2777;" id="hud-combo">🔥 0 콤보</div>
             <div class="hud-glass-pill" style="color:#d97706;" id="hud-score">⭐ 0점</div>
             <button class="btn btn-primary" onclick="OtterRun.startGame()" title="다시 시작">🔄</button>
@@ -111,22 +112,24 @@
 
         <!-- Prominent Top Question Banner -->
         <div class="console-question-box top-question-box">
-          <span class="q-wave-tag" id="q-gate-num">1 / 10</span>
+          <span class="q-wave-tag" id="q-question-num">1 / 10</span>
           <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
           <span class="q-timer-chip" id="q-time-label">15.0초</span>
           <div class="q-progress-track">
             <div class="q-progress-fill" id="q-progress-fill"></div>
           </div>
         </div>
+        <p class="run-status" id="run-status" role="status">정답이 적힌 물고기를 골라 수달에게 먹여 주세요!</p>
+        <div class="answer-choices" id="answer-choices" role="group" aria-label="답이 적힌 먹이 선택"></div>
       </header>
 
-      <!-- 2. Clean 3-Lane Stage: 3 Characters with Large, Steady Formula Shields on their bodies -->
+      <!-- 2. Clean 3-Lane Stage: 3 Fish with Large, Steady Formula Shields on their bodies -->
       <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <!-- Monster Character Body Formula Shields (Only the crisp math formula, no clutter!) -->
-        <div class="monster-signs-layer" id="monster-signs-layer">
-          <div class="monster-body-shield lane-0" id="mon-sign-0" onclick="OtterRun.selectAndFireLane(0)"></div>
-          <div class="monster-body-shield lane-1" id="mon-sign-1" onclick="OtterRun.selectAndFireLane(1)"></div>
-          <div class="monster-body-shield lane-2" id="mon-sign-2" onclick="OtterRun.selectAndFireLane(2)"></div>
+        <!-- Answer labels attached to fish (Only the crisp math formula, no clutter!) -->
+        <div class="food-signs-layer" id="food-signs-layer" aria-hidden="true">
+          <div class="food-answer-tag lane-0" id="food-sign-0" onclick="OtterRun.selectAndFireLane(0)"></div>
+          <div class="food-answer-tag lane-1" id="food-sign-1" onclick="OtterRun.selectAndFireLane(1)"></div>
+          <div class="food-answer-tag lane-2" id="food-sign-2" onclick="OtterRun.selectAndFireLane(2)"></div>
         </div>
 
         <canvas id="runner-canvas" width="960" height="440"></canvas>
@@ -135,7 +138,7 @@
         <div class="crash-tip-overlay" id="crash-tip-overlay">
           <div class="crash-tip-card">
             <div style="font-size:1.08rem;font-weight:900;color:#e11d48;margin-bottom:3px;" id="crash-headline-text">
-              ❌ 오답 캐릭터와 부딪혔어요!
+              다른 답이 적힌 먹이를 골랐어요.
             </div>
             <div style="font-size:1rem;font-weight:900;color:#059669;margin-bottom:4px;" id="crash-correct-text"></div>
             <div style="background:#f0f9ff;border:2px solid #38bdf8;border-radius:12px;padding:7px 14px;font-size:0.88rem;color:#0f172a;font-weight:800;" id="crash-tip-text"></div>
@@ -149,7 +152,7 @@
           ⬅️ 왼쪽 길 <span class="keycap">←</span>
         </button>
         <button type="button" class="steer-btn steer-fire" id="btn-steer-fire" onclick="OtterRun.fireCurrentLane()">
-          ⚡ 현재 길(<span id="current-lane-label">가운데</span>)로 빠르게 돌진! <span class="keycap">Space</span>
+          ⚡ 현재 길(<span id="current-lane-label">가운데</span>)로 먹이 먹으러 가기 <span class="keycap">Space</span>
         </button>
         <button type="button" class="steer-btn steer-right" onclick="OtterRun.steerOtter(1)">
           오른쪽 길 <span class="keycap">→</span> ➡️
@@ -161,15 +164,15 @@
   <!-- Result Modal -->
   <div class="modal-backdrop" id="modal-result">
     <div class="modal-box">
-      <div style="font-size:3.2rem;margin-bottom:6px;">🦦🕶️🏆</div>
-      <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">3D 토벌 완료!</h2>
+      <div style="font-size:3.2rem;margin-bottom:6px;">🦦🐟💛</div>
+      <h2 style="font-size:1.8rem;font-weight:900;margin-bottom:6px;" id="result-title">먹이 찾기 완료!</h2>
       <p style="color:var(--text-muted);font-size:1rem;margin-bottom:16px;" id="result-desc"></p>
 
       <div id="result-review-box" style="text-align:left;background:#f0f9ff;border:2px solid #bae6fd;border-radius:16px;padding:14px 18px;margin-bottom:20px;font-size:0.9rem;line-height:1.65;max-height:220px;overflow-y:auto;"></div>
 
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:13px 26px;font-size:1.05rem;" onclick="OtterRun.closeResultAndRestart()">
-          🚀 한 번 더 출격!
+          🚀 다시 먹이 찾기!
         </button>
         <button class="btn" style="padding:13px 20px;font-size:1rem;" onclick="OtterRun.closeResultAndIntro()">
           🏠 첫 화면으로
@@ -197,9 +200,9 @@
     </div>
   </div>
 
-  <script src="js/qrcode.js?v=12"></script>
-  <script src="js/sound.js?v=12"></script>
-  <script src="js/math-data.js?v=12"></script>
-  <script src="js/app.js?v=12"></script>
+  <script src="js/qrcode.js?v=14"></script>
+  <script src="js/sound.js?v=14"></script>
+  <script src="js/math-data.js?v=14"></script>
+  <script src="js/app.js?v=14"></script>
 </body>
 </html>
