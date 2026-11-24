@@ -13,7 +13,7 @@
   <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/style.css?v=7" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
 </head>
 <body>
   <div class="app-wrap">
@@ -30,8 +30,8 @@
           <div class="intro-badge">🦦 고등학교 1학년 수학 3D 액션 러너</div>
           <h1 class="intro-title">수달런 3D : 수학 몬스터 격파!</h1>
           <p class="intro-subtitle">
-            3D 다리를 달리는 수달 앞을 <strong>①번 · ②번 · ③번 몬스터</strong>가 막아섭니다.<br />
-            <strong>정답 공식을 가진 번호</strong>를 골라 워터캐논으로 날려버리세요!
+            화면 상단의 <strong>고1 수학 문제</strong>를 보고, <strong>키보드 방향키(← · →)로 수달을 좌우로 움직여</strong><br />
+            몸통에 <strong>정답 수식을 달고 오는 몬스터 캐릭터</strong>를 향해 워터캐논을 발사하세요!
           </p>
         </div>
       </div>
@@ -45,29 +45,29 @@
           <div class="flow-card fc-1">
             <div class="flow-num-badge">📋</div>
             <div>
-              <div class="flow-text-title">① 문제 보기</div>
+              <div class="flow-text-title">① 상단 문제 확인</div>
               <div class="flow-text-desc">
-                화면 아래 콘솔에 뜨는 <strong>고1 수학 문제</strong>를 읽습니다.
+                화면 <strong>맨 위 전광판에 크게 뜨는 고1 수학 문제</strong>를 읽습니다.
               </div>
             </div>
           </div>
 
           <div class="flow-card fc-2">
-            <div class="flow-num-badge">🎯</div>
+            <div class="flow-num-badge">🦦</div>
             <div>
-              <div class="flow-text-title">② 정답 번호 클릭!</div>
+              <div class="flow-text-title">② 방향키(←·→)로 정답 줄 맞추기!</div>
               <div class="flow-text-desc">
-                <strong>①·②·③번 입체 카드 클릭</strong> 또는 키보드 <span class="keycap">1</span> <span class="keycap">2</span> <span class="keycap">3</span> (<span class="keycap">←</span> <span class="keycap">↑</span> <span class="keycap">→</span>)
+                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답을 단 캐릭터 줄</strong>로 수달을 옮겨 몸으로 통과하세요!
               </div>
             </div>
           </div>
 
           <div class="flow-card fc-3">
-            <div class="flow-num-badge">🔥</div>
+            <div class="flow-num-badge">⚡</div>
             <div>
-              <div class="flow-text-title">③ 100% 메가 필살기</div>
+              <div class="flow-text-title">③ Space 키로 빠른 돌진</div>
               <div class="flow-text-desc">
-                3마리 격파 시 충전! <span class="keycap">Space</span> 키로 <strong>어려운 문제 한 방에 올클리어!</strong>
+                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 돌진해 격파</strong>합니다!
               </div>
             </div>
           </div>
@@ -102,11 +102,11 @@
             <div class="chapter-tabs" id="intro-chapter-tabs"></div>
           </div>
           <div>
-            <label class="config-label">⚡ 3. 몬스터 속도</label>
+            <label class="config-label">⚡ 3. 문제당 제한시간</label>
             <div class="chapter-tabs">
-              <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 (9초)</button>
-              <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 보통 (6.5초)</button>
-              <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 빠름 (4.5초)</button>
+              <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 (20초)</button>
+              <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 보통 (15초)</button>
+              <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 빠름 (11초)</button>
             </div>
           </div>
         </div>
@@ -122,78 +122,70 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: UNIFIED 3D STAGE + BATTLE QUIZ CONSOLE (플레이 중 화면)
+         SCREEN 2: ULTRA-CLEAN 3-LANE RUNNER (상단 문제 + 중앙 3캐릭터 수식 + 수달)
          ==================================================================== -->
     <section id="screen-game" style="display:none;">
-      <!-- 1. Wide 3D Viewport with Floating Corner HUD -->
-      <main class="canvas-stage-wrap" id="canvas-stage-wrap">
-        <!-- Floating Glassmorphism Corner HUD -->
-        <header class="floating-hud-bar">
+      <!-- 1. CLEAN TOP HUD & LARGE QUESTION BOARD -->
+      <header class="top-quiz-header">
+        <div class="top-hud-row">
           <div class="hud-group">
             <button class="btn" onclick="OtterRun.showIntro()">🏠 첫 화면</button>
             <div class="hud-glass-pill" id="hud-hearts">❤️❤️❤️❤️❤️</div>
-            <button class="btn btn-amber" id="btn-shield-chance" onclick="OtterRun.activateFreeShield()">🛡️ 무료 방어막</button>
           </div>
 
           <div class="hud-group">
-            <button class="ult-meter-btn" id="btn-ultimate" disabled onclick="OtterRun.fireUltimateSkill()">
-              <div class="ult-meter-fill" id="ult-meter-fill"></div>
-              <span style="position:relative;z-index:2;" id="ult-btn-label">⚡ 필살기 35%</span>
-            </button>
-            <div class="hud-glass-pill" style="color:#db2777;" id="hud-combo">🔥 0 COMBO</div>
-            <div class="hud-glass-pill" style="color:#d97706;" id="hud-score">🐚 0점</div>
+            <div class="hud-glass-pill" style="color:#db2777;" id="hud-combo">🔥 0 콤보</div>
+            <div class="hud-glass-pill" style="color:#d97706;" id="hud-score">⭐ 0점</div>
             <button class="btn btn-primary" onclick="OtterRun.startGame()" title="다시 시작">🔄</button>
             <button class="btn" id="btn-sound" onclick="OtterRun.toggleSound()" title="소리">🔊</button>
           </div>
-        </header>
-
-        <!-- 3D Boss Warning & HP Banner (Wave 5 & Wave 10) -->
-        <div class="boss-hud-banner" id="boss-hud-banner">
-          <span id="boss-hud-title">🚨 BOSS WAVE! 🐉 심해 크라켄 드래곤 출현! (격파 보너스 +600점)</span>
         </div>
 
-        <!-- Heartbeat Red Danger Proximity Vignette -->
-        <div class="danger-vignette" id="danger-vignette"></div>
-
-        <canvas id="runner-canvas" width="960" height="340"></canvas>
-
-        <!-- Wrong Monster Counterattack & 1-Line Explanation Overlay -->
-        <div class="crash-tip-overlay" id="crash-tip-overlay">
-          <div style="font-size:1.85rem;font-weight:900;color:#e11d48;margin-bottom:4px;">💢 쾅! 오답 몬스터 방패에 부딪혔어요!</div>
-          <div style="font-size:1.18rem;font-weight:900;color:#059669;margin-bottom:8px;" id="crash-correct-text"></div>
-          <div style="background:#f0f9ff;border:2px solid #38bdf8;border-radius:16px;padding:12px 18px;max-width:540px;font-size:0.98rem;color:#0f172a;font-weight:700;margin-bottom:10px;" id="crash-tip-text"></div>
-          <div style="font-size:0.82rem;color:#0284c7;font-weight:900;">잠시 후 다음 몬스터 웨이브로 돌격합니다...</div>
-        </div>
-      </main>
-
-      <!-- 2. Integrated Battle Quiz Console (Question + 1·2·3 Choices together directly below 3D Monsters!) -->
-      <section class="battle-quiz-console">
-        <!-- Dynamic Thrill Status Bar (Speed Kill / Just Counter / Boss / Golden Wave & Combo Speed Boost) -->
-        <div class="thrill-status-bar">
-          <div class="thrill-pill mode-speed" id="thrill-mode-pill">
-            ⚡ 3초 스피드 킬 찬스! (황금 조개 분수 +200점)
-          </div>
-          <div class="thrill-pill" id="thrill-speed-pill">
-            💨 질주 속도 1.0x (콤보 시 초고속 가속!)
-          </div>
-        </div>
-
-        <!-- Question & Timer Progress Bar -->
-        <div class="console-question-box">
-          <span class="q-wave-tag" id="q-gate-num">WAVE 1 / 10</span>
+        <!-- Prominent Top Question Banner -->
+        <div class="console-question-box top-question-box">
+          <span class="q-wave-tag" id="q-gate-num">1 / 10</span>
           <div class="q-main-text" id="q-prompt-text">문제를 불러오는 중...</div>
-          <span class="q-timer-chip" id="q-time-label">6.5초</span>
+          <span class="q-timer-chip" id="q-time-label">15.0초</span>
           <div class="q-progress-track">
             <div class="q-progress-fill" id="q-progress-fill"></div>
           </div>
         </div>
+      </header>
 
-        <!-- 3 Large Choice Cards right under the Question (0px eye ping-pong!) -->
-        <div class="answer-cards-grid">
-          <div class="answer-target-card lane-0" id="plat-card-0" onclick="OtterRun.jumpToFloorAndDash(0)"></div>
-          <div class="answer-target-card lane-1" id="plat-card-1" onclick="OtterRun.jumpToFloorAndDash(1)"></div>
-          <div class="answer-target-card lane-2" id="plat-card-2" onclick="OtterRun.jumpToFloorAndDash(2)"></div>
+      <!-- 2. Clean 3-Lane Stage: 3 Characters with Large, Steady Formula Shields on their bodies -->
+      <main class="canvas-stage-wrap" id="canvas-stage-wrap">
+        <!-- Monster Character Body Formula Shields (Only the crisp math formula, no clutter!) -->
+        <div class="monster-signs-layer" id="monster-signs-layer">
+          <div class="monster-body-shield lane-0" id="mon-sign-0" onclick="OtterRun.selectAndFireLane(0)"></div>
+          <div class="monster-body-shield lane-1" id="mon-sign-1" onclick="OtterRun.selectAndFireLane(1)"></div>
+          <div class="monster-body-shield lane-2" id="mon-sign-2" onclick="OtterRun.selectAndFireLane(2)"></div>
         </div>
+
+        <canvas id="runner-canvas" width="960" height="440"></canvas>
+
+        <!-- Non-Blocking Wrong Answer Explanation Toast -->
+        <div class="crash-tip-overlay" id="crash-tip-overlay">
+          <div class="crash-tip-card">
+            <div style="font-size:1.08rem;font-weight:900;color:#e11d48;margin-bottom:3px;" id="crash-headline-text">
+              ❌ 오답 캐릭터와 부딪혔어요!
+            </div>
+            <div style="font-size:1rem;font-weight:900;color:#059669;margin-bottom:4px;" id="crash-correct-text"></div>
+            <div style="background:#f0f9ff;border:2px solid #38bdf8;border-radius:12px;padding:7px 14px;font-size:0.88rem;color:#0f172a;font-weight:800;" id="crash-tip-text"></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- 3. Simple Bottom Arrow-Key Steering Bar -->
+      <section class="otter-steer-console">
+        <button type="button" class="steer-btn steer-left" onclick="OtterRun.steerOtter(-1)">
+          ⬅️ 왼쪽 길 <span class="keycap">←</span>
+        </button>
+        <button type="button" class="steer-btn steer-fire" id="btn-steer-fire" onclick="OtterRun.fireCurrentLane()">
+          ⚡ 현재 길(<span id="current-lane-label">가운데</span>)로 빠르게 돌진! <span class="keycap">Space</span>
+        </button>
+        <button type="button" class="steer-btn steer-right" onclick="OtterRun.steerOtter(1)">
+          오른쪽 길 <span class="keycap">→</span> ➡️
+        </button>
       </section>
     </section>
   </div>
@@ -237,9 +229,9 @@
     </div>
   </div>
 
-  <script src="js/qrcode.js?v=7"></script>
-  <script src="js/sound.js?v=7"></script>
-  <script src="js/math-data.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
+  <script src="js/qrcode.js?v=11"></script>
+  <script src="js/sound.js?v=11"></script>
+  <script src="js/math-data.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
 </body>
 </html>

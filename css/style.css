@@ -375,12 +375,40 @@ html, body {
   border-bottom-color: #b45309;
 }
 
-/* 1. Sunny 3D Stage Viewport */
+/* 1. Top Quiz Header & Prominent Top Question Board */
+.top-quiz-header {
+  background: #ffffff;
+  border: 3.5px solid #0284c7;
+  border-bottom: none;
+  border-radius: 30px 30px 0 0;
+  padding: 12px 16px 10px;
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.15);
+}
+
+.top-hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.top-question-box {
+  margin-bottom: 8px !important;
+  padding: 12px 18px 16px !important;
+  background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  border: 3px solid #0284c7 !important;
+  border-bottom-width: 6px !important;
+  border-bottom-color: #0369a1 !important;
+}
+
+/* 2. Tall Sunny 3D Stage Viewport */
 .canvas-stage-wrap {
   position: relative;
   width: 100%;
-  height: 345px;
-  border-radius: 30px 30px 0 0;
+  height: 415px;
+  border-radius: 0;
   overflow: hidden;
   border: 3.5px solid #0284c7;
   border-bottom: none;
@@ -433,7 +461,7 @@ html, body {
 /* 3D Boss Warning & Boss HP Bar Overlay */
 .boss-hud-banner {
   position: absolute;
-  top: 54px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 22;
@@ -757,13 +785,15 @@ html, body {
 .answer-target-card.selected-lane {
   border-color: #f59e0b !important;
   border-bottom-color: #b45309 !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.45);
+  transform: translateY(-3px);
 }
 
 .answer-target-card.shield-correct {
   background: #d1fae5 !important;
   border-color: #059669 !important;
   border-bottom-color: #064e3b !important;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.45);
   transform: scale(1.03);
 }
 
@@ -771,43 +801,234 @@ html, body {
   background: #ffe4e6 !important;
   border-color: #e11d48 !important;
   border-bottom-color: #881337 !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.45);
 }
 
-.card-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.78rem;
-  font-weight: 900;
-  margin-bottom: 4px;
+.answer-target-card.shield-dissolve {
+  opacity: 0.32;
+  filter: grayscale(0.7);
+  transform: scale(0.95);
 }
 
-.card-formula-body {
-  font-size: 1.26rem;
-  font-weight: 900;
-  color: #0f172a;
-  text-align: center;
-  margin: auto 0;
-  line-height: 1.35;
-}
-
-/* Crash Explanation Overlay */
-.crash-tip-overlay {
+/* Monster Character Body Formula Shields (Worn directly ON each Monster Character's torso!) */
+.monster-signs-layer {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(6px);
-  z-index: 40;
-  display: none;
+  pointer-events: none;
+  z-index: 18;
+  overflow: hidden;
+}
+
+.monster-body-shield {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  width: 26.5%;
+  max-width: 244px;
+  min-width: 155px;
+  min-height: 64px;
+  padding: 12px 14px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 3.5px solid #cbd5e1;
+  border-bottom-width: 7px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.16s ease, background-color 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+  text-align: center;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  text-align: center;
-  color: #ffffff;
+}
+
+/* Cute Monster Paws gripping the left & right edges of the Formula Shield on its chest! */
+.monster-body-shield::before,
+.monster-body-shield::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 15px;
+  height: 24px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  border: 2.5px solid #0f172a;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.22);
+}
+.monster-body-shield::before { left: -9px; }
+.monster-body-shield::after { right: -9px; }
+
+.monster-body-shield.lane-0 {
+  background: #ffffff;
+  border-color: #9333ea;
+  border-bottom-color: #6b21a8;
+}
+.monster-body-shield.lane-0::before,
+.monster-body-shield.lane-0::after {
+  background: #7e22ce;
+  border-color: #3b0764;
+}
+
+.monster-body-shield.lane-1 {
+  background: #ffffff;
+  border-color: #e11d48;
+  border-bottom-color: #9f1239;
+}
+.monster-body-shield.lane-1::before,
+.monster-body-shield.lane-1::after {
+  background: #e11d48;
+  border-color: #4c0519;
+}
+
+.monster-body-shield.lane-2 {
+  background: #ffffff;
+  border-color: #059669;
+  border-bottom-color: #065f46;
+}
+.monster-body-shield.lane-2::before,
+.monster-body-shield.lane-2::after {
+  background: #10b981;
+  border-color: #064e3b;
+}
+
+.monster-body-shield .sign-formula {
+  font-size: 1.32rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+}
+
+/* Highlight when the Otter is currently running in this character's lane! */
+.monster-body-shield.otter-aimed {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+  border-bottom-color: #b45309 !important;
+  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.65), 0 12px 24px rgba(15, 23, 42, 0.3);
+  z-index: 21;
+}
+
+.monster-body-shield.selected-lane {
+  background: #fef08a !important;
+  border-color: #d97706 !important;
+  border-bottom-color: #92400e !important;
+  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.8);
+  z-index: 22;
+}
+
+.monster-body-shield.shield-correct {
+  background: #d1fae5 !important;
+  border-color: #059669 !important;
+  border-bottom-color: #064e3b !important;
+  box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.75);
+  z-index: 23;
+}
+
+.monster-body-shield.shield-wrong {
+  background: #ffe4e6 !important;
+  border-color: #e11d48 !important;
+  border-bottom-color: #881337 !important;
+  box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.75);
+  z-index: 23;
+}
+
+.monster-body-shield.shield-dissolve {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 3. Bottom Arrow-Key Steering Control Bar */
+.otter-steer-console {
+  background: #ffffff;
+  border: 3.5px solid #0284c7;
+  border-bottom-width: 8px;
+  border-bottom-color: #0369a1;
+  border-radius: 0 0 30px 30px;
+  padding: 11px 16px 13px;
+  display: grid;
+  grid-template-columns: 1fr 1.45fr 1fr;
+  gap: 12px;
+  box-shadow: 0 20px 45px -12px rgba(2, 132, 199, 0.28);
+}
+
+@media (max-width: 680px) {
+  .otter-steer-console {
+    grid-template-columns: 1fr 1fr;
+  }
+  .steer-fire {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+}
+
+.steer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 14px;
+  border-radius: 999px;
+  background: #f0f9ff;
+  border: 2.5px solid #38bdf8;
+  border-bottom-width: 6px;
+  border-bottom-color: #0284c7;
+  color: #0369a1;
+  font-weight: 900;
+  font-size: 0.94rem;
+  cursor: pointer;
+  transition: transform 0.08s ease, background-color 0.12s ease;
+}
+
+.steer-btn:hover {
+  background: #e0f2fe;
+  transform: translateY(-1.5px);
+}
+
+.steer-btn:active {
+  transform: translateY(3px);
+  border-bottom-width: 3px;
+}
+
+.steer-btn.steer-fire {
+  background: linear-gradient(180deg, #fde047 0%, #f59e0b 100%);
+  border-color: #d97706;
+  border-bottom-color: #92400e;
+  color: #78350f;
+  font-size: 0.98rem;
+}
+
+.steer-btn.steer-fire:hover {
+  filter: brightness(1.04);
+}
+
+/* Non-Blocking Wrong Answer & Timeout Explanation Toast (Keeps 3D Otter & Monsters Visible!) */
+.crash-tip-overlay {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  z-index: 35;
+  display: none;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .crash-tip-overlay.active { display: flex; }
+
+.crash-tip-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 3px solid #f43f5e;
+  border-bottom-width: 6px;
+  border-bottom-color: #be123c;
+  border-radius: 20px;
+  padding: 10px 18px;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.35);
+}
 
 /* Math Typography (Adapts automatically to bright cards & dark overlays) */
 .math-inline {
