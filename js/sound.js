@@ -80,6 +80,12 @@
         playTone(f, 'sawtooth', 0.22, 0.15, i * 0.045);
       });
     },
+    eat(combo = 1) {
+      const base = COMBO_FREQS[Math.min(COMBO_FREQS.length - 1, Math.max(0, combo - 1))];
+      playTone(420, 'sine', 0.07, 0.08, 0, 580);
+      playTone(base, 'triangle', 0.13, 0.11, 0.08);
+      playTone(base * 1.5, 'sine', 0.18, 0.10, 0.16);
+    },
     correct(combo = 1) {
       this.smash(combo);
     },

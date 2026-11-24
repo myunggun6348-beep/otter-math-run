@@ -1,11 +1,11 @@
 {
-  "name": "까치매스 - 고1 수학 공식 짝맞추기",
-  "short_name": "까치매스 고1",
-  "description": "고등학교 1학년 수학 공식 & 개념 12장 짝맞추기 카드 웹앱",
+  "name": "수달런 3D - 정답 먹이를 찾아라!",
+  "short_name": "수달런 먹이 찾기",
+  "description": "고1 수학 문제를 풀고 정답이 적힌 물고기를 찾아 수달에게 먹여 주세요.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1120",
-  "theme_color": "#0b1120",
+  "background_color": "#e0f2fe",
+  "theme_color": "#0284c7",
   "orientation": "any",
   "icons": [
     {
