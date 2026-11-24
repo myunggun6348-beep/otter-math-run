@@ -810,7 +810,7 @@ html, body {
   transform: scale(0.95);
 }
 
-/* Monster Character Body Formula Shields (Worn directly ON each Monster Character's torso!) */
+/* Sleek 1-Line Pass-Through Arch Gate Banners (Zero overlap with Otter head, no side pill handles!) */
 .monster-signs-layer {
   position: absolute;
   inset: 0;
@@ -821,18 +821,18 @@ html, body {
 
 .monster-body-shield {
   position: absolute;
-  top: 200px;
+  top: 160px;
   left: 50%;
-  width: 26.5%;
-  max-width: 244px;
-  min-width: 155px;
-  min-height: 64px;
-  padding: 12px 14px;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 3.5px solid #cbd5e1;
-  border-bottom-width: 7px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+  width: 28.2%;
+  max-width: 266px;
+  min-width: 160px;
+  min-height: 46px;
+  padding: 10px 12px 8px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 3px solid #cbd5e1;
+  border-bottom-width: 6px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.22);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   cursor: pointer;
@@ -844,70 +844,69 @@ html, body {
   justify-content: center;
 }
 
-/* Cute Monster Paws gripping the left & right edges of the Formula Shield on its chest! */
-.monster-body-shield::before,
-.monster-body-shield::after {
-  content: '';
+/* Top Arch Gate Badge Pill */
+.gate-arch-badge {
   position: absolute;
-  top: 50%;
-  width: 15px;
-  height: 24px;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 10px;
   border-radius: 999px;
-  transform: translateY(-50%);
-  border: 2.5px solid #0f172a;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.22);
+  font-size: 0.69rem;
+  font-weight: 900;
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
 }
-.monster-body-shield::before { left: -9px; }
-.monster-body-shield::after { right: -9px; }
 
 .monster-body-shield.lane-0 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #9333ea;
   border-bottom-color: #6b21a8;
 }
-.monster-body-shield.lane-0::before,
-.monster-body-shield.lane-0::after {
-  background: #7e22ce;
-  border-color: #3b0764;
+.monster-body-shield.lane-0 .gate-arch-badge {
+  background: linear-gradient(90deg, #9333ea, #7e22ce);
 }
 
 .monster-body-shield.lane-1 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #e11d48;
   border-bottom-color: #9f1239;
 }
-.monster-body-shield.lane-1::before,
-.monster-body-shield.lane-1::after {
-  background: #e11d48;
-  border-color: #4c0519;
+.monster-body-shield.lane-1 .gate-arch-badge {
+  background: linear-gradient(90deg, #f43f5e, #be123c);
 }
 
 .monster-body-shield.lane-2 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #059669;
   border-bottom-color: #065f46;
 }
-.monster-body-shield.lane-2::before,
-.monster-body-shield.lane-2::after {
-  background: #10b981;
-  border-color: #064e3b;
+.monster-body-shield.lane-2 .gate-arch-badge {
+  background: linear-gradient(90deg, #10b981, #047857);
 }
 
 .monster-body-shield .sign-formula {
-  font-size: 1.32rem;
+  font-size: clamp(0.95rem, 1.32vw, 1.15rem);
   font-weight: 900;
   color: #0f172a;
-  line-height: 1.32;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
-/* Highlight when the Otter is currently running in this character's lane! */
+/* Highlight when the Otter is currently aligned with this Arch Gate lane! */
 .monster-body-shield.otter-aimed {
   background: #fffbeb !important;
   border-color: #f59e0b !important;
   border-bottom-color: #b45309 !important;
-  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.65), 0 12px 24px rgba(15, 23, 42, 0.3);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.65), 0 10px 22px rgba(15, 23, 42, 0.26);
   z-index: 21;
+}
+.monster-body-shield.otter-aimed .gate-arch-badge {
+  background: linear-gradient(90deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
 }
 
 .monster-body-shield.selected-lane {
@@ -925,6 +924,9 @@ html, body {
   box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.75);
   z-index: 23;
 }
+.monster-body-shield.shield-correct .gate-arch-badge {
+  background: #059669 !important;
+}
 
 .monster-body-shield.shield-wrong {
   background: #ffe4e6 !important;
@@ -932,6 +934,9 @@ html, body {
   border-bottom-color: #881337 !important;
   box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.75);
   z-index: 23;
+}
+.monster-body-shield.shield-wrong .gate-arch-badge {
+  background: #e11d48 !important;
 }
 
 .monster-body-shield.shield-dissolve {

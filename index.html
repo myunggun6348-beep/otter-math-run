@@ -13,7 +13,7 @@
   <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
 </head>
 <body>
   <div class="app-wrap">
@@ -28,10 +28,10 @@
         </div>
         <div style="flex:1;min-width:250px;">
           <div class="intro-badge">🦦 고등학교 1학년 수학 3D 액션 러너</div>
-          <h1 class="intro-title">수달런 3D : 수학 몬스터 격파!</h1>
+          <h1 class="intro-title">수달런 3D : 수학 관문 돌파!</h1>
           <p class="intro-subtitle">
             화면 상단의 <strong>고1 수학 문제</strong>를 보고, <strong>키보드 방향키(← · →)로 수달을 좌우로 움직여</strong><br />
-            몸통에 <strong>정답 수식을 달고 오는 몬스터 캐릭터</strong>를 향해 워터캐논을 발사하세요!
+            세 갈래 길에서 내려오는 <strong>정답 수식 아치 관문(게이트)</strong>을 통과해 몬스터를 격파하세요!
           </p>
         </div>
       </div>
@@ -55,9 +55,9 @@
           <div class="flow-card fc-2">
             <div class="flow-num-badge">🦦</div>
             <div>
-              <div class="flow-text-title">② 방향키(←·→)로 정답 줄 맞추기!</div>
+              <div class="flow-text-title">② 방향키(←·→)로 정답 관문 맞추기!</div>
               <div class="flow-text-desc">
-                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답을 단 캐릭터 줄</strong>로 수달을 옮겨 몸으로 통과하세요!
+                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답 수식 게이트가 내려오는 줄</strong>로 수달을 옮기세요!
               </div>
             </div>
           </div>
@@ -65,51 +65,19 @@
           <div class="flow-card fc-3">
             <div class="flow-num-badge">⚡</div>
             <div>
-              <div class="flow-text-title">③ Space 키로 빠른 돌진</div>
+              <div class="flow-text-title">③ Space 키로 즉시 돌파</div>
               <div class="flow-text-desc">
-                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 돌진해 격파</strong>합니다!
+                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 통과해 격파</strong>합니다!
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Clean Pre-game Config Box -->
+      <!-- Clean Pre-game Config Box (단원 선택만 깔끔하게 유지) -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 내 3D 수달 캐릭터 선택</label>
-        <div class="skin-grid">
-          <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.94rem;color:#0284c7;">🦦 아기 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개 부메랑</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.94rem;color:#059669;">🎓 우등생 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">플라즈마 워터 레이저</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.94rem;color:#d97706;">🏄 호버보드 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">네온 서핑 웨이브</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.94rem;color:#db2777;">👑 황금왕관 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">썬더 메테오 캐논</div>
-          </button>
-        </div>
-
-        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
-          <div style="flex:1;min-width:260px;">
-            <label class="config-label">📚 2. 출제 단원 선택 (고1 수학)</label>
-            <div class="chapter-tabs" id="intro-chapter-tabs"></div>
-          </div>
-          <div>
-            <label class="config-label">⚡ 3. 문제당 제한시간</label>
-            <div class="chapter-tabs">
-              <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 (20초)</button>
-              <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 보통 (15초)</button>
-              <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 빠름 (11초)</button>
-            </div>
-          </div>
-        </div>
+        <label class="config-label">📚 출제 단원 선택 (고1 수학)</label>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:0;"></div>
       </div>
 
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
@@ -229,9 +197,9 @@
     </div>
   </div>
 
-  <script src="js/qrcode.js?v=11"></script>
-  <script src="js/sound.js?v=11"></script>
-  <script src="js/math-data.js?v=11"></script>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/qrcode.js?v=12"></script>
+  <script src="js/sound.js?v=12"></script>
+  <script src="js/math-data.js?v=12"></script>
+  <script src="js/app.js?v=12"></script>
 </body>
 </html>

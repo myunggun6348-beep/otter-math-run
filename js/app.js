@@ -30,23 +30,23 @@
     isDashing: false,
     targetLane: 1, // 0 (Left), 1 (Center), 2 (Right)
 
-    // 3D Otter coordinates (wx, wy, wz)
+    // 3D Otter coordinates (wx, wy, wz) — Positioned at the very bottom foreground!
     otterX3D: 0,
     otterY3D: 0,
     otterVy3D: 0,
-    otterZ3D: 125,
+    otterZ3D: 55,
     otterRoll: 0,
     otterSpin: 0,
     otterPhase: 0,
     otterJumpCount: 0,
     otterMood: 'run',
 
-    // 3D Camera state
+    // 3D Camera state — Full-height runway from top horizon (y≈64px) to bottom edge (y=440px)
     camX: 0,
-    camY: 205,
+    camY: 515,
     camRoll: 0,
-    fov: 450,
-    horizonY: 84,
+    fov: 380,
+    horizonY: -42,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -846,7 +846,7 @@
     state.isQuickKillDash = false;
     state.slowMoTimer = 0;
     state.otterSpin = 0;
-    state.monsterZ = 720; // Starts at a comfortable, large, immediately readable distance!
+    state.monsterZ = 820; // Spawns near the top of the full-height 3-lane runway (y≈121px)!
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
     state.waveStartTime = performance.now();
@@ -866,14 +866,16 @@
     }
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
+    const gateBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
     state.gateOptions.forEach((opt, idx) => {
       const signEl = document.getElementById(`mon-sign-${idx}`);
       const renderedFormula = KkachiMathData.renderMathText(opt.text);
 
-      // Render ONLY the large, clean math formula directly ON the Monster Character's Body Shield!
+      // Render a sleek 1-line Pass-Through Arch Gate Banner with a top lane crest!
       if (signEl) {
         signEl.className = `monster-body-shield lane-${idx}`;
         signEl.innerHTML = `
+          <span class="gate-arch-badge" id="gate-badge-${idx}">${gateBadges[idx]}</span>
           <div class="sign-formula">
             ${renderedFormula}
           </div>
@@ -886,13 +888,20 @@
 
   function updateAimedMonsterUI() {
     const laneNames = ['왼쪽', '가운데', '오른쪽'];
+    const defaultBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
+    const aimedBadges = ['🎯 ① 왼쪽 관문 (내 수달 줄)', '🎯 ② 가운데 관문 (내 수달 줄)', '🎯 ③ 오른쪽 관문 (내 수달 줄)'];
     const lbl = document.getElementById('current-lane-label');
     if (lbl) lbl.textContent = laneNames[state.targetLane] || '가운데';
 
     [0, 1, 2].forEach((i) => {
       const signEl = document.getElementById(`mon-sign-${i}`);
+      const badgeEl = document.getElementById(`gate-badge-${i}`);
       if (!signEl || state.isDashing || state.pausedForCrash || state.gateClearRunTimer > 0) return;
-      signEl.classList.toggle('otter-aimed', i === state.targetLane);
+      const isAimed = i === state.targetLane;
+      signEl.classList.toggle('otter-aimed', isAimed);
+      if (badgeEl) {
+        badgeEl.textContent = isAimed ? aimedBadges[i] : defaultBadges[i];
+      }
     });
   }
 
@@ -1086,7 +1095,7 @@
 
     // Keep camera stable & centered so the 3 lanes and formulas never shift sideways!
     state.camX = 0;
-    state.fov = 450;
+    state.fov = 380;
 
     // 2. 3D Jump Gravity (wy)
     state.otterY3D += state.otterVy3D;
@@ -1113,12 +1122,14 @@
       return;
     }
 
-    // 3. Move the 3 Formula Characters steadily down the 3 lanes (or 8x faster when Space Dash is pressed!)
-    const baseMonSpeedZ = (720 - state.otterZ3D) / (state.gateDurationMs / 1000);
+    // 3. Move the 3 Pass-Through Arch Gates steadily down the 3 lanes (from Z=820 to Z=240 right in front of the Otter's nose!)
+    const START_MONSTER_Z = 820;
+    const PASS_MONSTER_Z = 240;
+    const baseMonSpeedZ = (START_MONSTER_Z - PASS_MONSTER_Z) / (state.gateDurationMs / 1000);
     const monSpeedZ = state.isDashing ? baseMonSpeedZ * 9.5 : baseMonSpeedZ;
     state.monsterZ -= monSpeedZ * dtSec;
 
-    const remSec = Math.max(0, (state.monsterZ - state.otterZ3D) / Math.max(1, baseMonSpeedZ));
+    const remSec = Math.max(0, (state.monsterZ - PASS_MONSTER_Z) / Math.max(1, baseMonSpeedZ));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
       timeLbl.textContent = state.isDashing ? '⚡ 돌진중!' : `${remSec.toFixed(1)}초`;
@@ -1126,12 +1137,12 @@
 
     const progFill = document.getElementById('q-progress-fill');
     if (progFill) {
-      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - state.otterZ3D) / (720 - state.otterZ3D)) * 100));
+      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - PASS_MONSTER_Z) / (START_MONSTER_Z - PASS_MONSTER_Z)) * 100));
       progFill.style.width = `${remPct}%`;
     }
 
-    // 4. When the 3 Formula Characters reach the Otter -> Otter physically passes through / clashes with the character in its current lane!
-    if (state.monsterZ <= state.otterZ3D + 60) {
+    // 4. Trigger Gate Pass / Collision the instant the Arch Gate threshold reaches right in front of the Otter's nose (Z=240, y≈274px) — never covering the Otter's head (y≈339px)!
+    if (state.monsterZ <= PASS_MONSTER_Z) {
       state.selectedLane = state.targetLane;
       resolve3DMonsterCollision(false);
     }
@@ -1192,20 +1203,22 @@
     const fov = state.fov;
     const horY = state.horizonY;
 
-    // 1. Calm, Clean Sky & Soft Emerald Sea Background (Zero visual clutter!)
+    // 1. Calm, Clean Sky & Soft Emerald Sea Background
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
     skyGrad.addColorStop(0, '#38bdf8');
-    skyGrad.addColorStop(0.2, '#bae6fd');
-    skyGrad.addColorStop(0.22, '#2dd4bf');
-    skyGrad.addColorStop(1, '#10b981');
+    skyGrad.addColorStop(0.14, '#bae6fd');
+    skyGrad.addColorStop(0.15, '#2dd4bf');
+    skyGrad.addColorStop(1, '#0d9488');
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // 2. Smooth, Non-Flickering 3-Lane Bridge Track (Solid Warm Cream Deck + Clean Lane Dividers)
-    const pTopL = project3D(-485, 0, 1200, W, H, camX, camY, fov, horY);
-    const pTopR = project3D(485, 0, 1200, W, H, camX, camY, fov, horY);
-    const pBotL = project3D(-485, 0, 15, W, H, camX, camY, fov, horY);
-    const pBotR = project3D(485, 0, 15, W, H, camX, camY, fov, horY);
+    // 2. Full-Height 3-Lane Runway (Stretches from y≈64px near the top all the way down to y=440px at the bottom edge!)
+    const TOP_Z = 1450;
+    const BOT_Z = 15;
+    const pTopL = project3D(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pTopR = project3D(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pBotL = project3D(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const pBotR = project3D(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = '#fffbeb';
     ctx.beginPath();
@@ -1226,19 +1239,19 @@
     ctx.lineTo(pBotR.x, pBotR.y);
     ctx.stroke();
 
-    // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Track Floor!
+    // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Full-Height Track Floor!
     const laneEdges = [
       [-485, -162],
       [-162, 162],
       [162, 485]
     ];
     const [curL, curR] = laneEdges[state.targetLane] || laneEdges[1];
-    const hlTopL = project3D(curL, 0, 1200, W, H, camX, camY, fov, horY);
-    const hlTopR = project3D(curR, 0, 1200, W, H, camX, camY, fov, horY);
-    const hlBotL = project3D(curL, 0, 15, W, H, camX, camY, fov, horY);
-    const hlBotR = project3D(curR, 0, 15, W, H, camX, camY, fov, horY);
+    const hlTopL = project3D(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlTopR = project3D(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlBotL = project3D(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlBotR = project3D(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
-    ctx.fillStyle = 'rgba(253, 224, 71, 0.35)';
+    ctx.fillStyle = 'rgba(253, 224, 71, 0.38)';
     ctx.beginPath();
     ctx.moveTo(hlTopL.x, hlTopL.y);
     ctx.lineTo(hlTopR.x, hlTopR.y);
@@ -1247,12 +1260,12 @@
     ctx.closePath();
     ctx.fill();
 
-    // Subtle Moving Horizontal Track Lines (Gives smooth forward running motion without flickering stripes!)
-    const segLen = 110;
+    // Subtle Moving Horizontal Track Lines
+    const segLen = 95;
     const zOffset = state.trackZ % segLen;
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.14)';
     ctx.lineWidth = 2;
-    for (let z = 1100; z >= 30; z -= segLen) {
+    for (let z = 1350; z >= 25; z -= segLen) {
       const zCur = z - zOffset;
       if (zCur < 15) continue;
       const pL = project3D(-480, 0, zCur, W, H, camX, camY, fov, horY);
@@ -1267,32 +1280,104 @@
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
     ctx.lineWidth = 3;
     [-162, 162].forEach((divX) => {
-      const dTop = project3D(divX, 0, 1200, W, H, camX, camY, fov, horY);
-      const dBot = project3D(divX, 0, 15, W, H, camX, camY, fov, horY);
+      const dTop = project3D(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
+      const dBot = project3D(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(dTop.x, dTop.y);
       ctx.lineTo(dBot.x, dBot.y);
       ctx.stroke();
     });
 
-    // 4. Draw Approaching 3D Monster Characters & Lock their Steady, Full-Size Formula Shields onto their Torsos!
+    // Forward Guide Chevrons on the Otter's Active Lane pointing from the Otter toward the approaching Arch Gate!
+    const activeX = LANE_X[state.targetLane] || 0;
+    [130, 195].forEach((cz) => {
+      if (cz >= state.monsterZ - 20) return;
+      const pTip = project3D(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
+      const pBL = project3D(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
+      const pBR = project3D(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(217, 119, 6, 0.55)';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pBL.x, pBL.y);
+      ctx.lineTo(pTip.x, pTip.y);
+      ctx.lineTo(pBR.x, pBR.y);
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // 4. Draw Approaching 3D Pass-Through Arch Gates + Perched Monster Guardians Above the Slim Formula Banners!
+    const gateColors = [
+      { main: '#9333ea', dark: '#581c87', glow: 'rgba(147, 51, 234, 0.35)' },
+      { main: '#e11d48', dark: '#881337', glow: 'rgba(225, 29, 72, 0.35)' },
+      { main: '#059669', dark: '#064e3b', glow: 'rgba(5, 150, 105, 0.35)' }
+    ];
+
     [0, 1, 2].forEach((ln) => {
       const signEl = document.getElementById(`mon-sign-${ln}`);
       if (!state.monstersAlive[ln]) return;
 
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const mScale = pMon.scale * 1.42;
+      const pPilL = project3D(wx - 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
+      const pPilR = project3D(wx + 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
 
-      // 1. Draw the 3D Monster Character
-      draw3DMonster(ctx, pMon.x, pMon.y, mScale, ln, state.otterPhase * 0.5, false, 0);
+      const isAimed = ln === state.targetLane;
+      const col = isAimed
+        ? { main: '#f59e0b', dark: '#b45309', glow: 'rgba(245, 158, 11, 0.55)' }
+        : gateColors[ln];
 
-      // 2. Lock the Body Formula Shield 1:1 onto the Monster Character's Torso (NO vertical bouncing, large fixed readable scale!)
+      const gateBannerY = pMon.y - 38;
+
+      // 4.1 Draw Glowing Pass-Through Threshold Line on the Track Floor between the Left & Right Arch Pillars!
+      ctx.save();
+      ctx.strokeStyle = col.glow;
+      ctx.lineWidth = isAimed ? 9 : 6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pPilL.x, pMon.y);
+      ctx.lineTo(pPilR.x, pMon.y);
+      ctx.stroke();
+
+      ctx.strokeStyle = col.main;
+      ctx.lineWidth = isAimed ? 3.5 : 2.5;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(pPilL.x, pMon.y);
+      ctx.lineTo(pPilR.x, pMon.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 4.2 Draw Left & Right 3D Arch Gate Pillars standing on the lane edges
+      const pilW = Math.max(6, 12 * pMon.scale);
+      [pPilL.x, pPilR.x].forEach((px) => {
+        // Pillar ground base pad
+        ctx.fillStyle = col.dark;
+        ctx.beginPath();
+        ctx.ellipse(px, pMon.y, pilW * 0.95, pilW * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vertical Arch Pillar column rising up to the Formula Gate Banner
+        const pGrad = ctx.createLinearGradient(px - pilW * 0.5, 0, px + pilW * 0.5, 0);
+        pGrad.addColorStop(0, col.dark);
+        pGrad.addColorStop(0.45, col.main);
+        pGrad.addColorStop(1, col.dark);
+        ctx.fillStyle = pGrad;
+        ctx.fillRect(px - pilW * 0.5, gateBannerY, pilW, pMon.y - gateBannerY);
+      });
+      ctx.restore();
+
+      // 4.3 Draw the Cute 3D Monster Guardian Perched ON TOP of the Arch Gate Banner (100% visible above the formula!)
+      const mScale = Math.max(0.72, Math.min(0.92, 0.54 + pMon.scale * 0.56));
+      draw3DMonster(ctx, pMon.x, gateBannerY - 12, mScale, ln, state.otterPhase * 0.5, false, 0);
+
+      // 4.4 Lock the Slim 1-Line Formula Gate Banner onto the Arch Crossbar (gateBannerY)
       if (signEl) {
-        const torsoCenterY = pMon.y - 34 * mScale;
         const leftPct = (pMon.x / W) * 100;
-        const topPct = (torsoCenterY / H) * 100;
-        const shieldScale = Math.max(0.94, Math.min(1.06, 0.8 + pMon.scale * 0.32));
+        const topPct = (gateBannerY / H) * 100;
+        const shieldScale = Math.max(0.92, Math.min(1.04, 0.78 + pMon.scale * 0.36));
         signEl.style.left = `${leftPct.toFixed(2)}%`;
         signEl.style.top = `${topPct.toFixed(2)}%`;
         signEl.style.transform = `translate(-50%, -50%) scale(${shieldScale.toFixed(2)})`;
@@ -1392,9 +1477,9 @@
       ctx.restore();
     }
 
-    // 9. Draw the 3D Volumetric Cute Otter in the foreground (Z = 125)!
+    // 9. Draw the 3D Volumetric Cute Otter at the very bottom foreground (Z = 55, y ≈ 408px)!
     const pOtter = project3D(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
-    draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.38, state.otterPhase, {
+    draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.15, state.otterPhase, {
       skin: state.skin,
       roll: state.otterRoll,
       spin: state.otterSpin,
@@ -1442,11 +1527,13 @@
 
       [0, 1, 2].forEach((i) => {
         const signEl = document.getElementById(`mon-sign-${i}`);
+        const badgeEl = document.getElementById(`gate-badge-${i}`);
         if (i === pickedIdx) {
           if (signEl) {
             signEl.classList.remove('otter-aimed', 'selected-lane');
             signEl.classList.add('shield-correct');
           }
+          if (badgeEl) badgeEl.textContent = '⭕ 정답 관문 돌파!';
         } else {
           state.monstersAlive[i] = false;
           state.monsterState[i] = 'dissolved';
@@ -1505,18 +1592,21 @@
     } else {
       // 2. WRONG CHARACTER COLLISION!
       state.pausedForCrash = true;
-      if (state.monsterZ > 400) state.monsterZ = 380;
+      state.monsterZ = Math.max(255, Math.min(380, state.monsterZ));
 
       [0, 1, 2].forEach((i) => {
         const signEl = document.getElementById(`mon-sign-${i}`);
+        const badgeEl = document.getElementById(`gate-badge-${i}`);
         if (signEl) signEl.classList.remove('otter-aimed', 'selected-lane');
 
         if (i === correctIdx) {
           state.monsterState[i] = 'correct';
           if (signEl) signEl.classList.add('shield-correct');
+          if (badgeEl) badgeEl.textContent = '⭕ 진짜 정답 관문!';
         } else if (i === pickedIdx) {
           state.monsterState[i] = 'wrong';
           if (signEl) signEl.classList.add('shield-wrong');
+          if (badgeEl) badgeEl.textContent = '❌ 내가 고른 오답';
         } else {
           state.monstersAlive[i] = false;
           state.monsterState[i] = 'dissolved';

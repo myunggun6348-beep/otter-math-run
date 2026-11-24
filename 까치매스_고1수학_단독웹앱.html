@@ -13,7 +13,8 @@
   <title>수달런 3D (OTTER MATH RUN 3D) - 고1 수학 3D 몬스터 러너</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-  <style>/* ==========================================================================
+  <style>
+/* ==========================================================================
    수달런 3D (OTTER MATH RUN 3D) - 밝고 청량한 '푸른 하늘 & 에메랄드 바다' 테마
    + 쿠키런/듀오링고 스타일 통통한 3D 입체 캡슐 버튼 UI (v6)
    ========================================================================== */
@@ -825,7 +826,7 @@ html, body {
   transform: scale(0.95);
 }
 
-/* Monster Character Body Formula Shields (Worn directly ON each Monster Character's torso!) */
+/* Sleek 1-Line Pass-Through Arch Gate Banners (Zero overlap with Otter head, no side pill handles!) */
 .monster-signs-layer {
   position: absolute;
   inset: 0;
@@ -836,18 +837,18 @@ html, body {
 
 .monster-body-shield {
   position: absolute;
-  top: 200px;
+  top: 160px;
   left: 50%;
-  width: 26.5%;
-  max-width: 244px;
-  min-width: 155px;
-  min-height: 64px;
-  padding: 12px 14px;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 3.5px solid #cbd5e1;
-  border-bottom-width: 7px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+  width: 28.2%;
+  max-width: 266px;
+  min-width: 160px;
+  min-height: 46px;
+  padding: 10px 12px 8px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 3px solid #cbd5e1;
+  border-bottom-width: 6px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.22);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   cursor: pointer;
@@ -859,70 +860,69 @@ html, body {
   justify-content: center;
 }
 
-/* Cute Monster Paws gripping the left & right edges of the Formula Shield on its chest! */
-.monster-body-shield::before,
-.monster-body-shield::after {
-  content: '';
+/* Top Arch Gate Badge Pill */
+.gate-arch-badge {
   position: absolute;
-  top: 50%;
-  width: 15px;
-  height: 24px;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 10px;
   border-radius: 999px;
-  transform: translateY(-50%);
-  border: 2.5px solid #0f172a;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.22);
+  font-size: 0.69rem;
+  font-weight: 900;
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
 }
-.monster-body-shield::before { left: -9px; }
-.monster-body-shield::after { right: -9px; }
 
 .monster-body-shield.lane-0 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #9333ea;
   border-bottom-color: #6b21a8;
 }
-.monster-body-shield.lane-0::before,
-.monster-body-shield.lane-0::after {
-  background: #7e22ce;
-  border-color: #3b0764;
+.monster-body-shield.lane-0 .gate-arch-badge {
+  background: linear-gradient(90deg, #9333ea, #7e22ce);
 }
 
 .monster-body-shield.lane-1 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #e11d48;
   border-bottom-color: #9f1239;
 }
-.monster-body-shield.lane-1::before,
-.monster-body-shield.lane-1::after {
-  background: #e11d48;
-  border-color: #4c0519;
+.monster-body-shield.lane-1 .gate-arch-badge {
+  background: linear-gradient(90deg, #f43f5e, #be123c);
 }
 
 .monster-body-shield.lane-2 {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
   border-color: #059669;
   border-bottom-color: #065f46;
 }
-.monster-body-shield.lane-2::before,
-.monster-body-shield.lane-2::after {
-  background: #10b981;
-  border-color: #064e3b;
+.monster-body-shield.lane-2 .gate-arch-badge {
+  background: linear-gradient(90deg, #10b981, #047857);
 }
 
 .monster-body-shield .sign-formula {
-  font-size: 1.32rem;
+  font-size: clamp(0.95rem, 1.32vw, 1.15rem);
   font-weight: 900;
   color: #0f172a;
-  line-height: 1.32;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
-/* Highlight when the Otter is currently running in this character's lane! */
+/* Highlight when the Otter is currently aligned with this Arch Gate lane! */
 .monster-body-shield.otter-aimed {
   background: #fffbeb !important;
   border-color: #f59e0b !important;
   border-bottom-color: #b45309 !important;
-  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.65), 0 12px 24px rgba(15, 23, 42, 0.3);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.65), 0 10px 22px rgba(15, 23, 42, 0.26);
   z-index: 21;
+}
+.monster-body-shield.otter-aimed .gate-arch-badge {
+  background: linear-gradient(90deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
 }
 
 .monster-body-shield.selected-lane {
@@ -940,6 +940,9 @@ html, body {
   box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.75);
   z-index: 23;
 }
+.monster-body-shield.shield-correct .gate-arch-badge {
+  background: #059669 !important;
+}
 
 .monster-body-shield.shield-wrong {
   background: #ffe4e6 !important;
@@ -947,6 +950,9 @@ html, body {
   border-bottom-color: #881337 !important;
   box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.75);
   z-index: 23;
+}
+.monster-body-shield.shield-wrong .gate-arch-badge {
+  background: #e11d48 !important;
 }
 
 .monster-body-shield.shield-dissolve {
@@ -1095,6 +1101,7 @@ html, body {
   max-height: 90vh;
   overflow-y: auto;
 }
+
 </style>
 </head>
 <body>
@@ -1110,10 +1117,10 @@ html, body {
         </div>
         <div style="flex:1;min-width:250px;">
           <div class="intro-badge">🦦 고등학교 1학년 수학 3D 액션 러너</div>
-          <h1 class="intro-title">수달런 3D : 수학 몬스터 격파!</h1>
+          <h1 class="intro-title">수달런 3D : 수학 관문 돌파!</h1>
           <p class="intro-subtitle">
             화면 상단의 <strong>고1 수학 문제</strong>를 보고, <strong>키보드 방향키(← · →)로 수달을 좌우로 움직여</strong><br />
-            몸통에 <strong>정답 수식을 달고 오는 몬스터 캐릭터</strong>를 향해 워터캐논을 발사하세요!
+            세 갈래 길에서 내려오는 <strong>정답 수식 아치 관문(게이트)</strong>을 통과해 몬스터를 격파하세요!
           </p>
         </div>
       </div>
@@ -1137,9 +1144,9 @@ html, body {
           <div class="flow-card fc-2">
             <div class="flow-num-badge">🦦</div>
             <div>
-              <div class="flow-text-title">② 방향키(←·→)로 정답 줄 맞추기!</div>
+              <div class="flow-text-title">② 방향키(←·→)로 정답 관문 맞추기!</div>
               <div class="flow-text-desc">
-                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답을 단 캐릭터 줄</strong>로 수달을 옮겨 몸으로 통과하세요!
+                <span class="keycap">←</span> <span class="keycap">→</span> 키로 <strong>정답 수식 게이트가 내려오는 줄</strong>로 수달을 옮기세요!
               </div>
             </div>
           </div>
@@ -1147,51 +1154,19 @@ html, body {
           <div class="flow-card fc-3">
             <div class="flow-num-badge">⚡</div>
             <div>
-              <div class="flow-text-title">③ Space 키로 빠른 돌진</div>
+              <div class="flow-text-title">③ Space 키로 즉시 돌파</div>
               <div class="flow-text-desc">
-                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 돌진해 격파</strong>합니다!
+                정답 줄에 맞춘 뒤 기다리지 않고 <span class="keycap">Space</span>를 누르면 <strong>즉시 빠르게 통과해 격파</strong>합니다!
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Clean Pre-game Config Box -->
+      <!-- Clean Pre-game Config Box (단원 선택만 깔끔하게 유지) -->
       <div class="intro-config-box">
-        <label class="config-label">🦦 1. 내 3D 수달 캐릭터 선택</label>
-        <div class="skin-grid">
-          <button type="button" class="skin-btn active" id="skin-btn-basic" onclick="OtterRun.selectSkin('basic')">
-            <div style="font-weight:900;font-size:0.94rem;color:#0284c7;">🦦 아기 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">황금 조개 부메랑</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-scholar" onclick="OtterRun.selectSkin('scholar')">
-            <div style="font-weight:900;font-size:0.94rem;color:#059669;">🎓 우등생 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">플라즈마 워터 레이저</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-surfer" onclick="OtterRun.selectSkin('surfer')">
-            <div style="font-weight:900;font-size:0.94rem;color:#d97706;">🏄 호버보드 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">네온 서핑 웨이브</div>
-          </button>
-          <button type="button" class="skin-btn" id="skin-btn-king" onclick="OtterRun.selectSkin('king')">
-            <div style="font-weight:900;font-size:0.94rem;color:#db2777;">👑 황금왕관 수달</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">썬더 메테오 캐논</div>
-          </button>
-        </div>
-
-        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
-          <div style="flex:1;min-width:260px;">
-            <label class="config-label">📚 2. 출제 단원 선택 (고1 수학)</label>
-            <div class="chapter-tabs" id="intro-chapter-tabs"></div>
-          </div>
-          <div>
-            <label class="config-label">⚡ 3. 문제당 제한시간</label>
-            <div class="chapter-tabs">
-              <button type="button" class="tab-btn" id="spd-slow" onclick="OtterRun.setSpeed('slow')">🐢 여유 (20초)</button>
-              <button type="button" class="tab-btn active" id="spd-normal" onclick="OtterRun.setSpeed('normal')">🏃 보통 (15초)</button>
-              <button type="button" class="tab-btn" id="spd-fast" onclick="OtterRun.setSpeed('fast')">⚡ 빠름 (11초)</button>
-            </div>
-          </div>
-        </div>
+        <label class="config-label">📚 출제 단원 선택 (고1 수학)</label>
+        <div class="chapter-tabs" id="intro-chapter-tabs" style="margin-bottom:0;"></div>
       </div>
 
       <button class="btn-start-huge" onclick="OtterRun.startGame()">
@@ -1311,7 +1286,8 @@ html, body {
     </div>
   </div>
 
-  <script>/**
+  <script>
+/**
  * Pure JavaScript Offline QR Code SVG Generator (Versions 1 to 6, ECC Level L)
  * Generates standard ISO/IEC 18004 scannable QR codes with zero external dependencies.
  */
@@ -1595,8 +1571,10 @@ html, body {
     toSVG: generateQRSVG
   };
 })(window);
+
 </script>
-  <script>/**
+  <script>
+/**
  * 수달런 (OTTER MATH RUN) - 액션 타격음 & 필살기 사운드 신디사이저 (Web Audio API)
  */
 (function (global) {
@@ -1745,8 +1723,10 @@ html, body {
 
   global.KkachiSound = Sound;
 })(window);
+
 </script>
-  <script>/**
+  <script>
+/**
  * 수달런 (OTTER MATH RUN) - 고등학교 1학년 수학 질주 & 점프 런게임 문제 데이터
  * 각 관문(Gate)마다 [1번 하늘 발판 / 2번 중앙 발판 / 3번 물길 발판]에 정답(ans)과 함정 보기(w1, w2)가 랜덤 배치됩니다.
  */
@@ -1759,8 +1739,424 @@ html, body {
         {
           id: 'c1_1',
           q: '$a^3 + b^3$ 의 곱셈공식 변형으로 옳은 것은?',
-          ans: '$(a+b)^3 - 3ab(a+b)
-  <script>/**
+          ans: '$(a+b)^3 - 3ab(a+b)$',
+          w1: '$(a+b)^3 + 3ab(a+b)$',
+          w2: '$(a-b)^3 + 3ab(a-b)$',
+          tip: '$a^3 + b^3 = (a+b)^3 - 3ab(a+b)$ 입니다! 부호에 주의하세요.'
+        },
+        {
+          id: 'c1_2',
+          q: '$a^3 - b^3$ 을 바르게 인수분해한 것은?',
+          ans: '$(a-b)(a^2 + ab + b^2)$',
+          w1: '$(a-b)(a^2 - ab + b^2)$',
+          w2: '$(a+b)(a^2 - ab + b^2)$',
+          tip: '앞괄호가 $(a-b)$이면 뒷괄호 가운데 항은 $+ab$ 입니다!'
+        },
+        {
+          id: 'c1_3',
+          q: '다항식 $P(x)$를 일차식 $(x - 3)$으로 나눈 나머지는?',
+          ans: '$P(3)$',
+          w1: '$P(-3)$',
+          w2: '$P(0)$',
+          tip: '나머지정리: $x - 3 = 0$이 되는 $x = 3$을 대입한 $P(3)$이 나머지입니다.'
+        },
+        {
+          id: 'c1_4',
+          q: '다항식 $P(x)$가 $(x + 2)$로 나누어떨어지기 위한 조건은?',
+          ans: '$P(-2) = 0$',
+          w1: '$P(2) = 0$',
+          w2: '$P(-2) = 2$',
+          tip: '인수정리: $(x+2)$를 인수로 가지므로 $P(-2) = 0$이어야 합니다.'
+        },
+        {
+          id: 'c1_5',
+          q: '$a + b = 4$, $ab = 3$ 일 때, $a^2 + b^2$ 의 값은?',
+          ans: '$10$',
+          w1: '$16$',
+          w2: '$22$',
+          tip: '$a^2 + b^2 = (a+b)^2 - 2ab = 16 - 6 = 10$ 입니다.'
+        },
+        {
+          id: 'c1_6',
+          q: '$x^3 - 1$ 을 인수분해한 식은?',
+          ans: '$(x - 1)(x^2 + x + 1)$',
+          w1: '$(x - 1)(x^2 - x + 1)$',
+          w2: '$(x + 1)(x^2 - x + 1)$',
+          tip: '$x^3 - 1^3 = (x-1)(x^2+x+1)$ 입니다.'
+        },
+        {
+          id: 'c1_7',
+          q: '$(a + b + c)^2$ 을 전개했을 때 나오는 항은?',
+          ans: '$a^2+b^2+c^2 + 2(ab+bc+ca)$',
+          w1: '$a^2+b^2+c^2 - 2(ab+bc+ca)$',
+          w2: '$a^2+b^2+c^2 + ab+bc+ca$',
+          tip: '각 항의 제곱의 합에 $+ 2(ab + bc + ca)$를 더합니다.'
+        },
+        {
+          id: 'c1_8',
+          q: '$(x - y)^2$ 을 $(x + y)^2$ 을 이용해 바르게 나타낸 것은?',
+          ans: '$(x + y)^2 - 4xy$',
+          w1: '$(x + y)^2 - 2xy$',
+          w2: '$(x + y)^2 + 4xy$',
+          tip: '$(x-y)^2 = (x+y)^2 - 4xy$ 입니다.'
+        }
+      ]
+    },
+    {
+      id: 'ch2',
+      title: '② 복소수 · 이차방정식',
+      questions: [
+        {
+          id: 'c2_1',
+          q: '허수단위 $i$에 대하여 $i^2$ 의 값은?',
+          ans: '$-1$',
+          w1: '$1$',
+          w2: '$-i$',
+          tip: '제곱하여 $-1$이 되는 수를 허수단위 $i$라 하므로 $i^2 = -1$입니다.'
+        },
+        {
+          id: 'c2_2',
+          q: '허수단위 $i$의 거듭제곱 합 $i + i^2 + i^3 + i^4$ 의 값은?',
+          ans: '$0$',
+          w1: '$1$',
+          w2: '$-1$',
+          tip: '$i + (-1) + (-i) + 1 = 0$! 연속한 4개의 합은 항상 $0$입니다.'
+        },
+        {
+          id: 'c2_3',
+          q: '복소수 $3 - 4i$ 의 켤레복소수는?',
+          ans: '$3 + 4i$',
+          w1: '$-3 - 4i$',
+          w2: '$-3 + 4i$',
+          tip: '켤레복소수는 허수부분의 부호만 바꾸어 $3 + 4i$가 됩니다.'
+        },
+        {
+          id: 'c2_4',
+          q: '이차방정식 $x^2 - 6x + 5 = 0$ 의 두 근의 합 $\\alpha + \\beta$는?',
+          ans: '$6$',
+          w1: '$-6$',
+          w2: '$5$',
+          tip: '근과 계수의 관계에 의해 두 근의 합은 $-\\frac{b}{a} = 6$입니다.'
+        },
+        {
+          id: 'c2_5',
+          q: '이차방정식 $2x^2 + 5x - 8 = 0$ 의 두 근의 곱 $\\alpha\\beta$는?',
+          ans: '$-4$',
+          w1: '$4$',
+          w2: '$-\\frac{5}{2}$',
+          tip: '근과 계수의 관계에 의해 두 근의 곱은 $\\frac{c}{a} = \\frac{-8}{2} = -4$입니다.'
+        },
+        {
+          id: 'c2_6',
+          q: '이차방정식이 중근(완전제곱식)을 가질 판별식 $D$의 조건은?',
+          ans: '$D = b^2 - 4ac = 0$',
+          w1: '$D = b^2 - 4ac > 0$',
+          w2: '$D = b^2 - 4ac < 0$',
+          tip: '중근을 가지려면 판별식 $D = 0$이어야 합니다.'
+        },
+        {
+          id: 'c2_7',
+          q: '이차함수 $y = ax^2+bx+c$의 그래프가 $x$축과 만나지 않을 조건은?',
+          ans: '판별식 $D < 0$',
+          w1: '판별식 $D > 0$',
+          w2: '판별식 $D = 0$',
+          tip: '$x$축과 교점이 없으려면 실근이 없어야 하므로 $D < 0$입니다!'
+        },
+        {
+          id: 'c2_8',
+          q: '$a < 0$, $b < 0$ (둘 다 음수)일 때 $\\sqrt{a}\\sqrt{b}$ 를 간단히 하면?',
+          ans: '$-\\sqrt{ab}$',
+          w1: '$\\sqrt{ab}$',
+          w2: '$\\sqrt{-ab}$',
+          tip: '음수의 제곱근 두 개를 곱하면 앞에 마이너스($-$)가 튀어나옵니다!'
+        }
+      ]
+    },
+    {
+      id: 'ch3',
+      title: '③ 도형의 방정식',
+      questions: [
+        {
+          id: 'c3_1',
+          q: '기울기가 $m, m\'$인 두 직선이 서로 수직일 조건은?',
+          ans: '$m \\cdot m\' = -1$',
+          w1: '$m \\cdot m\' = 1$',
+          w2: '$m + m\' = 0$',
+          tip: '수직인 두 직선의 기울기의 곱은 항상 $-1$입니다.'
+        },
+        {
+          id: 'c3_2',
+          q: '원 $(x - 2)^2 + (y + 3)^2 = 16$ 의 중심과 반지름 $r$은?',
+          ans: '중심 $(2, -3)$, $r = 4$',
+          w1: '중심 $(-2, 3)$, $r = 4$',
+          w2: '중심 $(2, -3)$, $r = 16$',
+          tip: '$(x-a)^2+(y-b)^2=r^2$에서 중심은 $(2,-3)$, 반지름은 $\\sqrt{16}=4$입니다.'
+        },
+        {
+          id: 'c3_3',
+          q: '점 $(4, -5)$를 $x$축에 대하여 대칭이동한 점의 좌표는?',
+          ans: '$(4, 5)$',
+          w1: '$(-4, -5)$',
+          w2: '$(-4, 5)$',
+          tip: '$x$축 대칭이동은 $y$좌표의 부호만 반대로 바뀝니다!'
+        },
+        {
+          id: 'c3_4',
+          q: '점 $(2, 7)$을 직선 $y = x$에 대하여 대칭이동한 좌표는?',
+          ans: '$(7, 2)$',
+          w1: '$(-2, -7)$',
+          w2: '$(-7, -2)$',
+          tip: '직선 $y = x$ 대칭이동은 $x$좌표와 $y$좌표의 자리를 서로 바꿉니다!'
+        },
+        {
+          id: 'c3_5',
+          q: '함수 $y = f(x)$의 그래프를 $x$축 방향으로 $+3$만큼 평행이동한 식은?',
+          ans: '$y = f(x - 3)$',
+          w1: '$y = f(x + 3)$',
+          w2: '$y = f(x) + 3$',
+          tip: '도형의 평행이동은 이동한 만큼 부호를 반대로 빼주어 $x$ 대신 $(x-3)$을 대입합니다!'
+        },
+        {
+          id: 'c3_6',
+          q: '점 $(-3, 5)$를 원점에 대하여 대칭이동한 점의 좌표는?',
+          ans: '$(3, -5)$',
+          w1: '$(-3, -5)$',
+          w2: '$(5, -3)$',
+          tip: '원점 대칭이동은 $x, y$ 두 좌표의 부호를 모두 반대로 바꿉니다.'
+        },
+        {
+          id: 'c3_7',
+          q: '두 점 $A(2, 4)$와 $B(6, 10)$의 중점 $M$의 좌표는?',
+          ans: '$(4, 7)$',
+          w1: '$(3, 6)$',
+          w2: '$(8, 14)$',
+          tip: '중점은 두 좌표의 평균: $(\\frac{2+6}{2}, \\frac{4+10}{2}) = (4, 7)$입니다.'
+        },
+        {
+          id: 'c3_8',
+          q: '원점 $(0, 0)$에서 점 $(3, 4)$까지의 거리는?',
+          ans: '$5$',
+          w1: '$7$',
+          w2: '$25$',
+          tip: '$\\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$ 입니다.'
+        }
+      ]
+    },
+    {
+      id: 'ch4',
+      title: '④ 집합 · 명제 · 함수',
+      questions: [
+        {
+          id: 'c4_1',
+          q: '드모르간의 법칙에서 $(A \\cup B)^C$ 과 항상 같은 집합은?',
+          ans: '$A^C \\cap B^C$',
+          w1: '$A^C \\cup B^C$',
+          w2: '$A \\cap B$',
+          tip: '여집합 $C$가 안으로 분배되면서 합집합($\\cup$)이 교집합($\\cap$)으로 뒤집힙니다!'
+        },
+        {
+          id: 'c4_2',
+          q: '원소가 $4$개인 집합 $A = \\{1, 2, 3, 4\\}$의 부분집합의 총 개수는?',
+          ans: '$16$개 ($2^4$)',
+          w1: '$8$개 ($2^3$)',
+          w2: '$15$개',
+          tip: '원소가 $n$개인 집합의 부분집합 개수는 $2^n$개이므로 $2^4 = 16$개입니다.'
+        },
+        {
+          id: 'c4_3',
+          q: '명제 $p \\to q$ 와 참·거짓(진리값)이 항상 같은 명제는?',
+          ans: '대우 ($\\sim q \\to \\sim p$)',
+          w1: '역 ($q \\to p$)',
+          w2: '부정 ($p \\to \\sim q$)',
+          tip: '본명제와 그 대우 명제($\\sim q \\to \\sim p$)는 항상 참·거짓이 같습니다!'
+        },
+        {
+          id: 'c4_4',
+          q: '양수 $a > 0, b > 0$ 에 대한 산술·기하평균 절대부등식은?',
+          ans: '$a + b \\ge 2\\sqrt{ab}$',
+          w1: '$a + b \\ge \\sqrt{ab}$',
+          w2: '$a + b \\le 2\\sqrt{ab}$',
+          tip: '$\\frac{a+b}{2} \\ge \\sqrt{ab}$ 이므로 $a + b \\ge 2\\sqrt{ab}$ (등호는 $a=b$일 때)입니다.'
+        },
+        {
+          id: 'c4_5',
+          q: '함수 $y = f(x)$와 그 역함수 $y = f^{-1}(x)$의 그래프는 어디에 대칭인가?',
+          ans: '직선 $y = x$',
+          w1: '$x$축',
+          w2: '원점',
+          tip: '원래 함수와 역함수의 그래프는 항상 직선 $y = x$에 대하여 대칭입니다.'
+        },
+        {
+          id: 'c4_6',
+          q: '합성함수의 역함수 $(g \\circ f)^{-1}$ 를 바르게 풀면?',
+          ans: '$f^{-1} \\circ g^{-1}$',
+          w1: '$g^{-1} \\circ f^{-1}$',
+          w2: '$f \\circ g$',
+          tip: '합성함수의 역함수는 순서가 반대로 뒤집혀서 $f^{-1} \\circ g^{-1}$ 가 됩니다!'
+        },
+        {
+          id: 'c4_7',
+          q: '함수 $f$의 역함수 $f^{-1}$가 존재하기 위한 필요충분조건은?',
+          ans: '일대일대응',
+          w1: '항등함수',
+          w2: '상수함수',
+          tip: '역함수가 존재하려면 반드시 일대일대응이어야 합니다.'
+        },
+        {
+          id: 'c4_8',
+          q: '$n(A) = 5$, $n(B) = 4$, $n(A \\cap B) = 2$ 일 때 $n(A \\cup B)$는?',
+          ans: '$7$',
+          w1: '$9$',
+          w2: '$11$',
+          tip: '$n(A \\cup B) = n(A) + n(B) - n(A \\cap B) = 5 + 4 - 2 = 7$입니다.'
+        }
+      ]
+    },
+    {
+      id: 'ch5',
+      title: '⑤ 경우의 수 · 순열 · 조합',
+      questions: [
+        {
+          id: 'c5_1',
+          q: '$0!$ (영 팩토리얼) 과 $_n\\text{C}_0$ 의 공통된 값은?',
+          ans: '$1$',
+          w1: '$0$',
+          w2: '$n$',
+          tip: '$0! = 1$ 이고 $_n\\text{C}_0 = 1$, $_n\\text{P}_0 = 1$ 입니다!'
+        },
+        {
+          id: 'c5_2',
+          q: '조합의 성질에 의해 $_n\\text{C}_r$ 과 항상 같은 값은?',
+          ans: '$_n\\text{C}_{n-r}$',
+          w1: '$_n\\text{P}_r$',
+          w2: '$_n\\text{C}_{r-1}$',
+          tip: '$n$명 중 $r$명을 뽑는 것은 남길 $(n-r)$명을 뽑는 것과 같으므로 $_n\\text{C}_r = _n\\text{C}_{n-r}$입니다.'
+        },
+        {
+          id: 'c5_3',
+          q: '조합 $_5\\text{C}_2$ 를 계산한 값은?',
+          ans: '$10$',
+          w1: '$20$',
+          w2: '$15$',
+          tip: '$_5\\text{C}_2 = \\frac{5 \\times 4}{2 \\times 1} = 10$ 입니다.'
+        },
+        {
+          id: 'c5_4',
+          q: '순열 $_5\\text{P}_2$ 를 계산한 값은?',
+          ans: '$20$',
+          w1: '$10$',
+          w2: '$25$',
+          tip: '$_5\\text{P}_2 = 5 \\times 4 = 20$ 입니다.'
+        },
+        {
+          id: 'c5_5',
+          q: '서로 다른 $n$개에서 순서를 생각하지 않고 $r$개를 택하는 것은?',
+          ans: '조합 $_n\\text{C}_r$',
+          w1: '순열 $_n\\text{P}_r$',
+          w2: '계승 $n!$',
+          tip: '순서 없이 뽑기만 하는 것은 조합(Combination, $_n\\text{C}_r$)입니다.'
+        },
+        {
+          id: 'c5_6',
+          q: '$4!$ ($4$ 팩토리얼)을 계산한 값은?',
+          ans: '$24$',
+          w1: '$12$',
+          w2: '$16$',
+          tip: '$4! = 4 \\times 3 \\times 2 \\times 1 = 24$ 입니다.'
+        },
+        {
+          id: 'c5_7',
+          q: '조합 $_7\\text{C}_5$ 를 가장 빠르게 계산하기 위해 바꾸는 식은?',
+          ans: '$_7\\text{C}_2$ ($= 21$)',
+          w1: '$_7\\text{C}_3$ ($= 35$)',
+          w2: '$_7\\text{P}_2$ ($= 42$)',
+          tip: '$_7\\text{C}_5 = _7\\text{C}_{7-5} = _7\\text{C}_2 = \\frac{7 \\times 6}{2} = 21$ 로 3초 만에 계산합니다!'
+        },
+        {
+          id: 'c5_8',
+          q: '$6$명의 학생 중 대표 $1$명, 부대표 $1$명을 순서 있게 뽑는 경우의 수는?',
+          ans: '$30$가지 ($_6\\text{P}_2$)',
+          w1: '$15$가지 ($_6\\text{C}_2$)',
+          w2: '$12$가지',
+          tip: '직책(순서)이 구분되므로 순열 $_6\\text{P}_2 = 6 \\times 5 = 30$가지입니다.'
+        }
+      ]
+    }
+  ];
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function offlineTeXToHtml(tex) {
+    let s = escapeHtml(tex.trim());
+    s = s.replace(/\\text\{([^{}]+)\}/g, '<span class="m-fn">$1</span>');
+    for (let i = 0; i < 3; i++) {
+      s = s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '<span class="m-frac"><span class="m-num">$1</span><span class="m-den">$2</span></span>');
+    }
+    s = s.replace(/\\sqrt\{([^{}]+)\}/g, '<span class="m-sqrt">√<span class="m-rad">$1</span></span>');
+    s = s.replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>');
+    s = s.replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>');
+    s = s.replace(/_\{([^{}]+)\}/g, '<sub>$1</sub>');
+    s = s.replace(/_([0-9a-zA-Z+-])/g, '<sub>$1</sub>');
+    s = s.replace(/\\\{/g, '{').replace(/\\\}/g, '}');
+
+    const symbols = [
+      [/\\alpha\b/g, 'α'],
+      [/\\beta\b/g, 'β'],
+      [/\\cup\b/g, '∪'],
+      [/\\cap\b/g, '∩'],
+      [/\\to\b/g, '→'],
+      [/\\sim\b/g, '~'],
+      [/\\ge\b/g, '≥'],
+      [/\\le\b/g, '≤'],
+      [/\\neq\b/g, '≠'],
+      [/\\times\b/g, '×'],
+      [/\\cdot\b/g, '·'],
+      [/\\circ\b/g, '∘']
+    ];
+    for (const [regex, repl] of symbols) {
+      s = s.replace(regex, repl);
+    }
+    return `<span class="math-inline">${s}</span>`;
+  }
+
+  function renderMathText(rawText) {
+    if (!rawText) return '';
+    const parts = String(rawText).split(/(\$[^$]+\$)/g);
+    return parts
+      .map((part) => {
+        if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
+          const tex = part.slice(1, -1);
+          if (window.katex && typeof window.katex.renderToString === 'function') {
+            try {
+              return window.katex.renderToString(tex, {
+                throwOnError: false,
+                displayMode: false
+              });
+            } catch (e) {
+              return offlineTeXToHtml(tex);
+            }
+          }
+          return offlineTeXToHtml(tex);
+        }
+        return escapeHtml(part);
+      })
+      .join('');
+  }
+
+  global.KkachiMathData = {
+    CHAPTERS,
+    renderMathText
+  };
+})(window);
+
+</script>
+  <script>
+/**
  * 수달런 3D (OTTER MATH RUN 3D) - 3인칭 원근 투영(Perspective 3D) & 3D 볼륨 셰이딩 런게임 엔진
  * 서브웨이 서퍼 / 템플런 스타일 좌·중·우 3레인 입체 다리 질주 및 3D 몬스터 격파 액션
  */
@@ -1792,23 +2188,23 @@ html, body {
     isDashing: false,
     targetLane: 1, // 0 (Left), 1 (Center), 2 (Right)
 
-    // 3D Otter coordinates (wx, wy, wz)
+    // 3D Otter coordinates (wx, wy, wz) — Positioned at the very bottom foreground!
     otterX3D: 0,
     otterY3D: 0,
     otterVy3D: 0,
-    otterZ3D: 125,
+    otterZ3D: 55,
     otterRoll: 0,
     otterSpin: 0,
     otterPhase: 0,
     otterJumpCount: 0,
     otterMood: 'run',
 
-    // 3D Camera state
+    // 3D Camera state — Full-height runway from top horizon (y≈64px) to bottom edge (y=440px)
     camX: 0,
-    camY: 205,
+    camY: 515,
     camRoll: 0,
-    fov: 450,
-    horizonY: 84,
+    fov: 380,
+    horizonY: -42,
 
     // 3D World objects & FX
     trackZ: 0,
@@ -2608,7 +3004,7 @@ html, body {
     state.isQuickKillDash = false;
     state.slowMoTimer = 0;
     state.otterSpin = 0;
-    state.monsterZ = 720; // Starts at a comfortable, large, immediately readable distance!
+    state.monsterZ = 820; // Spawns near the top of the full-height 3-lane runway (y≈121px)!
     state.monstersAlive = [true, true, true];
     state.projectiles3D = [];
     state.waveStartTime = performance.now();
@@ -2628,14 +3024,16 @@ html, body {
     }
     document.getElementById('q-prompt-text').innerHTML = KkachiMathData.renderMathText(q.q);
 
+    const gateBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
     state.gateOptions.forEach((opt, idx) => {
       const signEl = document.getElementById(`mon-sign-${idx}`);
       const renderedFormula = KkachiMathData.renderMathText(opt.text);
 
-      // Render ONLY the large, clean math formula directly ON the Monster Character's Body Shield!
+      // Render a sleek 1-line Pass-Through Arch Gate Banner with a top lane crest!
       if (signEl) {
         signEl.className = `monster-body-shield lane-${idx}`;
         signEl.innerHTML = `
+          <span class="gate-arch-badge" id="gate-badge-${idx}">${gateBadges[idx]}</span>
           <div class="sign-formula">
             ${renderedFormula}
           </div>
@@ -2648,13 +3046,20 @@ html, body {
 
   function updateAimedMonsterUI() {
     const laneNames = ['왼쪽', '가운데', '오른쪽'];
+    const defaultBadges = ['🐉 ① 왼쪽 관문', '👹 ② 가운데 관문', '👾 ③ 오른쪽 관문'];
+    const aimedBadges = ['🎯 ① 왼쪽 관문 (내 수달 줄)', '🎯 ② 가운데 관문 (내 수달 줄)', '🎯 ③ 오른쪽 관문 (내 수달 줄)'];
     const lbl = document.getElementById('current-lane-label');
     if (lbl) lbl.textContent = laneNames[state.targetLane] || '가운데';
 
     [0, 1, 2].forEach((i) => {
       const signEl = document.getElementById(`mon-sign-${i}`);
+      const badgeEl = document.getElementById(`gate-badge-${i}`);
       if (!signEl || state.isDashing || state.pausedForCrash || state.gateClearRunTimer > 0) return;
-      signEl.classList.toggle('otter-aimed', i === state.targetLane);
+      const isAimed = i === state.targetLane;
+      signEl.classList.toggle('otter-aimed', isAimed);
+      if (badgeEl) {
+        badgeEl.textContent = isAimed ? aimedBadges[i] : defaultBadges[i];
+      }
     });
   }
 
@@ -2848,7 +3253,7 @@ html, body {
 
     // Keep camera stable & centered so the 3 lanes and formulas never shift sideways!
     state.camX = 0;
-    state.fov = 450;
+    state.fov = 380;
 
     // 2. 3D Jump Gravity (wy)
     state.otterY3D += state.otterVy3D;
@@ -2875,12 +3280,14 @@ html, body {
       return;
     }
 
-    // 3. Move the 3 Formula Characters steadily down the 3 lanes (or 8x faster when Space Dash is pressed!)
-    const baseMonSpeedZ = (720 - state.otterZ3D) / (state.gateDurationMs / 1000);
+    // 3. Move the 3 Pass-Through Arch Gates steadily down the 3 lanes (from Z=820 to Z=240 right in front of the Otter's nose!)
+    const START_MONSTER_Z = 820;
+    const PASS_MONSTER_Z = 240;
+    const baseMonSpeedZ = (START_MONSTER_Z - PASS_MONSTER_Z) / (state.gateDurationMs / 1000);
     const monSpeedZ = state.isDashing ? baseMonSpeedZ * 9.5 : baseMonSpeedZ;
     state.monsterZ -= monSpeedZ * dtSec;
 
-    const remSec = Math.max(0, (state.monsterZ - state.otterZ3D) / Math.max(1, baseMonSpeedZ));
+    const remSec = Math.max(0, (state.monsterZ - PASS_MONSTER_Z) / Math.max(1, baseMonSpeedZ));
     const timeLbl = document.getElementById('q-time-label');
     if (timeLbl) {
       timeLbl.textContent = state.isDashing ? '⚡ 돌진중!' : `${remSec.toFixed(1)}초`;
@@ -2888,12 +3295,12 @@ html, body {
 
     const progFill = document.getElementById('q-progress-fill');
     if (progFill) {
-      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - state.otterZ3D) / (720 - state.otterZ3D)) * 100));
+      const remPct = Math.max(0, Math.min(100, ((state.monsterZ - PASS_MONSTER_Z) / (START_MONSTER_Z - PASS_MONSTER_Z)) * 100));
       progFill.style.width = `${remPct}%`;
     }
 
-    // 4. When the 3 Formula Characters reach the Otter -> Otter physically passes through / clashes with the character in its current lane!
-    if (state.monsterZ <= state.otterZ3D + 60) {
+    // 4. Trigger Gate Pass / Collision the instant the Arch Gate threshold reaches right in front of the Otter's nose (Z=240, y≈274px) — never covering the Otter's head (y≈339px)!
+    if (state.monsterZ <= PASS_MONSTER_Z) {
       state.selectedLane = state.targetLane;
       resolve3DMonsterCollision(false);
     }
@@ -2954,20 +3361,22 @@ html, body {
     const fov = state.fov;
     const horY = state.horizonY;
 
-    // 1. Calm, Clean Sky & Soft Emerald Sea Background (Zero visual clutter!)
+    // 1. Calm, Clean Sky & Soft Emerald Sea Background
     const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
     skyGrad.addColorStop(0, '#38bdf8');
-    skyGrad.addColorStop(0.2, '#bae6fd');
-    skyGrad.addColorStop(0.22, '#2dd4bf');
-    skyGrad.addColorStop(1, '#10b981');
+    skyGrad.addColorStop(0.14, '#bae6fd');
+    skyGrad.addColorStop(0.15, '#2dd4bf');
+    skyGrad.addColorStop(1, '#0d9488');
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // 2. Smooth, Non-Flickering 3-Lane Bridge Track (Solid Warm Cream Deck + Clean Lane Dividers)
-    const pTopL = project3D(-485, 0, 1200, W, H, camX, camY, fov, horY);
-    const pTopR = project3D(485, 0, 1200, W, H, camX, camY, fov, horY);
-    const pBotL = project3D(-485, 0, 15, W, H, camX, camY, fov, horY);
-    const pBotR = project3D(485, 0, 15, W, H, camX, camY, fov, horY);
+    // 2. Full-Height 3-Lane Runway (Stretches from y≈64px near the top all the way down to y=440px at the bottom edge!)
+    const TOP_Z = 1450;
+    const BOT_Z = 15;
+    const pTopL = project3D(-485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pTopR = project3D(485, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const pBotL = project3D(-485, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const pBotR = project3D(485, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
     ctx.fillStyle = '#fffbeb';
     ctx.beginPath();
@@ -2988,19 +3397,19 @@ html, body {
     ctx.lineTo(pBotR.x, pBotR.y);
     ctx.stroke();
 
-    // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Track Floor!
+    // 2.5 Highlight the Otter's Current Active Lane (state.targetLane) on the Full-Height Track Floor!
     const laneEdges = [
       [-485, -162],
       [-162, 162],
       [162, 485]
     ];
     const [curL, curR] = laneEdges[state.targetLane] || laneEdges[1];
-    const hlTopL = project3D(curL, 0, 1200, W, H, camX, camY, fov, horY);
-    const hlTopR = project3D(curR, 0, 1200, W, H, camX, camY, fov, horY);
-    const hlBotL = project3D(curL, 0, 15, W, H, camX, camY, fov, horY);
-    const hlBotR = project3D(curR, 0, 15, W, H, camX, camY, fov, horY);
+    const hlTopL = project3D(curL, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlTopR = project3D(curR, 0, TOP_Z, W, H, camX, camY, fov, horY);
+    const hlBotL = project3D(curL, 0, BOT_Z, W, H, camX, camY, fov, horY);
+    const hlBotR = project3D(curR, 0, BOT_Z, W, H, camX, camY, fov, horY);
 
-    ctx.fillStyle = 'rgba(253, 224, 71, 0.35)';
+    ctx.fillStyle = 'rgba(253, 224, 71, 0.38)';
     ctx.beginPath();
     ctx.moveTo(hlTopL.x, hlTopL.y);
     ctx.lineTo(hlTopR.x, hlTopR.y);
@@ -3009,12 +3418,12 @@ html, body {
     ctx.closePath();
     ctx.fill();
 
-    // Subtle Moving Horizontal Track Lines (Gives smooth forward running motion without flickering stripes!)
-    const segLen = 110;
+    // Subtle Moving Horizontal Track Lines
+    const segLen = 95;
     const zOffset = state.trackZ % segLen;
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.14)';
     ctx.lineWidth = 2;
-    for (let z = 1100; z >= 30; z -= segLen) {
+    for (let z = 1350; z >= 25; z -= segLen) {
       const zCur = z - zOffset;
       if (zCur < 15) continue;
       const pL = project3D(-480, 0, zCur, W, H, camX, camY, fov, horY);
@@ -3029,32 +3438,104 @@ html, body {
     ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
     ctx.lineWidth = 3;
     [-162, 162].forEach((divX) => {
-      const dTop = project3D(divX, 0, 1200, W, H, camX, camY, fov, horY);
-      const dBot = project3D(divX, 0, 15, W, H, camX, camY, fov, horY);
+      const dTop = project3D(divX, 0, TOP_Z, W, H, camX, camY, fov, horY);
+      const dBot = project3D(divX, 0, BOT_Z, W, H, camX, camY, fov, horY);
       ctx.beginPath();
       ctx.moveTo(dTop.x, dTop.y);
       ctx.lineTo(dBot.x, dBot.y);
       ctx.stroke();
     });
 
-    // 4. Draw Approaching 3D Monster Characters & Lock their Steady, Full-Size Formula Shields onto their Torsos!
+    // Forward Guide Chevrons on the Otter's Active Lane pointing from the Otter toward the approaching Arch Gate!
+    const activeX = LANE_X[state.targetLane] || 0;
+    [130, 195].forEach((cz) => {
+      if (cz >= state.monsterZ - 20) return;
+      const pTip = project3D(activeX, 0, cz + 24, W, H, camX, camY, fov, horY);
+      const pBL = project3D(activeX - 38, 0, cz, W, H, camX, camY, fov, horY);
+      const pBR = project3D(activeX + 38, 0, cz, W, H, camX, camY, fov, horY);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(217, 119, 6, 0.55)';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pBL.x, pBL.y);
+      ctx.lineTo(pTip.x, pTip.y);
+      ctx.lineTo(pBR.x, pBR.y);
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // 4. Draw Approaching 3D Pass-Through Arch Gates + Perched Monster Guardians Above the Slim Formula Banners!
+    const gateColors = [
+      { main: '#9333ea', dark: '#581c87', glow: 'rgba(147, 51, 234, 0.35)' },
+      { main: '#e11d48', dark: '#881337', glow: 'rgba(225, 29, 72, 0.35)' },
+      { main: '#059669', dark: '#064e3b', glow: 'rgba(5, 150, 105, 0.35)' }
+    ];
+
     [0, 1, 2].forEach((ln) => {
       const signEl = document.getElementById(`mon-sign-${ln}`);
       if (!state.monstersAlive[ln]) return;
 
       const wx = LANE_X[ln];
       const pMon = project3D(wx, 0, state.monsterZ, W, H, camX, camY, fov, horY);
-      const mScale = pMon.scale * 1.42;
+      const pPilL = project3D(wx - 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
+      const pPilR = project3D(wx + 125, 0, state.monsterZ, W, H, camX, camY, fov, horY);
 
-      // 1. Draw the 3D Monster Character
-      draw3DMonster(ctx, pMon.x, pMon.y, mScale, ln, state.otterPhase * 0.5, false, 0);
+      const isAimed = ln === state.targetLane;
+      const col = isAimed
+        ? { main: '#f59e0b', dark: '#b45309', glow: 'rgba(245, 158, 11, 0.55)' }
+        : gateColors[ln];
 
-      // 2. Lock the Body Formula Shield 1:1 onto the Monster Character's Torso (NO vertical bouncing, large fixed readable scale!)
+      const gateBannerY = pMon.y - 38;
+
+      // 4.1 Draw Glowing Pass-Through Threshold Line on the Track Floor between the Left & Right Arch Pillars!
+      ctx.save();
+      ctx.strokeStyle = col.glow;
+      ctx.lineWidth = isAimed ? 9 : 6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pPilL.x, pMon.y);
+      ctx.lineTo(pPilR.x, pMon.y);
+      ctx.stroke();
+
+      ctx.strokeStyle = col.main;
+      ctx.lineWidth = isAimed ? 3.5 : 2.5;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(pPilL.x, pMon.y);
+      ctx.lineTo(pPilR.x, pMon.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 4.2 Draw Left & Right 3D Arch Gate Pillars standing on the lane edges
+      const pilW = Math.max(6, 12 * pMon.scale);
+      [pPilL.x, pPilR.x].forEach((px) => {
+        // Pillar ground base pad
+        ctx.fillStyle = col.dark;
+        ctx.beginPath();
+        ctx.ellipse(px, pMon.y, pilW * 0.95, pilW * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vertical Arch Pillar column rising up to the Formula Gate Banner
+        const pGrad = ctx.createLinearGradient(px - pilW * 0.5, 0, px + pilW * 0.5, 0);
+        pGrad.addColorStop(0, col.dark);
+        pGrad.addColorStop(0.45, col.main);
+        pGrad.addColorStop(1, col.dark);
+        ctx.fillStyle = pGrad;
+        ctx.fillRect(px - pilW * 0.5, gateBannerY, pilW, pMon.y - gateBannerY);
+      });
+      ctx.restore();
+
+      // 4.3 Draw the Cute 3D Monster Guardian Perched ON TOP of the Arch Gate Banner (100% visible above the formula!)
+      const mScale = Math.max(0.72, Math.min(0.92, 0.54 + pMon.scale * 0.56));
+      draw3DMonster(ctx, pMon.x, gateBannerY - 12, mScale, ln, state.otterPhase * 0.5, false, 0);
+
+      // 4.4 Lock the Slim 1-Line Formula Gate Banner onto the Arch Crossbar (gateBannerY)
       if (signEl) {
-        const torsoCenterY = pMon.y - 34 * mScale;
         const leftPct = (pMon.x / W) * 100;
-        const topPct = (torsoCenterY / H) * 100;
-        const shieldScale = Math.max(0.94, Math.min(1.06, 0.8 + pMon.scale * 0.32));
+        const topPct = (gateBannerY / H) * 100;
+        const shieldScale = Math.max(0.92, Math.min(1.04, 0.78 + pMon.scale * 0.36));
         signEl.style.left = `${leftPct.toFixed(2)}%`;
         signEl.style.top = `${topPct.toFixed(2)}%`;
         signEl.style.transform = `translate(-50%, -50%) scale(${shieldScale.toFixed(2)})`;
@@ -3154,9 +3635,9 @@ html, body {
       ctx.restore();
     }
 
-    // 9. Draw the 3D Volumetric Cute Otter in the foreground (Z = 125)!
+    // 9. Draw the 3D Volumetric Cute Otter at the very bottom foreground (Z = 55, y ≈ 408px)!
     const pOtter = project3D(state.otterX3D, state.otterY3D, state.otterZ3D, W, H, camX, camY, fov, horY);
-    draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.38, state.otterPhase, {
+    draw3DOtter(ctx, pOtter.x, pOtter.y, pOtter.scale * 1.15, state.otterPhase, {
       skin: state.skin,
       roll: state.otterRoll,
       spin: state.otterSpin,
@@ -3204,11 +3685,13 @@ html, body {
 
       [0, 1, 2].forEach((i) => {
         const signEl = document.getElementById(`mon-sign-${i}`);
+        const badgeEl = document.getElementById(`gate-badge-${i}`);
         if (i === pickedIdx) {
           if (signEl) {
             signEl.classList.remove('otter-aimed', 'selected-lane');
             signEl.classList.add('shield-correct');
           }
+          if (badgeEl) badgeEl.textContent = '⭕ 정답 관문 돌파!';
         } else {
           state.monstersAlive[i] = false;
           state.monsterState[i] = 'dissolved';
@@ -3267,18 +3750,21 @@ html, body {
     } else {
       // 2. WRONG CHARACTER COLLISION!
       state.pausedForCrash = true;
-      if (state.monsterZ > 400) state.monsterZ = 380;
+      state.monsterZ = Math.max(255, Math.min(380, state.monsterZ));
 
       [0, 1, 2].forEach((i) => {
         const signEl = document.getElementById(`mon-sign-${i}`);
+        const badgeEl = document.getElementById(`gate-badge-${i}`);
         if (signEl) signEl.classList.remove('otter-aimed', 'selected-lane');
 
         if (i === correctIdx) {
           state.monsterState[i] = 'correct';
           if (signEl) signEl.classList.add('shield-correct');
+          if (badgeEl) badgeEl.textContent = '⭕ 진짜 정답 관문!';
         } else if (i === pickedIdx) {
           state.monsterState[i] = 'wrong';
           if (signEl) signEl.classList.add('shield-wrong');
+          if (badgeEl) badgeEl.textContent = '❌ 내가 고른 오답';
         } else {
           state.monstersAlive[i] = false;
           state.monsterState[i] = 'dissolved';
@@ -3493,840 +3979,7 @@ html, body {
 
   window.addEventListener('DOMContentLoaded', init);
 })(window);
+
 </script>
-</body>
-</html>
-,
-          w1: '$(a+b)^3 + 3ab(a+b)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(a-b)^3 + 3ab(a-b)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$a^3 + b^3 = (a+b)^3 - 3ab(a+b)$ 입니다! 부호에 주의하세요.'
-        },
-        {
-          id: 'c1_2',
-          q: '$a^3 - b^3$ 을 바르게 인수분해한 것은?',
-          ans: '$(a-b)(a^2 + ab + b^2)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(a-b)(a^2 - ab + b^2)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(a+b)(a^2 - ab + b^2)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '앞괄호가 $(a-b)$이면 뒷괄호 가운데 항은 $+ab$ 입니다!'
-        },
-        {
-          id: 'c1_3',
-          q: '다항식 $P(x)$를 일차식 $(x - 3)$으로 나눈 나머지는?',
-          ans: '$P(3)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$P(-3)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$P(0)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '나머지정리: $x - 3 = 0$이 되는 $x = 3$을 대입한 $P(3)$이 나머지입니다.'
-        },
-        {
-          id: 'c1_4',
-          q: '다항식 $P(x)$가 $(x + 2)$로 나누어떨어지기 위한 조건은?',
-          ans: '$P(-2) = 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$P(2) = 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$P(-2) = 2
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '인수정리: $(x+2)$를 인수로 가지므로 $P(-2) = 0$이어야 합니다.'
-        },
-        {
-          id: 'c1_5',
-          q: '$a + b = 4$, $ab = 3$ 일 때, $a^2 + b^2$ 의 값은?',
-          ans: '$10
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$16
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$22
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$a^2 + b^2 = (a+b)^2 - 2ab = 16 - 6 = 10$ 입니다.'
-        },
-        {
-          id: 'c1_6',
-          q: '$x^3 - 1$ 을 인수분해한 식은?',
-          ans: '$(x - 1)(x^2 + x + 1)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(x - 1)(x^2 - x + 1)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(x + 1)(x^2 - x + 1)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$x^3 - 1^3 = (x-1)(x^2+x+1)$ 입니다.'
-        },
-        {
-          id: 'c1_7',
-          q: '$(a + b + c)^2$ 을 전개했을 때 나오는 항은?',
-          ans: '$a^2+b^2+c^2 + 2(ab+bc+ca)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$a^2+b^2+c^2 - 2(ab+bc+ca)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$a^2+b^2+c^2 + ab+bc+ca
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '각 항의 제곱의 합에 $+ 2(ab + bc + ca)$를 더합니다.'
-        },
-        {
-          id: 'c1_8',
-          q: '$(x - y)^2$ 을 $(x + y)^2$ 을 이용해 바르게 나타낸 것은?',
-          ans: '$(x + y)^2 - 4xy
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(x + y)^2 - 2xy
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(x + y)^2 + 4xy
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$(x-y)^2 = (x+y)^2 - 4xy$ 입니다.'
-        }
-      ]
-    },
-    {
-      id: 'ch2',
-      title: '② 복소수 · 이차방정식',
-      questions: [
-        {
-          id: 'c2_1',
-          q: '허수단위 $i$에 대하여 $i^2$ 의 값은?',
-          ans: '$-1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$-i
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '제곱하여 $-1$이 되는 수를 허수단위 $i$라 하므로 $i^2 = -1$입니다.'
-        },
-        {
-          id: 'c2_2',
-          q: '허수단위 $i$의 거듭제곱 합 $i + i^2 + i^3 + i^4$ 의 값은?',
-          ans: '$0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$-1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$i + (-1) + (-i) + 1 = 0$! 연속한 4개의 합은 항상 $0$입니다.'
-        },
-        {
-          id: 'c2_3',
-          q: '복소수 $3 - 4i$ 의 켤레복소수는?',
-          ans: '$3 + 4i
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$-3 - 4i
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$-3 + 4i
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '켤레복소수는 허수부분의 부호만 바꾸어 $3 + 4i$가 됩니다.'
-        },
-        {
-          id: 'c2_4',
-          q: '이차방정식 $x^2 - 6x + 5 = 0$ 의 두 근의 합 $\\alpha + \\beta$는?',
-          ans: '$6
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$-6
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$5
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '근과 계수의 관계에 의해 두 근의 합은 $-\\frac{b}{a} = 6$입니다.'
-        },
-        {
-          id: 'c2_5',
-          q: '이차방정식 $2x^2 + 5x - 8 = 0$ 의 두 근의 곱 $\\alpha\\beta$는?',
-          ans: '$-4
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$4
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$-\\frac{5}{2}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '근과 계수의 관계에 의해 두 근의 곱은 $\\frac{c}{a} = \\frac{-8}{2} = -4$입니다.'
-        },
-        {
-          id: 'c2_6',
-          q: '이차방정식이 중근(완전제곱식)을 가질 판별식 $D$의 조건은?',
-          ans: '$D = b^2 - 4ac = 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$D = b^2 - 4ac > 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$D = b^2 - 4ac < 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '중근을 가지려면 판별식 $D = 0$이어야 합니다.'
-        },
-        {
-          id: 'c2_7',
-          q: '이차함수 $y = ax^2+bx+c$의 그래프가 $x$축과 만나지 않을 조건은?',
-          ans: '판별식 $D < 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '판별식 $D > 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '판별식 $D = 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$x$축과 교점이 없으려면 실근이 없어야 하므로 $D < 0$입니다!'
-        },
-        {
-          id: 'c2_8',
-          q: '$a < 0$, $b < 0$ (둘 다 음수)일 때 $\\sqrt{a}\\sqrt{b}$ 를 간단히 하면?',
-          ans: '$-\\sqrt{ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$\\sqrt{ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$\\sqrt{-ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '음수의 제곱근 두 개를 곱하면 앞에 마이너스($-$)가 튀어나옵니다!'
-        }
-      ]
-    },
-    {
-      id: 'ch3',
-      title: '③ 도형의 방정식',
-      questions: [
-        {
-          id: 'c3_1',
-          q: '기울기가 $m, m\'$인 두 직선이 서로 수직일 조건은?',
-          ans: '$m \\cdot m\' = -1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$m \\cdot m\' = 1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$m + m\' = 0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '수직인 두 직선의 기울기의 곱은 항상 $-1$입니다.'
-        },
-        {
-          id: 'c3_2',
-          q: '원 $(x - 2)^2 + (y + 3)^2 = 16$ 의 중심과 반지름 $r$은?',
-          ans: '중심 $(2, -3)$, $r = 4
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '중심 $(-2, 3)$, $r = 4
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '중심 $(2, -3)$, $r = 16
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$(x-a)^2+(y-b)^2=r^2$에서 중심은 $(2,-3)$, 반지름은 $\\sqrt{16}=4$입니다.'
-        },
-        {
-          id: 'c3_3',
-          q: '점 $(4, -5)$를 $x$축에 대하여 대칭이동한 점의 좌표는?',
-          ans: '$(4, 5)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(-4, -5)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(-4, 5)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$x$축 대칭이동은 $y$좌표의 부호만 반대로 바뀝니다!'
-        },
-        {
-          id: 'c3_4',
-          q: '점 $(2, 7)$을 직선 $y = x$에 대하여 대칭이동한 좌표는?',
-          ans: '$(7, 2)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(-2, -7)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(-7, -2)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '직선 $y = x$ 대칭이동은 $x$좌표와 $y$좌표의 자리를 서로 바꿉니다!'
-        },
-        {
-          id: 'c3_5',
-          q: '함수 $y = f(x)$의 그래프를 $x$축 방향으로 $+3$만큼 평행이동한 식은?',
-          ans: '$y = f(x - 3)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$y = f(x + 3)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$y = f(x) + 3
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '도형의 평행이동은 이동한 만큼 부호를 반대로 빼주어 $x$ 대신 $(x-3)$을 대입합니다!'
-        },
-        {
-          id: 'c3_6',
-          q: '점 $(-3, 5)$를 원점에 대하여 대칭이동한 점의 좌표는?',
-          ans: '$(3, -5)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(-3, -5)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(5, -3)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '원점 대칭이동은 $x, y$ 두 좌표의 부호를 모두 반대로 바꿉니다.'
-        },
-        {
-          id: 'c3_7',
-          q: '두 점 $A(2, 4)$와 $B(6, 10)$의 중점 $M$의 좌표는?',
-          ans: '$(4, 7)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$(3, 6)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$(8, 14)
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '중점은 두 좌표의 평균: $(\\frac{2+6}{2}, \\frac{4+10}{2}) = (4, 7)$입니다.'
-        },
-        {
-          id: 'c3_8',
-          q: '원점 $(0, 0)$에서 점 $(3, 4)$까지의 거리는?',
-          ans: '$5
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$7
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$25
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$\\sqrt{3^2 + 4^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$ 입니다.'
-        }
-      ]
-    },
-    {
-      id: 'ch4',
-      title: '④ 집합 · 명제 · 함수',
-      questions: [
-        {
-          id: 'c4_1',
-          q: '드모르간의 법칙에서 $(A \\cup B)^C$ 과 항상 같은 집합은?',
-          ans: '$A^C \\cap B^C
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$A^C \\cup B^C
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$A \\cap B
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '여집합 $C$가 안으로 분배되면서 합집합($\\cup$)이 교집합($\\cap$)으로 뒤집힙니다!'
-        },
-        {
-          id: 'c4_2',
-          q: '원소가 $4$개인 집합 $A = \\{1, 2, 3, 4\\}$의 부분집합의 총 개수는?',
-          ans: '$16$개 ($2^4$)',
-          w1: '$8$개 ($2^3$)',
-          w2: '$15$개',
-          tip: '원소가 $n$개인 집합의 부분집합 개수는 $2^n$개이므로 $2^4 = 16$개입니다.'
-        },
-        {
-          id: 'c4_3',
-          q: '명제 $p \\to q$ 와 참·거짓(진리값)이 항상 같은 명제는?',
-          ans: '대우 ($\\sim q \\to \\sim p$)',
-          w1: '역 ($q \\to p$)',
-          w2: '부정 ($p \\to \\sim q$)',
-          tip: '본명제와 그 대우 명제($\\sim q \\to \\sim p$)는 항상 참·거짓이 같습니다!'
-        },
-        {
-          id: 'c4_4',
-          q: '양수 $a > 0, b > 0$ 에 대한 산술·기하평균 절대부등식은?',
-          ans: '$a + b \\ge 2\\sqrt{ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$a + b \\ge \\sqrt{ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$a + b \\le 2\\sqrt{ab}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$\\frac{a+b}{2} \\ge \\sqrt{ab}$ 이므로 $a + b \\ge 2\\sqrt{ab}$ (등호는 $a=b$일 때)입니다.'
-        },
-        {
-          id: 'c4_5',
-          q: '함수 $y = f(x)$와 그 역함수 $y = f^{-1}(x)$의 그래프는 어디에 대칭인가?',
-          ans: '직선 $y = x
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$x$축',
-          w2: '원점',
-          tip: '원래 함수와 역함수의 그래프는 항상 직선 $y = x$에 대하여 대칭입니다.'
-        },
-        {
-          id: 'c4_6',
-          q: '합성함수의 역함수 $(g \\circ f)^{-1}$ 를 바르게 풀면?',
-          ans: '$f^{-1} \\circ g^{-1}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$g^{-1} \\circ f^{-1}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$f \\circ g
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '합성함수의 역함수는 순서가 반대로 뒤집혀서 $f^{-1} \\circ g^{-1}$ 가 됩니다!'
-        },
-        {
-          id: 'c4_7',
-          q: '함수 $f$의 역함수 $f^{-1}$가 존재하기 위한 필요충분조건은?',
-          ans: '일대일대응',
-          w1: '항등함수',
-          w2: '상수함수',
-          tip: '역함수가 존재하려면 반드시 일대일대응이어야 합니다.'
-        },
-        {
-          id: 'c4_8',
-          q: '$n(A) = 5$, $n(B) = 4$, $n(A \\cap B) = 2$ 일 때 $n(A \\cup B)$는?',
-          ans: '$7
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$9
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$11
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$n(A \\cup B) = n(A) + n(B) - n(A \\cap B) = 5 + 4 - 2 = 7$입니다.'
-        }
-      ]
-    },
-    {
-      id: 'ch5',
-      title: '⑤ 경우의 수 · 순열 · 조합',
-      questions: [
-        {
-          id: 'c5_1',
-          q: '$0!$ (영 팩토리얼) 과 $_n\\text{C}_0$ 의 공통된 값은?',
-          ans: '$1
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$0
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$n
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$0! = 1$ 이고 $_n\\text{C}_0 = 1$, $_n\\text{P}_0 = 1$ 입니다!'
-        },
-        {
-          id: 'c5_2',
-          q: '조합의 성질에 의해 $_n\\text{C}_r$ 과 항상 같은 값은?',
-          ans: '$_n\\text{C}_{n-r}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$_n\\text{P}_r
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$_n\\text{C}_{r-1}
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$n$명 중 $r$명을 뽑는 것은 남길 $(n-r)$명을 뽑는 것과 같으므로 $_n\\text{C}_r = _n\\text{C}_{n-r}$입니다.'
-        },
-        {
-          id: 'c5_3',
-          q: '조합 $_5\\text{C}_2$ 를 계산한 값은?',
-          ans: '$10
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$20
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$15
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$_5\\text{C}_2 = \\frac{5 \\times 4}{2 \\times 1} = 10$ 입니다.'
-        },
-        {
-          id: 'c5_4',
-          q: '순열 $_5\\text{P}_2$ 를 계산한 값은?',
-          ans: '$20
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$10
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$25
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$_5\\text{P}_2 = 5 \\times 4 = 20$ 입니다.'
-        },
-        {
-          id: 'c5_5',
-          q: '서로 다른 $n$개에서 순서를 생각하지 않고 $r$개를 택하는 것은?',
-          ans: '조합 $_n\\text{C}_r
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '순열 $_n\\text{P}_r
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '계승 $n!
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '순서 없이 뽑기만 하는 것은 조합(Combination, $_n\\text{C}_r$)입니다.'
-        },
-        {
-          id: 'c5_6',
-          q: '$4!$ ($4$ 팩토리얼)을 계산한 값은?',
-          ans: '$24
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w1: '$12
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          w2: '$16
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-,
-          tip: '$4! = 4 \\times 3 \\times 2 \\times 1 = 24$ 입니다.'
-        },
-        {
-          id: 'c5_7',
-          q: '조합 $_7\\text{C}_5$ 를 가장 빠르게 계산하기 위해 바꾸는 식은?',
-          ans: '$_7\\text{C}_2$ ($= 21$)',
-          w1: '$_7\\text{C}_3$ ($= 35$)',
-          w2: '$_7\\text{P}_2$ ($= 42$)',
-          tip: '$_7\\text{C}_5 = _7\\text{C}_{7-5} = _7\\text{C}_2 = \\frac{7 \\times 6}{2} = 21$ 로 3초 만에 계산합니다!'
-        },
-        {
-          id: 'c5_8',
-          q: '$6$명의 학생 중 대표 $1$명, 부대표 $1$명을 순서 있게 뽑는 경우의 수는?',
-          ans: '$30$가지 ($_6\\text{P}_2$)',
-          w1: '$15$가지 ($_6\\text{C}_2$)',
-          w2: '$12$가지',
-          tip: '직책(순서)이 구분되므로 순열 $_6\\text{P}_2 = 6 \\times 5 = 30$가지입니다.'
-        }
-      ]
-    }
-  ];
-
-  function escapeHtml(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  function offlineTeXToHtml(tex) {
-    let s = escapeHtml(tex.trim());
-    s = s.replace(/\\text\{([^{}]+)\}/g, '<span class="m-fn">$1</span>');
-    for (let i = 0; i < 3; i++) {
-      s = s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '<span class="m-frac"><span class="m-num">$1</span><span class="m-den">$2</span></span>');
-    }
-    s = s.replace(/\\sqrt\{([^{}]+)\}/g, '<span class="m-sqrt">√<span class="m-rad">$1</span></span>');
-    s = s.replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>');
-    s = s.replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>');
-    s = s.replace(/_\{([^{}]+)\}/g, '<sub>$1</sub>');
-    s = s.replace(/_([0-9a-zA-Z+-])/g, '<sub>$1</sub>');
-    s = s.replace(/\\\{/g, '{').replace(/\\\}/g, '}');
-
-    const symbols = [
-      [/\\alpha\b/g, 'α'],
-      [/\\beta\b/g, 'β'],
-      [/\\cup\b/g, '∪'],
-      [/\\cap\b/g, '∩'],
-      [/\\to\b/g, '→'],
-      [/\\sim\b/g, '~'],
-      [/\\ge\b/g, '≥'],
-      [/\\le\b/g, '≤'],
-      [/\\neq\b/g, '≠'],
-      [/\\times\b/g, '×'],
-      [/\\cdot\b/g, '·'],
-      [/\\circ\b/g, '∘']
-    ];
-    for (const [regex, repl] of symbols) {
-      s = s.replace(regex, repl);
-    }
-    return `<span class="math-inline">${s}</span>`;
-  }
-
-  function renderMathText(rawText) {
-    if (!rawText) return '';
-    const parts = String(rawText).split(/(\$[^$]+\$)/g);
-    return parts
-      .map((part) => {
-        if (part.startsWith('
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-) && part.endsWith('
-  <script src="js/app.js?v=11"></script>
-</body>
-</html>
-) && part.length > 2) {
-          const tex = part.slice(1, -1);
-          if (window.katex && typeof window.katex.renderToString === 'function') {
-            try {
-              return window.katex.renderToString(tex, {
-                throwOnError: false,
-                displayMode: false
-              });
-            } catch (e) {
-              return offlineTeXToHtml(tex);
-            }
-          }
-          return offlineTeXToHtml(tex);
-        }
-        return escapeHtml(part);
-      })
-      .join('');
-  }
-
-  global.KkachiMathData = {
-    CHAPTERS,
-    renderMathText
-  };
-})(window);
-</script>
-  <script src="js/app.js?v=11"></script>
 </body>
 </html>
